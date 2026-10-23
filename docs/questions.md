@@ -2,7 +2,8 @@
 
 ## Avoimet
 
-_(ei avoimia)_
+- **Q23 (päätös):** Hyväksytkö Matikan toteutussuunnitelman
+  (`docs/plans/sei-2.md`)? (SEI-2, SEI-5, SEI-6) — avattu 2026-10-23
 
 ## Vastatut
 
