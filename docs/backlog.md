@@ -150,7 +150,7 @@ Kriteerit:
    napautuksesta (ei vaadi toista yritystä).
 
 ### SEI-45 — Luonnollisempi puheääni (suomi ja espanja)
-Tila: todo
+Tila: in-progress
 Havainto (2026-10-23): omistaja avasi https://hakaotu.github.io/seikkailut/
 Macilla ja sanoi sanatarkasti: "en tykkää tosta nykyisestä tietokoneäänestä.
 Eikö meillä voisi olla mitään luonnollisempaa puheääntä siihen?" Mitä ääntä
@@ -776,3 +776,6 @@ Kriteerit:
 - 2026-10-23: lisätty SEI-45 (luonnollisempi puheääni), omistajan havainto
   Macilla julkaistusta sovelluksesta. Reitti A/B auki, odottaa omistajan
   päätöstä. Tila todo.
+- 2026-10-23: Q16 → reitti A (laitteen paras oma ääni). SEI-45 →
+  in-progress; ilman designeria ja arkkitehtia, koska muutos rajautuu
+  äänen valintaan `speech.js`:ssä.
