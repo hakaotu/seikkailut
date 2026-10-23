@@ -5,8 +5,11 @@
 //
 // Game module contract
 // --------------------
-// A game is an object { create(ctx) }. create is called once, synchronously, the
-// first time the game is opened in a page session. It returns an instance:
+// A game is an object `{ create(ctx) }`. Each real game lives in app/src/games/<id>.js and
+// default-exports that object; this file imports it statically and puts it in the entry's
+// `module` field. The placeholder keeps its factory form until it is removed.
+// create is called once, synchronously, the first time the game is opened in a page session.
+// It returns an instance:
 //
 //   instance = {
 //     show({ autoRead })  // every time the view becomes visible, synchronously inside
@@ -47,6 +50,7 @@
 //   6. localStorage keys are prefixed with the game id.
 
 import { placeholder } from './placeholder.js';
+import matikka from './matikka.js';
 
 export const GAMES = [
   {
@@ -54,12 +58,7 @@ export const GAMES = [
     name: 'Matikka',
     lang: 'fi-FI',
     listenLabel: 'Kuuntele lasku',
-    module: placeholder({
-      question: 'Tehtävä',
-      area: 'Matikan oma alue',
-      hint: 'vaihtoehdot tai numeronäppäimistö – suunnitellaan myöhemmin',
-      sample: [{ text: 'yksi plus kaksi', rate: 0.75 }],
-    }),
+    module: matikka,
   },
   {
     id: 'sanat',

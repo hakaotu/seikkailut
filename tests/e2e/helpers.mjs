@@ -23,8 +23,8 @@ export async function installFakeSpeech(page, opts = {}) {
     ({ mode, voices }) => {
       const realTimeout = window.setTimeout.bind(window); // page.clock may replace it later
       window.__speak = [];
-      // Every trusted click listener runs between __inListener++ and __inListener--, so speak()
-      // sees > 0 only while a user's click listener is on the stack. Microtasks queued by the
+      // Every trusted click or keydown listener runs between __inListener++ and __inListener--, so speak()
+      // sees > 0 only while a user's click or keydown listener is on the stack. Microtasks queued by the
       // listener run after the decrement, as do timers and hashchange handlers. Listeners
       // attached with `onclick =` are not wrapped.
       window.__inListener = 0;
@@ -33,9 +33,9 @@ export async function installFakeSpeech(page, opts = {}) {
       const realAdd = EventTarget.prototype.addEventListener;
       const realRemove = EventTarget.prototype.removeEventListener;
       EventTarget.prototype.addEventListener = function (type, listener, options) {
-        if (type !== 'click' || !listener) return realAdd.call(this, type, listener, options);
+        if ((type !== 'click' && type !== 'keydown') || !listener) return realAdd.call(this, type, listener, options);
         const run = function (e) {
-          const counted = e.isTrusted; // el.click() and timers are not user gestures on iPad
+          const counted = e.isTrusted; // el.click() and timers are not user gestures on iPad; key presses are
           if (counted) window.__inListener++;
           try {
             return typeof listener === 'function' ? listener.call(this, e) : listener.handleEvent(e);
@@ -50,7 +50,7 @@ export async function installFakeSpeech(page, opts = {}) {
         return realAdd.call(this, type, byCapture[cap], options);
       };
       EventTarget.prototype.removeEventListener = function (type, listener, options) {
-        const wrapper = type === 'click' && listener && (wrappers.get(listener) || {})[captureOf(options)];
+        const wrapper = (type === 'click' || type === 'keydown') && listener && (wrappers.get(listener) || {})[captureOf(options)];
         return realRemove.call(this, type, wrapper || listener, options);
       };
 

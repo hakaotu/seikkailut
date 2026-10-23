@@ -56,7 +56,13 @@ button {
 .back-btn,
 .listen,
 .ok-btn,
-.accent-btn {
+.accent-btn,
+.mk-primary,
+.mk-secondary,
+.mk-level,
+.mk-toggle,
+.mk-option,
+.mk-key {
   --shadow: 0 4px 0 var(--brand-dark);
   box-shadow: var(--shadow);
 }
@@ -65,7 +71,13 @@ button {
 .back-btn:active,
 .listen:active,
 .ok-btn:active,
-.accent-btn:active {
+.accent-btn:active,
+.mk-primary:active,
+.mk-secondary:active,
+.mk-level:active,
+.mk-toggle:active,
+.mk-option:active,
+.mk-key:active {
   transform: translateY(4px);
   box-shadow: none;
 }
@@ -74,13 +86,25 @@ button {
 .back-btn:focus,
 .listen:focus,
 .ok-btn:focus,
-.accent-btn:focus { outline: none; }
+.accent-btn:focus,
+.mk-primary:focus,
+.mk-secondary:focus,
+.mk-level:focus,
+.mk-toggle:focus,
+.mk-option:focus,
+.mk-key:focus { outline: none; }
 
 .game-card:focus-visible,
 .back-btn:focus-visible,
 .listen:focus-visible,
 .ok-btn:focus-visible,
-.accent-btn:focus-visible {
+.accent-btn:focus-visible,
+.mk-primary:focus-visible,
+.mk-secondary:focus-visible,
+.mk-level:focus-visible,
+.mk-toggle:focus-visible,
+.mk-option:focus-visible,
+.mk-key:focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 2px;
   box-shadow: var(--shadow), 0 0 0 9px var(--focus-yellow);
@@ -515,4 +539,359 @@ html[data-booted] .boot-error { display: none; }
 @media (min-width: 600px) {
   .game-body { padding: 24px; }
   .notice { flex-direction: row; align-items: center; gap: 18px; }
+}
+
+/* ---------- Matikka (docs/design/sei-2.md) ---------- */
+
+.game-view[data-game='matikka'] .game-area { position: relative; }
+.game-view[data-game='matikka'] .mk-screen { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* The five stars in the top bar (design 3.0) */
+.game-view[data-game='matikka'] .status-slot { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.game-view[data-game='matikka'] .status-slot svg { width: 28px; height: 28px; flex: none; fill: none; stroke: #fff; stroke-width: 2.2; }
+.game-view[data-game='matikka'] .status-slot svg.is-on { fill: var(--focus-yellow); stroke: var(--focus-yellow); }
+
+/* Question row */
+.game-view[data-game='matikka'] .mk-heading { margin: 0; font-size: 32px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='matikka'] .mk-heading:focus { outline: none; }
+.game-view[data-game='matikka'] .mk-q-end { font-size: 40px; }
+.game-view[data-game='matikka'] .mk-problem {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  padding-right: 14px; /* room for the mark that sticks out of the answer box */
+  font-size: 56px;
+  font-weight: bold;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.game-view[data-game='matikka'] .mk-problem:focus { outline: none; }
+.game-view[data-game='matikka'] .mk-op-symbol { color: var(--brand); }
+.game-view[data-game='matikka'] .mk-equals { color: var(--grey); }
+.game-view[data-game='matikka'] .mk-problem.is-appearing { animation: mk-appear 0.3s ease; }
+@keyframes mk-appear { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.game-view[data-game='matikka'] .mk-box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  height: 1.18em;
+  padding: 0 0.25em;
+  border: 4px solid #8a8fa3;
+  border-radius: 14px;
+  line-height: 1;
+}
+.game-view[data-game='matikka'] .mk-box.is-empty { color: var(--grey); }
+.game-view[data-game='matikka'] .mk-box.is-typing { border-color: var(--brand); }
+.game-view[data-game='matikka'] .mk-box.is-ok { border-color: var(--brand); color: var(--brand); }
+.game-view[data-game='matikka'] .mk-mark {
+  position: absolute;
+  top: -13px;
+  right: -13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 16px;
+  line-height: 1;
+}
+.game-view[data-game='matikka'] .mk-mark svg { width: 20px; height: 20px; }
+.game-view[data-game='matikka'] .mk-mark.is-wrong { background: #c62828; }
+.game-view[data-game='matikka'] .mk-yours {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.24em 0.4em;
+  border: 3px solid #c62828;
+  border-radius: 12px;
+  background: #fdeceb;
+  color: #c62828;
+  font-size: 0.61em;
+  line-height: 1;
+  text-decoration: line-through;
+  text-decoration-thickness: 3px;
+}
+
+/* Buttons */
+.game-view[data-game='matikka'] .mk-primary,
+.game-view[data-game='matikka'] .mk-secondary {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 120px;
+  height: 56px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-size: 22px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.game-view[data-game='matikka'] .mk-primary { border: 0; background: var(--brand); color: #fff; }
+.game-view[data-game='matikka'] .mk-secondary { --shadow: 0 4px 0 var(--ink); border: 3px solid var(--ink); background: #fff; color: var(--ink); }
+.game-view[data-game='matikka'] .mk-primary svg { width: 28px; height: 28px; }
+.game-view[data-game='matikka'] .mk-big { height: 64px; min-width: 240px; padding: 0 32px; font-size: 26px; }
+.game-view[data-game='matikka'] .mk-actions { display: flex; justify-content: center; gap: 16px; }
+
+/* Choose screen (design 3.1) */
+.game-view[data-game='matikka'] .mk-choose { gap: 10px; }
+.game-view[data-game='matikka'] .mk-group-label { font-size: 22px; font-weight: bold; }
+.game-view[data-game='matikka'] .mk-levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 6px; }
+.game-view[data-game='matikka'] .mk-level {
+  --shadow: 0 4px 0 #c9cbd6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  height: 140px;
+  padding: 12px 16px;
+  border: 3px solid #c9cbd6;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+}
+.game-view[data-game='matikka'] .mk-level-head { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: bold; line-height: 1.15; }
+.game-view[data-game='matikka'] .mk-pips { display: inline-flex; gap: 4px; }
+.game-view[data-game='matikka'] .mk-pips i { width: 14px; height: 14px; border: 2px solid var(--brand); border-radius: 50%; }
+.game-view[data-game='matikka'] .mk-pips i.is-full { background: var(--brand); }
+.game-view[data-game='matikka'] .mk-level-example { font-size: 30px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='matikka'] .mk-level-how { font-size: 20px; color: var(--grey); }
+.game-view[data-game='matikka'] .mk-level.is-selected { --shadow: 0 4px 0 var(--brand-dark); border: 4px solid var(--brand); background: var(--brand-light); }
+.game-view[data-game='matikka'] .mk-tick {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+}
+.game-view[data-game='matikka'] .mk-tick svg { width: 20px; height: 20px; }
+.game-view[data-game='matikka'] .mk-level.is-selected .mk-tick { display: flex; }
+.game-view[data-game='matikka'] .mk-toggles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.game-view[data-game='matikka'] .mk-toggle {
+  --shadow: 0 4px 0 #c9cbd6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  height: 100px;
+  padding: 0 8px;
+  border: 3px solid #c9cbd6;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: bold;
+}
+.game-view[data-game='matikka'] .mk-sym { font-size: 42px; line-height: 1; }
+.game-view[data-game='matikka'] .mk-cb {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid #8a8fa3;
+  border-radius: 7px;
+  background: #fff;
+  color: #fff;
+}
+.game-view[data-game='matikka'] .mk-cb svg { width: 20px; height: 20px; visibility: hidden; }
+.game-view[data-game='matikka'] .mk-toggle.is-on { --shadow: 0 4px 0 var(--brand-dark); border-color: var(--brand); background: var(--brand-light); }
+.game-view[data-game='matikka'] .mk-toggle.is-on .mk-cb { border-color: var(--brand); background: var(--brand); }
+.game-view[data-game='matikka'] .mk-toggle.is-on .mk-cb svg { visibility: visible; }
+.game-view[data-game='matikka'] .mk-toggle.is-on .mk-sym { color: var(--brand); }
+.game-view[data-game='matikka'] .mk-hint { display: flex; align-items: center; justify-content: center; height: 30px; font-size: 20px; text-align: center; }
+
+/* Question screen (design 3.2 - 3.4, 3.9): one column first */
+.game-view[data-game='matikka'] .mk-play { gap: 16px; }
+.game-view[data-game='matikka'] .mk-info { display: flex; align-items: center; gap: 18px; }
+.game-view[data-game='matikka'] .mk-score { font-size: 22px; font-weight: bold; white-space: nowrap; }
+.game-view[data-game='matikka'] .mk-bar { display: flex; flex: 1; gap: 4px; }
+.game-view[data-game='matikka'] .mk-bar i { flex: 1; height: 14px; border-radius: 7px; background: #dfe3ea; }
+.game-view[data-game='matikka'] .mk-bar i.is-full { background: var(--brand); }
+.game-view[data-game='matikka'] .mk-streak { display: flex; align-items: center; min-height: 34px; color: #a14b00; font-size: 22px; font-weight: bold; }
+.game-view[data-game='matikka'] .mk-answer { display: flex; justify-content: center; }
+.game-view[data-game='matikka'] .mk-options { display: grid; grid-template-columns: repeat(2, 150px); gap: 16px; }
+.game-view[data-game='matikka'] .mk-option {
+  --shadow: 0 5px 0 #c9cbd6;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 110px;
+  padding: 0;
+  border: 3px solid #c9cbd6;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 52px;
+  font-weight: bold;
+}
+.game-view[data-game='matikka'] .mk-option:active { transform: translateY(5px); }
+.game-view[data-game='matikka'] .mk-option:disabled { transform: none; box-shadow: var(--shadow); cursor: default; }
+.game-view[data-game='matikka'] .mk-option.is-right { --shadow: 0 5px 0 var(--brand-dark); border-color: var(--brand); background: var(--brand); color: #fff; }
+.game-view[data-game='matikka'] .mk-option.is-right .mk-mark { background: #fff; color: var(--brand); }
+.game-view[data-game='matikka'] .mk-option.is-wrong {
+  --shadow: 0 5px 0 #f3c4c4;
+  border: 4px solid #c62828;
+  color: #c62828;
+  text-decoration: line-through;
+  text-decoration-thickness: 4px;
+}
+.game-view[data-game='matikka'] .mk-option.is-dim { opacity: 0.45; }
+.game-view[data-game='matikka'] .mk-option.is-popping, .game-view[data-game='matikka'] .mk-box.is-popping { animation: mk-pop 0.5s ease; }
+.game-view[data-game='matikka'] .mk-option.is-shaking { animation: mk-shake 0.5s ease; }
+@keyframes mk-pop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@keyframes mk-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+.game-view[data-game='matikka'] .mk-pad { display: grid; grid-template-columns: repeat(3, 96px); gap: 12px; }
+.game-view[data-game='matikka'] .mk-key {
+  --shadow: 0 4px 0 #c9cbd6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 72px;
+  padding: 0;
+  border: 3px solid #c9cbd6;
+  border-radius: 16px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 34px;
+  font-weight: bold;
+}
+.game-view[data-game='matikka'] .mk-key svg { width: 32px; height: 32px; }
+.game-view[data-game='matikka'] .mk-key-ok { --shadow: 0 4px 0 var(--brand-dark); border-color: var(--brand); background: var(--brand); color: #fff; font-size: 28px; }
+.game-view[data-game='matikka'] .mk-key-ok svg { width: 24px; height: 24px; }
+.game-view[data-game='matikka'] .mk-key:disabled { transform: none; box-shadow: var(--shadow); opacity: 0.45; cursor: default; }
+.game-view[data-game='matikka'] .mk-feedback { display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 92px; text-align: left; }
+.game-view[data-game='matikka'] .mk-fb-icon { display: flex; flex: none; width: 28px; height: 28px; }
+.game-view[data-game='matikka'] .mk-fb-icon svg { width: 28px; height: 28px; }
+.game-view[data-game='matikka'] .mk-feedback[data-kind='right'] { color: var(--brand); font-size: 30px; font-weight: bold; }
+.game-view[data-game='matikka'] .mk-feedback[data-kind='wrong'] .mk-fb-icon { color: #c62828; }
+.game-view[data-game='matikka'] .mk-fb-title { display: block; color: #c62828; font-size: 30px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='matikka'] .mk-fb-line { display: block; font-size: 26px; line-height: 1.3; }
+.game-view[data-game='matikka'] .mk-next-wrap { display: flex; justify-content: center; height: 64px; }
+.game-view[data-game='matikka'] .mk-next.is-waiting { visibility: hidden; }
+.game-view[data-game='matikka'] .mk-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
+.game-view[data-game='matikka'] .mk-settings { font-size: 20px; color: var(--grey); }
+
+/* End screen (design 3.6) */
+.game-view[data-game='matikka'] .mk-end { align-items: center; gap: 14px; text-align: center; }
+.game-view[data-game='matikka'] .mk-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 18px 12px;
+  border-radius: 24px;
+  background: #fff;
+}
+.game-view[data-game='matikka'] .mk-result[data-tier='perfect'] { background: #fff4d6; }
+.game-view[data-game='matikka'] .mk-result[data-tier='good'] { background: #e3f7ea; }
+.game-view[data-game='matikka'] .mk-medal { display: flex; flex: none; align-items: center; justify-content: center; width: 120px; height: 120px; border-radius: 50%; }
+.game-view[data-game='matikka'] .mk-medal svg { width: 64px; height: 64px; }
+.game-view[data-game='matikka'] .mk-result[data-tier='perfect'] .mk-medal { background: #ffd23f; }
+.game-view[data-game='matikka'] .mk-result[data-tier='perfect'] .mk-medal svg { width: 84px; height: 84px; fill: #fff; stroke: var(--ink); stroke-width: 1.4; }
+.game-view[data-game='matikka'] .mk-result[data-tier='good'] .mk-medal { background: var(--brand); color: #fff; }
+.game-view[data-game='matikka'] .mk-result[data-tier='good'] .mk-medal svg { width: 72px; height: 72px; }
+.game-view[data-game='matikka'] .mk-result[data-tier='done'] .mk-medal { border: 3px solid #c9d8f0; background: #e8f1ff; color: var(--ink); }
+.game-view[data-game='matikka'] .mk-result-score { font-size: 64px; font-weight: bold; line-height: 1.05; }
+.game-view[data-game='matikka'] .mk-end-stars { display: flex; gap: 6px; }
+.game-view[data-game='matikka'] .mk-end-stars svg { width: 40px; height: 40px; fill: #fff; stroke: #b7791f; stroke-width: 1.8; }
+.game-view[data-game='matikka'] .mk-end-stars svg.is-on { fill: var(--focus-yellow); }
+.game-view[data-game='matikka'] .mk-result-line { font-size: 26px; }
+.game-view[data-game='matikka'] .mk-settings-end { font-size: 20px; color: var(--grey); }
+
+/* Confetti (design 3.6): over the game area, never in the way of a tap */
+.game-view[data-game='matikka'] .mk-confetti { position: absolute; inset: 0; z-index: 4; overflow: hidden; pointer-events: none; }
+.game-view[data-game='matikka'] .mk-piece {
+  position: absolute;
+  top: -14px;
+  width: 11px;
+  height: 11px;
+  animation: mk-fall 2s linear both;
+}
+@keyframes mk-fall { to { transform: translateY(var(--fall)) rotate(720deg); } }
+
+/* Wide (>= 900 px): the answer area on the right (design 3.9) */
+@media (min-width: 900px) {
+  .game-view[data-game='matikka'] .mk-play {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 336px;
+    grid-template-rows: auto auto auto auto 1fr;
+    grid-template-areas: 'info answer' 'streak answer' 'feedback answer' 'next answer' 'foot answer';
+    column-gap: 28px;
+    row-gap: 12px;
+  }
+  .game-view[data-game='matikka'] .mk-info { grid-area: info; flex-direction: column; align-items: stretch; gap: 8px; }
+  .game-view[data-game='matikka'] .mk-bar { flex: none; }
+  .game-view[data-game='matikka'] .mk-streak { grid-area: streak; }
+  .game-view[data-game='matikka'] .mk-answer { grid-area: answer; align-items: flex-start; }
+  .game-view[data-game='matikka'] .mk-feedback { grid-area: feedback; justify-content: flex-start; }
+  .game-view[data-game='matikka'] .mk-next-wrap { grid-area: next; justify-content: flex-start; }
+  .game-view[data-game='matikka'] .mk-foot { grid-area: foot; align-self: end; }
+  .game-view[data-game='matikka'] .mk-options { grid-template-columns: repeat(2, 160px); }
+  .game-view[data-game='matikka'] .mk-option { width: auto; height: 120px; }
+}
+
+@media (max-width: 599.98px) {
+  .game-view[data-game='matikka'] .mk-levels, .game-view[data-game='matikka'] .mk-toggles { grid-template-columns: 1fr; gap: 12px; }
+  .game-view[data-game='matikka'] .mk-level {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'head example' 'how example';
+    align-items: center;
+    gap: 0 12px;
+    height: 88px;
+    padding: 10px 54px 10px 14px;
+  }
+  .game-view[data-game='matikka'] .mk-level-head { grid-area: head; font-size: 24px; }
+  .game-view[data-game='matikka'] .mk-level-how { grid-area: how; font-size: 18px; }
+  .game-view[data-game='matikka'] .mk-level-example { grid-area: example; font-size: 26px; }
+  .game-view[data-game='matikka'] .mk-toggle { flex-direction: row; justify-content: flex-start; gap: 12px; height: 64px; padding: 0 12px 0 56px; }
+  .game-view[data-game='matikka'] .mk-cb { top: 17px; }
+  .game-view[data-game='matikka'] .mk-sym { font-size: 34px; }
+  .game-view[data-game='matikka'] .mk-actions { flex-direction: column; }
+  .game-view[data-game='matikka'] .mk-actions .mk-big { width: 100%; min-width: 0; }
+  .game-view[data-game='matikka'] .mk-answer { width: 100%; }
+  .game-view[data-game='matikka'] .mk-options { grid-template-columns: 1fr 1fr; width: 100%; }
+  .game-view[data-game='matikka'] .mk-option { width: auto; height: 96px; font-size: 44px; }
+  .game-view[data-game='matikka'] .mk-pad { grid-template-columns: repeat(3, 1fr); width: 100%; }
+  .game-view[data-game='matikka'] .mk-key { height: 64px; }
+  .game-view[data-game='matikka'] .mk-play { gap: 12px; }
+  .game-view[data-game='matikka'] .mk-score { font-size: 20px; }
+  .game-view[data-game='matikka'] .mk-result-score { font-size: 48px; }
+}
+
+@media (max-width: 419.98px) {
+  .game-view[data-game='matikka'] .status-slot { gap: 3px; }
+  .game-view[data-game='matikka'] .status-slot svg { width: 20px; height: 20px; }
+  .game-view[data-game='matikka'] .mk-heading { font-size: 28px; }
+  .game-view[data-game='matikka'] .mk-q-end { font-size: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-view[data-game='matikka'] .mk-problem.is-appearing, .game-view[data-game='matikka'] .mk-option.is-popping, .game-view[data-game='matikka'] .mk-box.is-popping, .game-view[data-game='matikka'] .mk-option.is-shaking { animation: none; }
 }
