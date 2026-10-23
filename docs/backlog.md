@@ -150,7 +150,11 @@ Kriteerit:
    napautuksesta (ei vaadi toista yritystä).
 
 ### SEI-45 — Luonnollisempi puheääni (suomi ja espanja)
-Tila: verifying
+Tila: done
+Havainto (2026-10-23): omistaja latasi Maciin Satun ja Mónican parannetut
+äänet ja kuunteli julkaistua sivua Chromella: "parempi" (hola ja kaksi
+erillistä kissaa). iPadilla ei kuunneltu; kriteeri 7 ja §7 C tarkistetaan
+SEI-2:n iPad-tarkistuksen yhteydessä.
 Havainto (2026-10-23): omistaja avasi https://hakaotu.github.io/seikkailut/
 Macilla ja sanoi sanatarkasti: "en tykkää tosta nykyisestä tietokoneäänestä.
 Eikö meillä voisi olla mitään luonnollisempaa puheääntä siihen?" Mitä ääntä
@@ -817,3 +821,4 @@ Kriteerit:
 - 2026-10-23: SEI-45 kriteeri 8 toteutettu (e1e24c8; developer: unit 40/40, playwright 194/2/0). Pääsession §7 A -mittaus samana päivänä: oikea Chrome (Playwright channel chrome, ei headless) tällä Macilla, paikallinen palvelin commitista e1e24c8, Sanat-napautus: ääni Satu (Enhanced), napautuksesta 1. alkuun 50 ms, 1. loppu → 2. alku 708 ms. → review.
 - 2026-10-23: SEI-45 kriteeri 8 reviewer APPROVED (e1e24c8; reviewer: unit 40/40, playwright 194/2/0; mutaatiot M2, M3 havaittu, M1 ei). Should fix 1–2 ja nice 3 jatkokorjauksena. Julkaistu; omistajan kuuntelu Q22:ssa.
 - 2026-10-23: SEI-45 jatkokorjaus 96d8cc0 (reviewerin should fix 1–2, nice 3). Pääsession ajo: unit 43/43, playwright 194/2/0; mutaatio M1 kaatuu nyt 2 testiin. Julkaistu.
+- 2026-10-23: SEI-45 → done (Q22). Q21: tasonimet Helppo/Keskitaso/Vaikea (oletus).

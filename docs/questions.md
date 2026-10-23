@@ -5,17 +5,12 @@
 - **Q20 (katso):** Matikan ulkoasuluonnos
   (https://claude.ai/artifact/LAJorartbGKYxbgxFzPGmq): hyväksytkö, vai
   mitä muutetaan? (SEI-2, SEI-5, SEI-6) — avattu 2026-10-23
-- **Q21 (tieto):** Käyttävätkö lapset vanhoja tasonimiä Eskari / 1. luokka
-  / 2. luokka? Oletus: uudet nimet Helppo / Keskitaso / Vaikea. (SEI-2)
-  — avattu 2026-10-23
-
-- **Q22 (klikkaus):** Lataa Mónican parannettu espanjan ääni samasta
-  paikasta kuin Satu ja kuuntele Espanja: kelpaako? Lisäksi Sanat:
-  kuuluuko kaksi erillistä "kissaa" rauhallisella tahdilla? (SEI-45)
-  — avattu 2026-10-23
-
 ## Vastatut
 
+- **Q22 (klikkaus):** Mónican parannettu ääni ja tauko — "parempi"
+  (tulkittu koskemaan molempia: hola ja kaksi erillistä kissaa). (2026-10-23)
+- **Q21 (tieto):** Vanhat tasonimet — "en tiedä" → oletus: Helppo,
+  Keskitaso, Vaikea. (2026-10-23)
 - **Q19 (klikkaus):** Satun parannettu ääni ladattu Maciin — "Q19 on nyt
   ok". Lisäksi: "Kissakissa" kuulostaa yhä yhteen kirjoitetulta, "joku
   tauko siihen väliin nyt" → SEI-45:n taukosuunnitelma toteutukseen.
