@@ -592,6 +592,57 @@ test('tap guard: an option tapped at once after Aloita is not answered, and Kuun
   expect((await speakCalls(page)).length).toBe(2); // Aloita and Kuuntele
 });
 
+// Every call below clicks two buttons in one evaluate, so the second one lands on the new screen
+// inside the 500 ms guard; without the guard on that button the second click would act.
+const clickBoth = (page, first, second) => page.evaluate(([a, b]) => {
+  const v = document.querySelector('.game-view[data-game="matikka"]');
+  v.querySelector(a).click();
+  v.querySelector(b).click();
+}, [first, second]);
+
+test('tap guard: Vaihda then Aloita uusi kierros at once does not restart the round', async ({ page }, testInfo) => {
+  await openMatikka(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await answerRight(page, testInfo);
+  await next(page, testInfo);
+  expect(await label(page)).toMatch(/^Lasku 2 \/ 10/);
+  await clickBoth(page, '.mk-change', '.mk-restart'); // the second tap lands on the choose screen
+  await expect(view(page).locator('.mk-choose')).toBeVisible();
+  await expect(view(page).locator('.mk-play')).toBeHidden();
+  await settle(page);
+  await press(button(page, 'Takaisin laskuun'), testInfo);
+  expect(await label(page)).toMatch(/^Lasku 2 \/ 10/);
+  await expect(view(page).locator('.mk-score')).toHaveText('Pisteet: 1 / 1');
+});
+
+test('tap guard: Vaihda then Takaisin laskuun at once stays on the choose screen', async ({ page }, testInfo) => {
+  await openMatikka(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await clickBoth(page, '.mk-change', '.mk-back-to-round');
+  await expect(view(page).locator('.mk-choose')).toBeVisible();
+  await expect(view(page).locator('.mk-play')).toBeHidden();
+});
+
+test('tap guard: Aloita then Vaihda at once stays in the round', async ({ page }, testInfo) => {
+  await openMatikka(page, testInfo);
+  await clickBoth(page, '.mk-start', '.mk-change');
+  await expect(view(page).locator('.mk-play')).toBeVisible();
+  await expect(view(page).locator('.mk-choose')).toBeHidden();
+});
+
+test('tap guard: Katso tulos then Vaihda laskuja at once stays on the end screen', async ({ page }, testInfo) => {
+  await openMatikka(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  for (let i = 0; i < 9; i++) {
+    await answerRight(page, testInfo);
+    await next(page, testInfo);
+  }
+  await answerRight(page, testInfo);
+  await clickBoth(page, '.mk-next', '.mk-new-settings');
+  await expect(view(page).locator('.mk-end')).toBeVisible();
+  await expect(view(page).locator('.mk-choose')).toBeHidden();
+});
+
 // ---------- accessibility (design 7) ----------
 
 test('names and roles: radiogroup, pressed toggles, keypad and Seuraava reachable by name, focus moves with the game', async ({ page }, testInfo) => {
