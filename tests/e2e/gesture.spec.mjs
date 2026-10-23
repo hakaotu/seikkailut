@@ -108,7 +108,8 @@ test('Matikka: a typed round, with the keyboard on desktop, speaks inside the ta
     await page.keyboard.press('Enter');
   }
   const calls = await speakCalls(page);
-  expect(calls.length).toBeGreaterThanOrEqual(3);
+  // Aloita + the wrong answer + Seuraava; on desktop also the answer and the next problem by key
+  expect(calls.length).toBe(testInfo.project.use.hasTouch ? 3 : 5);
   expect(calls.every((c) => c.inDispatch)).toBe(true);
 });
 
