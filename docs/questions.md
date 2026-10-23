@@ -2,11 +2,6 @@
 
 ## Avoimet
 
-- **Q19 (klikkaus):** Lataa Maciin Satun parannettu ääni (Enhanced/Premium),
-  käynnistä Chrome uudelleen ja kuuntele Sanat: kelpaako ääni? Jos ei,
-  seuraavaksi äänitetyt luonnolliset äänet (reitti B). (SEI-45)
-  — avattu 2026-10-23
-
 - **Q20 (katso):** Matikan ulkoasuluonnos
   (https://claude.ai/artifact/LAJorartbGKYxbgxFzPGmq): hyväksytkö, vai
   mitä muutetaan? (SEI-2, SEI-5, SEI-6) — avattu 2026-10-23
@@ -16,6 +11,10 @@
 
 ## Vastatut
 
+- **Q19 (klikkaus):** Satun parannettu ääni ladattu Maciin — "Q19 on nyt
+  ok". Lisäksi: "Kissakissa" kuulostaa yhä yhteen kirjoitetulta, "joku
+  tauko siihen väliin nyt" → SEI-45:n taukosuunnitelma toteutukseen.
+  (2026-10-23)
 - **Q18 (katso):** Kumpi kuulostaa sovelluksen "kissalta"? — omistaja
   vastasi rivillä "! say -v Satu kissa", tulkittu: Satu. Selain Chrome.
   Lisäksi: kaksi "kissaa" kuulostaa yhteen kirjoitetulta, tahti
