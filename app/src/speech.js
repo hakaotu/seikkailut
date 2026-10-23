@@ -11,6 +11,47 @@ function normalise(lang) {
   return String(lang || '').toLowerCase().replace(/_/g, '-');
 }
 
+// Voice names for pickVoice, lower case and without accents. Edit the lists here.
+// GOOD: natural-sounding device voices, in order of preference, by language prefix.
+// AVOID: Apple's robotic "Eloquence" set and its novelty voices; used only when
+// nothing else matches the language. A name containing Enhanced, Premium or Siri
+// is a bonus. Google's network voices rank below the local good ones.
+const GOOD_VOICES = {
+  fi: ['satu', 'onni'],
+  es: ['monica', 'jorge', 'marisol', 'paulina'],
+};
+const AVOID_VOICES = new Set([
+  'eddy', 'flo', 'grandma', 'grandpa', 'reed', 'rocko', 'sandy', 'shelley',
+  'albert', 'bad news', 'bahh', 'bells', 'boing', 'bubbles', 'cellos', 'good news',
+  'jester', 'organ', 'superstar', 'trinoids', 'whisper', 'wobble', 'zarvox',
+]);
+const BONUS_NAME = /enhanced|premium|siri/;
+
+// "Satu (Enhanced)" and "Eddy (suomi (Suomi))" both reduce to the part before " (".
+function baseName(name) {
+  return String(name || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .split(' (')[0]
+    .trim();
+}
+
+// Higher is better: [name score, exact tag and local > exact tag > prefix, earlier in GOOD].
+function voiceRank(v, tag, prefix) {
+  const full = baseName(v.name);
+  const good = (GOOD_VOICES[prefix] || []).indexOf(full);
+  let score = 0;
+  if (AVOID_VOICES.has(full)) score = -100;
+  else {
+    if (good >= 0) score = 20;
+    else if (full.startsWith('google')) score = 10;
+    if (BONUS_NAME.test(String(v.name || '').toLowerCase())) score += 30;
+  }
+  const exact = normalise(v.lang) === tag;
+  return [score, exact ? (v.localService ? 2 : 1) : 0, -good];
+}
+
 export function createSpeech({
   synth,
   Utterance,
@@ -46,13 +87,23 @@ export function createSpeech({
   function pickVoice(lang) {
     const tag = normalise(lang);
     const prefix = tag.split('-')[0];
-    const list = voices();
-    return (
-      list.find((v) => normalise(v.lang) === tag && v.localService) ||
-      list.find((v) => normalise(v.lang) === tag) ||
-      list.find((v) => normalise(v.lang).split('-')[0] === prefix) ||
-      null
-    );
+    let best = null;
+    let bestRank = null;
+    for (const v of voices()) {
+      if (normalise(v.lang).split('-')[0] !== prefix) continue;
+      const rank = voiceRank(v, tag, prefix);
+      const better =
+        !best ||
+        rank.some((n, i) => {
+          for (let j = 0; j < i; j++) if (rank[j] !== bestRank[j]) return false;
+          return n > bestRank[i];
+        });
+      if (better) {
+        best = v;
+        bestRank = rank;
+      }
+    }
+    return best;
   }
 
   function clearTimers(call) {

@@ -96,6 +96,62 @@ test('prefers the exact tag with a local voice over a remote one', () => {
   assert.equal(speech.pickVoice('es-ES'), local);
 });
 
+const named = (name, lang, localService = true) => ({ name, lang, localService });
+const eloquence = ['Eddy', 'Flo', 'Grandma', 'Grandpa', 'Reed', 'Rocko', 'Sandy', 'Shelley'];
+
+test('Finnish: Satu is chosen over Eloquence voices whatever the order', () => {
+  const satu = named('Satu', 'fi-FI');
+  const others = eloquence.map((n) => named(n, 'fi-FI'));
+  for (const list of [[satu, ...others], [...others, satu], [...others.slice(0, 3), satu, ...others.slice(3)]]) {
+    const { speech } = setup([voice('en-US'), ...list]);
+    assert.equal(speech.pickVoice('fi-FI'), satu);
+  }
+});
+
+test('Enhanced beats plain, in either order', () => {
+  const plain = named('Satu', 'fi-FI');
+  const enhanced = named('Satu (Enhanced)', 'fi-FI');
+  assert.equal(setup([plain, enhanced]).speech.pickVoice('fi-FI'), enhanced);
+  assert.equal(setup([enhanced, plain]).speech.pickVoice('fi-FI'), enhanced);
+  const premium = named('Mónica (Premium)', 'es-ES');
+  const monica = named('Mónica', 'es-ES');
+  assert.equal(setup([monica, premium]).speech.pickVoice('es-ES'), premium);
+});
+
+test('an Eloquence or novelty voice is used only when it is the only Finnish voice', () => {
+  const eddy = named('Eddy (suomi (Suomi))', 'fi-FI');
+  const zarvox = named('Zarvox', 'fi-FI');
+  assert.equal(setup([named('Alex', 'en-US'), eddy]).speech.pickVoice('fi-FI'), eddy);
+  assert.equal(setup([zarvox, eddy]).speech.pickVoice('fi-FI'), zarvox);
+  assert.equal(setup([eddy, named('Satu', 'fi-FI')]).speech.pickVoice('fi-FI').name, 'Satu');
+  assert.equal(setup([zarvox, voice('fi-FI')]).speech.pickVoice('fi-FI').name, 'fi-FI');
+});
+
+test('Spanish: Mónica is chosen over Rocko, and a Finnish voice is never used for Spanish', () => {
+  const monica = named('Mónica', 'es-ES');
+  const rocko = named('Rocko', 'es-ES');
+  const satu = named('Satu', 'fi-FI');
+  assert.equal(setup([rocko, satu, monica]).speech.pickVoice('es-ES'), monica);
+  assert.equal(setup([monica, rocko]).speech.pickVoice('es-ES'), monica);
+  assert.equal(setup([satu, rocko]).speech.pickVoice('es-ES'), rocko);
+  assert.equal(setup([satu]).speech.pickVoice('es-ES'), null);
+});
+
+test('Google network voice ranks below a local good voice but above an unknown one', () => {
+  const google = named('Google español', 'es-ES', false);
+  const monica = named('Mónica', 'es-ES');
+  const other = named('Whatever', 'es-ES');
+  assert.equal(setup([google, monica]).speech.pickVoice('es-ES'), monica);
+  assert.equal(setup([other, google]).speech.pickVoice('es-ES'), google);
+});
+
+test('the exact tag still beats a prefix match within the same rank', () => {
+  const mx = named('Paulina', 'es-MX');
+  const es = named('Jorge', 'es-ES');
+  assert.equal(setup([mx, es]).speech.pickVoice('es-ES'), es);
+  assert.equal(setup([voice('es-MX'), voice('es-ES', false)]).speech.pickVoice('es-ES').lang, 'es-ES');
+});
+
 test('two parts are both spoken synchronously, in order', () => {
   const { synth, speech } = setup([voice('fi-FI')]);
   const cb = recorder();
