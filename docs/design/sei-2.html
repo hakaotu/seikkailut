@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Matikka – ulkoasuluonnos SEI-2, SEI-5, SEI-6</title>
+<style>
+  /* ---------- Esityssivun oma tyyli (sama kuin sei-1.html) ---------- */
+  body { margin:0; background:#eceef3; color:#222; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .page { max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px; }
+  .page > h1 { font-size: 30px; margin: 0 0 6px; }
+  .lead { font-size: 17px; max-width: 860px; color:#333; }
+  .page h2 { font-size: 23px; margin: 56px 0 6px; padding-top: 18px; border-top: 2px solid #d5d8e0; }
+  .page h3 { font-size: 18px; margin: 28px 0 6px; }
+  .note { color:#444; max-width: 860px; margin: 4px 0 14px; }
+  .row { display:flex; flex-wrap:wrap; gap: 28px; align-items:flex-start; }
+  figure { margin:0; }
+  figcaption { font-size: 14.5px; color:#333; margin-top: 10px; max-width: 520px; }
+  figcaption b { color:#000; }
+  .toc { background:#fff; border-radius:12px; padding:14px 20px; max-width: 860px; }
+  .toc ol { margin: 6px 0; padding-left: 22px; }
+  .q { background:#fff7db; border:2px solid #e2b93b; border-radius:12px; padding:14px 20px; max-width: 860px; }
+  /* Ero vanhaan peliin -merkki */
+  .d { display:inline-block; background:#ffe1ef; color:#8a0045; border:1.5px solid #d6337a; border-radius:999px; padding:0 8px; font-size:13px; font-weight:700; line-height:20px; margin: 0 2px; white-space:nowrap; }
+  .legend { background:#fff; border-left: 6px solid #d6337a; border-radius:8px; padding:10px 16px; max-width: 860px; }
+  table.diff { border-collapse: collapse; background:#fff; border-radius:12px; overflow:hidden; max-width: 1180px; font-size:15px; }
+  table.diff th, table.diff td { text-align:left; vertical-align:top; padding: 9px 12px; border-bottom:1px solid #e3e5ea; }
+  table.diff th { background:#f4f5f8; font-size:14px; }
+  table.diff td:first-child { white-space:nowrap; }
+  .keep { color:#17803d; font-weight:700; }
+
+  /* Laitekehys */
+  .dev { --ch: 50; width: calc(var(--w) * var(--s) * 1px); height: calc(var(--h) * var(--s) * 1px);
+         border: 8px solid #26272b; border-radius: 22px; overflow: hidden; background:#fff;
+         box-shadow: 0 10px 30px rgba(0,0,0,.18); position: relative; }
+  .dev.pc { border-radius: 10px; border-width: 6px; --ch: 80; }
+  .screen { width: calc(var(--w) * 1px); height: calc(var(--h) * 1px);
+            transform: scale(var(--s)); transform-origin: 0 0; position:absolute; top:0; left:0; }
+  .chrome { height: calc(var(--ch) * 1px); background:#f3f3f5; border-bottom:1px solid #d7d7dc;
+            display:flex; align-items:center; justify-content:center; font: 16px system-ui, sans-serif; color:#555; }
+  .chrome .addr { background:#e4e4e9; border-radius: 10px; padding: 6px 60px; }
+  .pc .chrome { flex-direction: column; justify-content: flex-end; padding-bottom: 8px; gap: 8px; }
+  .pc .chrome .tabs { align-self: flex-start; margin-left: 90px; background:#fff; border-radius: 8px 8px 0 0; padding: 4px 18px; font-size: 14px; }
+  .viewport { height: calc(100% - var(--ch) * 1px); position: relative; overflow: hidden; }
+  .tap { position:absolute; width:70px; height:70px; border-radius:50%; background: rgba(255,210,63,.55); border: 4px solid #e2a800; pointer-events:none; z-index:5; }
+  .story { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .arrow { font-size: 28px; color:#888; }
+
+  /* ---------- SOVELLUS: kehys (SEI-1, ei muutu) ---------- */
+  .app { height:100%; box-sizing:border-box; color:#1f2340;
+         font-family: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', system-ui, sans-serif; }
+  .app * { box-sizing: border-box; }
+  .m { --a:#17803d; --ad:#0f5c2b; --al:#e3f7ea; }
+  .home { background: linear-gradient(180deg, #e8f1ff 0%, #fffaf0 65%); display:flex; flex-direction:column;
+          align-items:center; justify-content:center; padding: 40px 48px; text-align:center; }
+  .home h1 { font-size:56px; margin:0; line-height:1.15; }
+  .home .sub { font-size:28px; margin: 6px 0 32px; }
+  .cards { display:grid; grid-template-columns: repeat(3, 1fr); gap:28px; width:100%; max-width:1100px; text-align:left; }
+  .card { position:relative; background:#fff; border-radius:28px; overflow:hidden; display:flex; flex-direction:column;
+          box-shadow: 0 6px 0 rgba(31,35,64,.14), 0 14px 30px rgba(31,35,64,.10); }
+  .card .art { background: var(--a); height:150px; display:flex; align-items:center; justify-content:center; gap:10px; color:#fff; }
+  .card .txt { padding: 20px 24px 26px; }
+  .card .t { font-size:36px; font-weight:bold; line-height:1.15; }
+  .card .d2 { font-size:21px; color:#5b5f73; margin-top:6px; line-height:1.3; }
+  .s { --a:#764ba2; --ad:#553578; --al:#efe8fb; }
+  .e { --a:#c62828; --ad:#8e0000; --al:#fdeceb; }
+  .glyph { font-size:64px; font-weight:bold; letter-spacing:2px; }
+  .tile { width:62px; height:62px; border-radius:14px; background:#fff; color: var(--a); font-size:38px; font-weight:bold;
+          display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 0 var(--ad); }
+  .hola { font-size:56px; font-weight:bold; border-bottom: 7px solid #ffd600; line-height:1.1; padding-bottom:2px; }
+  .badge { position:absolute; top:14px; right:14px; background:#fff; color:#1f2340; border-radius:999px;
+           padding:6px 16px; font-size:19px; font-weight:bold; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+  .card.pressed { transform: translateY(4px); box-shadow: 0 2px 8px rgba(31,35,64,.10); }
+
+  .game { display:flex; flex-direction:column; background: var(--al); position:relative; }
+  .gh { height:76px; flex:none; background: var(--a); color:#fff; display:flex; align-items:center; gap:18px; padding: 0 20px; }
+  .gh h1 { font-size:30px; margin:0; font-weight:bold; white-space:nowrap; }
+  .back { height:56px; display:inline-flex; align-items:center; gap:6px; padding: 0 22px 0 12px; border-radius:999px;
+          background:#fff; color: var(--a); font-size:22px; font-weight:bold; box-shadow: 0 4px 0 var(--ad); flex:none; }
+  .back svg { width:28px; height:28px; }
+  .back.pressed { transform: translateY(4px); box-shadow:none; }
+  .back.icon { width:56px; padding:0; justify-content:center; }
+  .gbody { flex:1; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; min-height:0; }
+  .gcard { background:#fff; border-radius:30px; width:100%; max-width:760px; flex:1; padding:24px; display:flex; flex-direction:column; gap:20px;
+           box-shadow: 0 10px 30px rgba(31,35,64,.10); min-height:0; position:relative; }
+  .qrow { display:flex; align-items:center; gap:16px; min-height:56px; }
+  .listen { height:56px; min-width:150px; display:inline-flex; align-items:center; justify-content:center; gap:10px; padding: 0 24px 0 18px;
+            border-radius:999px; border:3px solid var(--a); background:#fff; color: var(--a); font-size:22px; font-weight:bold;
+            box-shadow: 0 4px 0 var(--ad); flex:none; white-space:nowrap; }
+  .listen svg { width:28px; height:28px; flex:none; }
+  .listen.playing { background: var(--a); color:#fff; }
+  .waves { display:inline-flex; gap:3px; align-items:center; height:22px; }
+  .waves i { display:block; width:4px; background: currentColor; border-radius:2px; }
+  .waves i:nth-child(1){ height:10px; } .waves i:nth-child(2){ height:20px; } .waves i:nth-child(3){ height:14px; }
+  .btn { height:56px; min-width:120px; padding: 0 24px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+         font-size:22px; font-weight:bold; flex:none; white-space:nowrap; }
+  .btn.ok { background:#fff; color:#1f2340; border:3px solid #1f2340; box-shadow: 0 4px 0 #1f2340; }
+  .btn.acc { background: var(--a); color:#fff; box-shadow: 0 4px 0 var(--ad); }
+  .btn.big { height:64px; min-width:240px; font-size:26px; padding: 0 32px; }
+  .btn svg { width:28px; height:28px; }
+  .btn.pressed { transform: translateY(4px); box-shadow:none; }
+  .f { outline: 3px solid #1f2340 !important; outline-offset: 2px; }
+  .btn.acc.f { box-shadow: 0 4px 0 var(--ad), 0 0 0 9px #ffd23f; }
+
+  /* ---------- SOVELLUS: Matikka (uutta tässä) ---------- */
+  .stars { margin-left:auto; display:flex; gap:4px; flex:none; }
+  .stars svg { width:28px; height:28px; fill:none; stroke:#fff; stroke-width:2.2; }
+  .stars svg.on { fill:#ffd23f; stroke:#ffd23f; }
+
+  .eq { flex:1; min-width:0; font-size:56px; font-weight:bold; line-height:72px; white-space:nowrap; display:flex; align-items:center; gap:14px; }
+  .eq .op { color: var(--a); }
+  .eq .eqs { color:#5b5f73; }
+  .box { position:relative; display:inline-flex; align-items:center; justify-content:center; min-width:1.6em; height:66px; padding:0 14px;
+         border:4px solid #8a8fa3; border-radius:14px; line-height:1; }
+  .box.empty { color:#5b5f73; }
+  .box.typing { border-color: var(--a); }
+  .box.ok { border-color:#17803d; color:#17803d; }
+  .mk { position:absolute; top:-13px; right:-13px; width:30px; height:30px; border-radius:50%; background:#17803d; color:#fff;
+        display:flex; align-items:center; justify-content:center; }
+  .mk svg { width:20px; height:20px; }
+  .mk.x { background:#c62828; }
+  .yours { position:relative; display:inline-flex; align-items:center; font-size:34px; line-height:1; color:#c62828; background:#fdeceb;
+           border:3px solid #c62828; border-radius:12px; padding:8px 14px; text-decoration: line-through; text-decoration-thickness:3px; }
+  .qt { margin:0; flex:1; min-width:0; font-size:32px; font-weight:bold; }
+  .qt.big { font-size:40px; }
+
+  .ga { flex:1; display:flex; flex-direction:column; gap:16px; min-height:0; }
+  .info { display:flex; align-items:center; gap:18px; }
+  .score { font-size:22px; font-weight:bold; white-space:nowrap; }
+  .bar { flex:1; display:flex; gap:4px; }
+  .bar i { flex:1; height:14px; border-radius:7px; background:#dfe3ea; }
+  .bar i.f { background: var(--a); }
+  .streak { height:34px; font-size:22px; font-weight:bold; color:#a14b00; display:flex; align-items:center; }
+  .ans { display:flex; justify-content:center; }
+  .opts { display:grid; grid-template-columns: repeat(2, 150px); gap:16px; }
+  .opt { position:relative; height:110px; border-radius:22px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 5px 0 #c9cbd6;
+         font-size:52px; font-weight:bold; display:flex; align-items:center; justify-content:center; }
+  .opt.pr { transform: translateY(5px); box-shadow:none; }
+  .opt.ok { background:#17803d; border-color:#17803d; color:#fff; box-shadow:0 5px 0 #0f5c2b; }
+  .opt.ok .mk { background:#fff; color:#17803d; }
+  .opt.bad { border:4px solid #c62828; color:#c62828; text-decoration: line-through; text-decoration-thickness:4px; box-shadow:0 5px 0 #f3c4c4; }
+  .opt.dim { opacity:.45; }
+  .pad { display:grid; grid-template-columns: repeat(3, 96px); gap:12px; }
+  .key { height:72px; border-radius:16px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6;
+         font-size:34px; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .key svg { width:34px; height:34px; }
+  .key.okk { background: var(--a); border-color: var(--a); color:#fff; box-shadow:0 4px 0 var(--ad); font-size:28px; }
+  .key.okk svg { width:24px; height:24px; }
+  .key.pr { transform: translateY(4px); box-shadow:none; }
+  .pad.lock .key { opacity:.45; }
+  .fb { min-height:92px; display:flex; align-items:center; justify-content:center; gap:14px; }
+  .fb .ic { width:40px; height:40px; flex:none; }
+  .fb.good { color:#17803d; font-size:30px; font-weight:bold; }
+  .fb.bad .ic { color:#c62828; }
+  .fb .t1 { display:block; color:#c62828; font-size:30px; font-weight:bold; line-height:1.2; }
+  .fb .t2 { display:block; font-size:26px; line-height:1.3; }
+  .nextw { height:64px; display:flex; justify-content:center; }
+  .foot { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; }
+  .sel { font-size:20px; color:#5b5f73; }
+
+  /* leveä asettelu (>= 900 px): kaksi saraketta */
+  .ga.two { display:grid; grid-template-columns: 1fr 336px; grid-template-rows: auto auto auto auto 1fr;
+            grid-template-areas: "info ans" "streak ans" "fb ans" "next ans" "foot ans"; column-gap:28px; row-gap:12px; }
+  .two .info { grid-area:info; flex-direction:column; align-items:stretch; gap:8px; }
+  .two .bar { flex:none; }
+  .two .streak { grid-area:streak; }
+  .two .ans { grid-area:ans; align-items:flex-start; }
+  .two .fb { grid-area:fb; justify-content:flex-start; }
+  .two .nextw { grid-area:next; justify-content:flex-start; }
+  .two .foot { grid-area:foot; align-self:end; }
+  .two .opts { grid-template-columns: repeat(2, 160px); }
+  .two .opt { height:120px; }
+
+  /* valintaruutu */
+  .choose { display:flex; flex-direction:column; gap:10px; }
+  .glabel { font-size:22px; font-weight:bold; }
+  .levels { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-bottom:6px; }
+  .lv { position:relative; height:140px; border-radius:22px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6;
+        padding:12px 16px; display:flex; flex-direction:column; justify-content:center; gap:2px; }
+  .lv .ln { font-size:28px; font-weight:bold; display:flex; align-items:center; gap:10px; line-height:1.15; }
+  .pips { display:inline-flex; gap:4px; }
+  .pips i { width:14px; height:14px; border-radius:50%; border:2px solid var(--a); }
+  .pips i.f { background: var(--a); }
+  .lv .lx { font-size:30px; font-weight:bold; line-height:1.2; }
+  .lv .lm { font-size:20px; color:#5b5f73; }
+  .lv.sel { border:4px solid var(--a); background: var(--al); box-shadow:0 4px 0 var(--ad); }
+  .tick { position:absolute; top:10px; right:10px; width:30px; height:30px; border-radius:50%; background: var(--a); color:#fff;
+          display:flex; align-items:center; justify-content:center; }
+  .tick svg { width:20px; height:20px; }
+  .ops { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+  .tg { position:relative; height:100px; border-radius:22px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6;
+        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; font-size:22px; font-weight:bold; }
+  .tg .sym { font-size:42px; line-height:1; }
+  .tg .cb { position:absolute; top:10px; left:12px; width:28px; height:28px; border-radius:7px; border:2.5px solid #8a8fa3; background:#fff;
+            display:flex; align-items:center; justify-content:center; }
+  .tg .cb svg { width:20px; height:20px; }
+  .tg.on { background: var(--al); border-color: var(--a); box-shadow:0 4px 0 var(--ad); }
+  .tg.on .cb { background: var(--a); border-color: var(--a); color:#fff; }
+  .tg.on .sym { color: var(--a); }
+  .tg.pr { transform: translateY(4px); box-shadow:none; }
+  .hint { height:30px; font-size:20px; display:flex; align-items:center; justify-content:center; }
+  .acts { display:flex; justify-content:center; gap:16px; }
+
+  /* kapea */
+  .narrow .gh { padding:0 12px; gap:12px; }
+  .narrow .gh h1 { font-size:24px; }
+  .narrow .stars { gap:3px; } .narrow .stars svg { width:20px; height:20px; }
+  .narrow .gbody { padding:12px; }
+  .narrow .gcard { padding:16px; }
+  .narrow .qrow { flex-wrap:wrap; }
+  .narrow .eq { flex-basis:100%; font-size:40px; gap:10px; }
+  .narrow .box { height:52px; }
+  .narrow .pad { grid-template-columns: repeat(3, 1fr); width:100%; }
+  .narrow .key { height:64px; }
+  .narrow .levels, .narrow .ops { grid-template-columns: 1fr; gap:12px; }
+  .narrow .lv { height:88px; flex-direction:row; align-items:center; justify-content:space-between; padding:10px 54px 10px 14px; }
+  .narrow .lv .lx { font-size:26px; }
+  .narrow .tg { height:64px; flex-direction:row; gap:12px; justify-content:flex-start; padding-left:56px; }
+  .narrow .tg .cb { top:15px; }
+  .narrow .tg .sym { font-size:34px; }
+  .narrow .acts { flex-direction:column; }
+  .narrow .acts .btn { width:100%; }
+  .narrow .score { font-size:20px; }
+
+  /* loppuruutu */
+  .end { flex:1; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center; }
+  .res { width:100%; border-radius:24px; padding:18px 12px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .res.gold { background:#fff4d6; } .res.green { background:#e3f7ea; }
+  .medal { width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:none; }
+  .medal.gold { background:#ffd23f; } .medal.gold svg { width:84px; height:84px; fill:#fff; stroke:#1f2340; stroke-width:1.4; }
+  .medal.green { background:#17803d; color:#fff; } .medal.green svg { width:72px; height:72px; }
+  .medal.blue { background:#e8f1ff; color:#1f2340; border:3px solid #c9d8f0; } .medal.blue svg { width:64px; height:64px; }
+  .big { font-size:64px; font-weight:bold; line-height:1.05; }
+  .estars { display:flex; gap:6px; }
+  .estars svg { width:40px; height:40px; fill:#fff; stroke:#b7791f; stroke-width:1.8; }
+  .estars svg.on { fill:#ffd23f; }
+  .l3 { font-size:26px; }
+  .conf { position:absolute; inset:0; pointer-events:none; z-index:4;
+    background-image: radial-gradient(circle,#FF6B6B 6px,transparent 7px), radial-gradient(circle,#4ECDC4 5px,transparent 6px),
+      radial-gradient(circle,#45B7D1 6px,transparent 7px), radial-gradient(circle,#FFB347 5px,transparent 6px), radial-gradient(circle,#DDA0DD 6px,transparent 7px);
+    background-size: 173px 211px, 149px 127px, 233px 181px, 197px 163px, 127px 241px;
+    background-position: 13px 40px, 71px 9px, 140px 90px, 30px 150px, 99px 66px; }
+  .conf.few { background-size: 347px 421px, 299px 383px, 467px 359px, 0 0, 0 0; }
+
+  /* komponentit todellisessa koossa */
+  .spec { background:#fff; border-radius:16px; padding: 24px; display:flex; flex-wrap:wrap; gap: 28px 30px; align-items:flex-end; }
+  .spec figure { display:flex; flex-direction:column; align-items:center; }
+  .spec figcaption { text-align:center; max-width:170px; font-size:14px; }
+</style>
+</head>
+<body>
+<!-- Kuvakkeet -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.85 5.95 6.55.8-4.8 4.5 1.25 6.5L12 17.2l-5.85 3.15 1.25-6.5-4.8-4.5 6.55-.8z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-spk" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-spk0" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/></symbol>
+  <symbol id="i-bksp" viewBox="0 0 24 24"><path d="M9 5h11a1.5 1.5 0 0 1 1.5 1.5v11A1.5 1.5 0 0 1 20 19H9l-6.5-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 9.5l5 5M16.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V5M5.5 11.5L12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="page">
+
+<h1>Matikka – miltä peli näyttää (SEI-2, SEI-5, SEI-6)</h1>
+<p class="lead">Tällä sivulla on Matikka uuden sovelluksen sisällä: tason ja laskujen valinta, laskut neljällä vaihtoehdolla ja numeronäppäimistöllä,
+oikea ja väärä vastaus, loppuruutu kolmella eri tuloksella ja kesken jäänyt kierros. Kehys (vihreä yläpalkki, Etusivu, Kuuntele) on sama,
+jonka hyväksyit SEI-1:ssä. Laitteiden kuvat on pienennetty, mittasuhteet ovat oikeat, ja harmaa palkki ylhäällä on selaimen oma.</p>
+
+<div class="legend"><b>Vaaleanpunainen merkki, esim. <span class="d">E1</span>, tarkoittaa: tämä on erilainen kuin vanhassa Matikkaseikkailussa.</b>
+Jokainen ero on selitetty kohdassa 10. <b>Yksikään vanhan pelin toiminto ei ole poistunut</b>: kohdan 10 taulukossa näkyy, missä kukin vanha asia on nyt.</div>
+
+<div class="toc" style="margin-top:14px">
+  <b>Sivulla:</b>
+  <ol>
+    <li>Tason ja laskujen valinta</li>
+    <li>Valinta kesken kierroksen</li>
+    <li>Helppo: valitse oikea vaihtoehto</li>
+    <li>Keskitaso ja Vaikea: kirjoita vastaus numeroilla</li>
+    <li>Oikea vastaus ja "peräkkäin oikein"</li>
+    <li>Väärä vastaus (SEI-5)</li>
+    <li>Kymmenes lasku: Katso tulos</li>
+    <li>Loppuruutu: hyvä, keskinkertainen ja heikko tulos (SEI-6)</li>
+    <li>Kesken jäänyt kierros</li>
+    <li>Mikä on erilaista kuin vanhassa pelissä</li>
+    <li>Painikkeet oikeassa koossa</li>
+    <li>Kysymys sinulle</li>
+  </ol>
+</div>
+
+<!-- ===================================================== 1 -->
+<h2>1. Tason ja laskujen valinta</h2>
+<p class="note">Kun Matikka avataan ensimmäisen kerran, lapsi valitsee ensin tason ja laskut ja painaa <b>Aloita</b>. Ensimmäinen lasku luetaan ääneen
+samasta napautuksesta. Valmiiksi valittuna on sama kuin vanhassa pelissä: helpoin taso, yhteen- ja vähennyslasku.
+Tasoissa on samat laskut kuin ennen, mutta nimet ovat uudet <span class="d">E2</span>, ja jokaisessa näkyy esimerkkilasku, jonka lapsi osaa lukea.
+Valinta on omalla ruudullaan, eikä se enää näy laskujen yläpuolella <span class="d">E1</span>.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä lasketaan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="choose">
+            <div class="glabel">Taso</div>
+            <div class="levels">
+              <div class="lv sel"><span class="ln"><span class="pips"><i class="f"></i><i></i><i></i></span>Helppo</span><span class="lx">3 + 4</span><span class="lm">Valitse vastaus</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i></i></span>Keskitaso</span><span class="lx">12 + 7</span><span class="lm">Kirjoita vastaus</span></div>
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i class="f"></i></span>Vaikea</span><span class="lx">45 + 38</span><span class="lm">Kirjoita vastaus</span></div>
+            </div>
+            <div class="glabel">Laskut</div>
+            <div class="ops">
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">+</span>Yhteenlasku</div>
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">−</span>Vähennyslasku</div>
+              <div class="tg"><span class="cb"></span><span class="sym">×</span>Kertolasku</div>
+            </div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn acc big">Aloita</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, ensimmäinen avaus.</b> Tähdet yläpalkissa ovat tyhjiä, koska mitään ei ole vielä laskettu <span class="d">E9</span>.
+    Valittu taso on vihreä <i>ja</i> siinä on valintamerkki; päällä olevissa laskuissa on rasti ruudussa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä lasketaan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="choose">
+            <div class="glabel">Taso</div>
+            <div class="levels">
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i></i><i></i></span>Helppo</span><span class="lx">3 + 4</span><span class="lm">Valitse vastaus</span></div>
+              <div class="lv sel"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i></i></span>Keskitaso</span><span class="lx">12 + 7</span><span class="lm">Kirjoita vastaus</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i class="f"></i></span>Vaikea</span><span class="lx">45 + 38</span><span class="lm">Kirjoita vastaus</span></div>
+            </div>
+            <div class="glabel">Laskut</div>
+            <div class="ops">
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">+</span>Yhteenlasku</div>
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">−</span>Vähennyslasku</div>
+              <div class="tg"><span class="cb"></span><span class="sym">×</span>Kertolasku</div>
+            </div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn acc big">Aloita</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, Keskitaso valittuna.</b> Kaikki mahtuu ilman vieritystä. Taso vaihtuu vasta, kun lapsi painaa Aloita <span class="d">E1</span>.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä lasketaan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="choose">
+            <div class="glabel">Taso</div>
+            <div class="levels">
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i></i><i></i></span>Helppo</span><span class="lx">3 + 4</span><span class="lm">Valitse vastaus</span></div>
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i></i></span>Keskitaso</span><span class="lx">12 + 7</span><span class="lm">Kirjoita vastaus</span></div>
+              <div class="lv sel"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i class="f"></i></span>Vaikea</span><span class="lx">45 + 38</span><span class="lm">Kirjoita vastaus</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+            </div>
+            <div class="glabel">Laskut</div>
+            <div class="ops">
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">+</span>Yhteenlasku</div>
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">−</span>Vähennyslasku</div>
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">×</span>Kertolasku</div>
+            </div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn acc big">Aloita</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, Vaikea juuri valittu.</b> Kertolasku kytkeytyi itsestään päälle, kuten vanhassa pelissä. Sen voi kytkeä pois.
+    Tietokoneen ikkuna on matalin, ja tämä ruutu mahtuu siihenkin.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:375; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr" style="padding:6px 20px">seikkailut</span></div>
+      <div class="viewport"><div class="app game m narrow">
+        <header class="gh"><span class="back icon"><svg><use href="#i-back"/></svg></span><h1>Matikka</h1>
+          <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt" style="flex-basis:100%">Mitä lasketaan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="choose">
+            <div class="glabel">Taso</div>
+            <div class="levels">
+              <div class="lv sel"><div><div class="ln"><span class="pips"><i class="f"></i><i></i><i></i></span>Helppo</div><div class="lm">Valitse vastaus</div></div><span class="lx">3 + 4</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+              <div class="lv"><div><div class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i></i></span>Keskitaso</div><div class="lm">Kirjoita vastaus</div></div><span class="lx">12 + 7</span></div>
+              <div class="lv"><div><div class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i class="f"></i></span>Vaikea</div><div class="lm">Kirjoita vastaus</div></div><span class="lx">45 + 38</span></div>
+            </div>
+            <div class="glabel">Laskut</div>
+            <div class="ops">
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">+</span>Yhteenlasku</div>
+              <div class="tg on"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">−</span>Vähennyslasku</div>
+              <div class="tg"><span class="cb"></span><span class="sym">×</span>Kertolasku</div>
+            </div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn acc big">Aloita</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Kapea ikkuna</b> (iPadin jaettu näyttö). Kaikki allekkain, ei sivuttaista vieritystä.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 2 -->
+<h2>2. Valinta kesken kierroksen</h2>
+<p class="note">Laskujen alla on aina rivi, joka kertoo, mitä lasketaan (esim. <b>Keskitaso · + −</b>), ja painike <b>Vaihda</b>.
+Se avaa saman valintaruudun. Kesken kierroksen siinä on kaksi painiketta: <b>Takaisin laskuun</b> palaa täsmälleen samaan laskuun, ja
+<b>Aloita uusi kierros</b> aloittaa alusta uusilla valinnoilla. Vanhassa pelissä tason napautus aloitti uuden kierroksen heti, ja vahingossa
+napauttamalla kierros katosi <span class="d">E1</span>.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä lasketaan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="choose">
+            <div class="glabel">Taso</div>
+            <div class="levels">
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i></i><i></i></span>Helppo</span><span class="lx">3 + 4</span><span class="lm">Valitse vastaus</span></div>
+              <div class="lv sel"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i></i></span>Keskitaso</span><span class="lx">12 + 7</span><span class="lm">Kirjoita vastaus</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+              <div class="lv"><span class="ln"><span class="pips"><i class="f"></i><i class="f"></i><i class="f"></i></span>Vaikea</span><span class="lx">45 + 38</span><span class="lm">Kirjoita vastaus</span></div>
+            </div>
+            <div class="glabel">Laskut</div>
+            <div class="ops">
+              <div class="tg on pr"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">+</span>Yhteenlasku</div>
+              <div class="tg"><span class="cb"></span><span class="sym">−</span>Vähennyslasku</div>
+              <div class="tg"><span class="cb"></span><span class="sym">×</span>Kertolasku</div>
+            </div>
+            <div class="hint">Ainakin yksi laskutapa pitää olla valittuna.</div>
+            <div class="acts"><span class="btn ok big">Takaisin laskuun</span><span class="btn acc big">Aloita uusi kierros</span></div>
+          </div>
+        </div></main>
+        <div class="tap" style="left:335px; top:450px"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>Kesken kierroksen, ainoaa laskua yritetään poistaa.</b> Yhteenlasku jää päälle ja alle tulee selitys <span class="d">E12</span>.
+    Vanhassa pelissä napautus ei tehnyt mitään eikä kertonut miksi. Tähdet näyttävät yhä keskeneräisen kierroksen tilanteen.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box typing">1</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok pressed">Vaihda</span></div>
+          </div>
+        </div></main>
+        <div class="tap" style="left:682px; top:842px"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>Mistä valintaruutu avataan kesken kierroksen:</b> alarivin <b>Vaihda</b>. Painike ei kysy "Haluatko varmasti?", koska
+    mitään ei menetä: Takaisin laskuun palaa tähän samaan kohtaan, jopa kirjoitettu "1" säilyy.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 3 -->
+<h2>3. Helppo: valitse oikea vaihtoehto</h2>
+<p class="note">Lasku on ylhäällä isolla ja sen vieressä <b>Kuuntele lasku</b>. Vastauksen paikalla on ruutu, jossa on kysymysmerkki.
+Neljä vaihtoehtoa ovat kaikki samanvärisiä <span class="d">E5</span>. Vanhassa pelissä ne olivat punainen, turkoosi, sininen ja oranssi, ja yksi
+oli siis valmiiksi "väärän värinen". Nyt vihreä tarkoittaa vain oikeaa ja punainen vain väärää. Laskun yläpuolella ollut iso emoji
+(➕) on poistettu, jotta kaikki mahtuu ilman vieritystä <span class="d">E14</span>.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">7 <span class="op">+</span> 2 <span class="eqs">=</span> <span class="box empty">?</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 1 / 1</span><span class="bar"><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="opts"><span class="opt">9</span><span class="opt">6</span><span class="opt">11</span><span class="opt">8</span></div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Helppo · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, lasku 2.</b> Lasku luetaan ääneen ("seitsemän plus kaksi") samasta napautuksesta, joka toi sen näkyviin.
+    Palkissa on 10 lohkoa, yksi täynnä <span class="d">E10</span>.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box empty">?</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 4 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="opts"><span class="opt">12</span><span class="opt">9</span><span class="opt">14</span><span class="opt">7</span></div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, lasku 6.</b> Leveällä ruudulla vaihtoehdot ovat oikealla ja palaute tulee vasemmalle, jotta kaikki mahtuu
+    matalaan ruutuun ilman vieritystä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">6 <span class="op">−</span> 2 <span class="eqs">=</span> <span class="box empty">?</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 0 / 0</span><span class="bar"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="opts"><span class="opt pr">4</span><span class="opt">1</span><span class="opt">5</span><span class="opt">7</span></div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Helppo · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+        <div class="tap" style="left:705px; top:240px"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, lasku 1, vaihtoehtoa painetaan.</b> Painettu nappi laskeutuu kuten ennenkin. Ennen ensimmäistä vastausta
+    tähdet ovat tyhjiä <span class="d">E9</span> – vanha peli näytti tässä viisi täyttä tähteä.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 4 -->
+<h2>4. Keskitaso ja Vaikea: kirjoita vastaus numeroilla</h2>
+<p class="note">Numeronäppäimistö on samassa järjestyksessä kuin ennen: 1–9, sitten poisto, 0 ja OK. Kirjoitettu luku näkyy suoraan laskun ruudussa,
+eikä erillisellä rivillä laskun alla <span class="d">E6</span>. Enintään 4 numeroa. OK tyhjällä ei tee mitään. Tietokoneella toimivat myös
+näppäimistön numerot, askelpalautin ja Enter, kuten ennen. Poistonäppäin ei ole enää punainen <span class="d">E17</span>.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box typing">1</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad">
+              <span class="key pr">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, Keskitaso, lapsi on kirjoittanut "1".</b> Ruudun reunus muuttuu vihreäksi, kun siinä on numero.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">45 <span class="op">+</span> 38 <span class="eqs">=</span> <span class="box empty">?</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 6 / 7</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i></span></div>
+            <div class="streak">🔥 5 peräkkäin oikein!</div>
+            <div class="ans"><div class="pad">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Vaikea · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, Vaikea, lasku 8.</b> Näppäimistö oikealla. "5 peräkkäin oikein" pysyy näkyvissä seuraavassakin laskussa,
+    kunnes tulee väärä vastaus, kuten ennen.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">100 <span class="op">−</span> 64 <span class="eqs">=</span> <span class="box typing">36</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 2 / 3</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk pr">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Vaikea · −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, pisin tavallinen lasku.</b> "100 − 64 = 36" mahtuu täyteen kokoon. Jos lasku ja vastaus olisivat vielä pidempiä,
+    numerot pienenevät hieman, eikä mitään jää ruudun ulkopuolelle.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:375; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr" style="padding:6px 20px">seikkailut</span></div>
+      <div class="viewport"><div class="app game m narrow">
+        <header class="gh"><span class="back icon"><svg><use href="#i-back"/></svg></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box typing">19</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans" style="width:100%"><div class="pad">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Kapea ikkuna.</b> Kuuntele siirtyy laskun alle; näppäimet venyvät koko leveydelle.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 5 -->
+<h2>5. Oikea vastaus ja "peräkkäin oikein"</h2>
+<p class="note">Oikeasta vastauksesta tulee sama kehu kuin ennen (Hienoa! 🌟, Oikein! ⭐, Mahtavaa! 🎉 …), lasku täydentyy vihreällä
+vastauksella, ja vastaus luetaan ääneen ("yhdeksän"). Kehun vieressä on lisäksi rasti, joten oikea ei näy pelkkänä värinä.
+Värit ovat hieman tummempia kuin ennen, jotta teksti erottuu <span class="d">E11</span>. Sitten <b>Seuraava</b>.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">7 <span class="op">+</span> 2 <span class="eqs">=</span> <span class="box ok">9<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 2 / 2</span><span class="bar"><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="opts"><span class="opt ok">9<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt dim">6</span><span class="opt dim">11</span><span class="opt dim">8</span></div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Hienoa! 🌟</div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Helppo · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Helppo, oikein.</b> Valittu 9 vihreänä rastin kanssa, muut himmenevät. Vaihtoehdot lukittuvat, kunnes painetaan Seuraava (kuten ennen).</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">45 <span class="op">+</span> 38 <span class="eqs">=</span> <span class="box ok">83<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 6 / 8</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span></div>
+            <div class="streak">🔥 3 peräkkäin oikein!</div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Loistavaa! 🌈</div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Vaikea · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Vaikea, oikein, kolmas peräkkäin.</b> Teksti "🔥 3 peräkkäin oikein!" on sanasta sanaan sama kuin ennen; vain väri on tummempi
+    <span class="d">E11</span>. Näppäimistö himmenee ja lukittuu.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak">🔥 4 peräkkäin oikein!</div>
+            <div class="ans"><div class="opts"><span class="opt ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt dim">9</span><span class="opt dim">14</span><span class="opt dim">7</span></div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Mestari! 🧙</div>
+            <div class="nextw"><span class="btn acc big f">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, oikein.</b> Kohdistus siirtyy Seuraava-painikkeeseen (keltainen rengas näkyy vain näppäimistöllä liikuttaessa),
+    joten Enter vie seuraavaan laskuun kuten ennen.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 6 -->
+<h2>6. Väärä vastaus (SEI-5)</h2>
+<p class="note"><b>Vanha peli sanoi esimerkiksi "Ei ihan, yritä uudelleen! 💪", mutta uutta yritystä ei voinut tehdä</b>: napit lukittuivat ja
+peli jatkoi. Nyt palaute sanoo sen, mitä oikeasti tapahtuu: <b>"Ei ihan. Oikea vastaus on 12."</b> Sama lause luetaan ääneen <span class="d">E3</span>.
+Uutta yritystä ei ole, koska oikea vastaus on jo näkyvissä. Kirjoitettu väärä vastaus jää näkyviin yliviivattuna oikean viereen <span class="d">E4</span>.
+Vanhassa pelissä se vaihtui oikeaksi alle sekunnissa.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 4 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="opts"><span class="opt ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt bad">9<span class="mk x"><svg><use href="#i-cross"/></svg></span></span><span class="opt dim">14</span><span class="opt dim">7</span></div></div>
+            <div class="fb bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="t1">Ei ihan.</span><span class="t2">Oikea vastaus on 12.</span></div></div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Helppo, väärin.</b> Lapsen valitsema 9 punaisella reunalla, yliviivattuna ja ristillä; oikea 12 vihreänä rastilla. Lasku
+    täydentyy oikealla vastauksella. Ääneen: "Ei ihan. Oikea vastaus on 12." Putki nollautuu, joten "peräkkäin oikein" katoaa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box ok">19<span class="mk"><svg><use href="#i-check"/></svg></span></span> <span class="yours">16<span class="mk x"><svg><use href="#i-cross"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 3 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="t1">Ei ihan.</span><span class="t2">Oikea vastaus on 19.</span></div></div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Keskitaso, väärin.</b> Ruutuun tulee oikea 19, ja lapsen oma 16 näkyy sen vieressä yliviivattuna. Ei kehotusta
+    yrittää uudelleen <span class="d">E3</span> <span class="d">E4</span>.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">6 <span class="op">×</span> 7 <span class="eqs">=</span> <span class="box ok">42<span class="mk"><svg><use href="#i-check"/></svg></span></span> <span class="yours">48<span class="mk x"><svg><use href="#i-cross"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 5 / 9</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="t1">Ei ihan.</span><span class="t2">Oikea vastaus on 42.</span></div></div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Vaikea · ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, Vaikea, väärin.</b> Näppäimistöllä kirjoittaminen ei enää muuta näkyvää lukua vastauksen jälkeen
+    (vanhassa pelissä muutti) <span class="d">E13</span>.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 7 -->
+<h2>7. Kymmenes lasku: Katso tulos</h2>
+<p class="note">Kymmenennen laskun jälkeen Seuraava-painikkeen paikalla lukee <b>Katso tulos</b>. Vanhassa pelissä loppuruutu tuli itsestään
+puolentoista sekunnin päästä <span class="d">E7</span>. Nyt lapsi ehtii nähdä, menikö viimeinen oikein, ja iPad voi lukea tuloksen ääneen,
+koska se käynnistyy napautuksesta.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">9 <span class="op">+</span> 6 <span class="eqs">=</span> <span class="box ok">15<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 8 / 10</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+            <div class="streak">🔥 3 peräkkäin oikein!</div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Upea! 💪</div>
+            <div class="nextw"><span class="btn acc big">Katso tulos<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Viimeinen lasku vastattu.</b> Palkki on täynnä, ja painikkeessa lukee Katso tulos.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 8 -->
+<h2>8. Loppuruutu: hyvä, keskinkertainen ja heikko tulos (SEI-6)</h2>
+<p class="note"><b>Vanha loppuruutu sanoi aina "Mahtavaa! Olet matikkamestari!"</b>, myös tuloksella 2/10. Nyt loppuruutuja on kolme
+<span class="d">E16</span>, ja niissä on samat rajat kuin vanhan pelin tulosrivissä: 10/10, 7–9 ja 0–6. Otsikko, kuva, tausta, konfetti ja ääneen luettu
+lause vaihtuvat tuloksen mukaan. "Olet matikkamestari!" tulee vain täydestä tuloksesta. Loppuruutu on pelin sisällä, ja yläpalkki näkyy;
+vanhassa pelissä koko sivun peitti tumma laatikko <span class="d">E8</span>. Pelaa uudelleen toimii kuten ennen, ja uusi painike Vaihda laskuja vie
+tason valintaan <span class="d">E8</span>.</p>
+
+<h3>Kolme tulosta vierekkäin (iPad vaakatasossa)</h3>
+<div class="row" style="gap:20px">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.32; border-width:6px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt big">Täydellinen tulos!</h2><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="end">
+            <div class="res gold"><span class="medal gold"><svg><use href="#i-star"/></svg></span><span class="big">10 / 10 oikein</span>
+              <span class="estars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span>
+              <span class="l3">Olet matikkamestari!</span></div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda laskuja</span></div>
+            <span class="sel">Helppo · + −</span>
+          </div>
+        </div></main>
+        <div class="conf"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>10 / 10.</b> Keltainen tähti, keltainen tausta, paljon konfettia. Ääneen: "Täydellinen tulos! Sait 10 oikein. Olet matikkamestari!"</figcaption>
+  </figure>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.32; border-width:6px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt big">Hienoa!</h2><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="end">
+            <div class="res green"><span class="medal green"><svg><use href="#i-check"/></svg></span><span class="big">8 / 10 oikein</span>
+              <span class="estars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+              <span class="l3">Hyvin laskettu!</span></div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda laskuja</span></div>
+            <span class="sel">Keskitaso · + −</span>
+          </div>
+        </div></main>
+        <div class="conf few"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>8 / 10.</b> Vihreä rasti, vihreä tausta, vähän konfettia. Ääneen: "Hienoa! Sait 8 oikein. Hyvin laskettu!"</figcaption>
+  </figure>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.32; border-width:6px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt big">Kierros valmis!</h2><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="end">
+            <div class="res"><span class="medal blue"><svg><use href="#i-up"/></svg></span><span class="big">2 / 10 oikein</span>
+              <span class="estars"><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+              <span class="l3">Harjoittelemalla oppii!</span></div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda laskuja</span></div>
+            <span class="sel">Vaikea · + − ×</span>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>2 / 10.</b> Ei konfettia, ei mestari-puhetta. Ylös osoittava nuoli ja vanhan pelin oma kannustus "Harjoittelemalla oppii!".
+    Ääneen: "Kierros valmis. Sait 2 oikein. Harjoittelemalla oppii!" Tuloksella 0 / 10 lukua ei sanota ääneen.</figcaption>
+  </figure>
+</div>
+
+<h3>Samat kolme muilla laitteilla</h3>
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt big">Täydellinen tulos!</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="end">
+            <div class="res gold"><span class="medal gold"><svg><use href="#i-star"/></svg></span><span class="big">10 / 10 oikein</span>
+              <span class="estars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span>
+              <span class="l3">Olet matikkamestari!</span></div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda laskuja</span></div>
+            <span class="sel">Helppo · + −</span>
+          </div>
+        </div></main>
+        <div class="conf"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, 10 / 10.</b></figcaption>
+  </figure>
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt big">Hienoa!</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="end">
+            <div class="res green"><span class="medal green"><svg><use href="#i-check"/></svg></span><span class="big">7 / 10 oikein</span>
+              <span class="estars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+              <span class="l3">Hyvin laskettu!</span></div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda laskuja</span></div>
+            <span class="sel">Keskitaso · + − ×</span>
+          </div>
+        </div></main>
+        <div class="conf few"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, 7 / 10</b> – pienin tulos, joka saa "Hienoa!" ja konfetin (sama raja kuin vanhassa pelissä, 70 %).
+    Tietokoneen matalaan ikkunaan mahtuu koko loppuruutu.</figcaption>
+  </figure>
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt big">Kierros valmis!</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="end">
+            <div class="res"><span class="medal blue"><svg><use href="#i-up"/></svg></span><span class="big">0 / 10 oikein</span>
+              <span class="estars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span>
+              <span class="l3">Harjoittelemalla oppii!</span></div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda laskuja</span></div>
+            <span class="sel">Vaikea · + − ×</span>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, 0 / 10</b> (heikoin mahdollinen). Ääneen vain: "Kierros valmis. Harjoittelemalla oppii!"</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 9 -->
+<h2>9. Kesken jäänyt kierros</h2>
+<p class="note">Kuten SEI-1:ssä sovittiin: kun lapsi käy etusivulla, Matikka-kortissa on merkki <b>Kesken 4/10</b>, ja kortin napautus jatkaa
+täsmälleen samasta kohdasta: sama lasku, sama kirjoitettu numero, samat pisteet ja tähdet <span class="d">E18</span>. Laskua ei lueta ääneen
+uudelleen; Kuuntele lukee sen, jos lapsi haluaa. Kierros säilyy niin kauan kuin sivu on auki. Jos sivu ladataan uudelleen, Matikka alkaa
+valintaruudusta.</p>
+
+<div class="story">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back pressed"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">14 <span class="op">−</span> 6 <span class="eqs">=</span> <span class="box typing">8</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div><div class="nextw"></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+        <div class="tap" style="left:60px; top:-6px; transform:scale(1.8)"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>1.</b> Lasku 5, lapsi on kirjoittanut "8" mutta ei ole painanut OK. Hän napauttaa Etusivu.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut</span></div>
+      <div class="viewport"><div class="app home">
+        <h1>Seikkailut</h1><p class="sub">Mitä pelataan?</p>
+        <div class="cards">
+          <div class="card m pressed"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d2">Laske ja harjoittele numeroita</div></div><div class="badge">Kesken 4/10</div></div>
+          <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d2">Rakenna suomen sanoja kirjaimista</div></div></div>
+          <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d2">Opi espanjan sanoja</div></div></div>
+        </div>
+        <div class="tap" style="left:230px; top:420px; transform:scale(1.8)"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>2.</b> Etusivulla Matikassa "Kesken 4/10" (neljä laskua vastattu). Lapsi napauttaa Matikkaa uudelleen.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">14 <span class="op">−</span> 6 <span class="eqs">=</span> <span class="box typing">8</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div><div class="nextw"></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>3.</b> Täsmälleen sama kohta: lasku 5, "8" ruudussa, pisteet 3 / 4. Ei luentaa; Kuuntele odottaa napautusta.</figcaption>
+  </figure>
+</div>
+
+<div class="row" style="margin-top:28px">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">8 <span class="op">−</span> 3 <span class="eqs">=</span> <span class="box ok">5<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 4 / 7</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="opts"><span class="opt dim">4</span><span class="opt ok">5<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt bad">6<span class="mk x"><svg><use href="#i-cross"/></svg></span></span><span class="opt dim">2</span></div></div>
+            <div class="fb bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="t1">Ei ihan.</span><span class="t2">Oikea vastaus on 5.</span></div></div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Helppo · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Jos lapsi lähti heti vastattuaan</b> (ennen Seuraavaa), hän palaa samaan palautteeseen. Etusivulla merkki oli "Kesken 7/10".</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 10 -->
+<h2>10. Mikä on erilaista kuin vanhassa pelissä</h2>
+<p class="note">Ensin jokainen vanhan pelin asia ja missä se on nyt, jotta näet, ettei mitään ole kadonnut. Sen alla kaikki erot <span class="d">E1</span>–<span class="d">E19</span> perusteluineen.</p>
+
+<h3>Vanhan pelin jokainen toiminto</h3>
+<table class="diff">
+  <tr><th>Vanhassa Matikkaseikkailussa</th><th>Uudessa</th><th>Kuva</th></tr>
+  <tr><td>Kolme tasoa: Eskari, 1. luokka, 2. luokka</td><td><span class="keep">Säilyy</span>, samat laskut; nimet Helppo, Keskitaso, Vaikea <span class="d">E2</span></td><td>1</td></tr>
+  <tr><td>Tasojen laskut ja lukualueet</td><td><span class="keep">Säilyy täsmälleen</span></td><td>1</td></tr>
+  <tr><td>2. luokka kytkee kertolaskun päälle</td><td><span class="keep">Säilyy</span> (Vaikea)</td><td>1</td></tr>
+  <tr><td>Yhteen-, vähennys- ja kertolasku päälle/pois; viimeistä ei voi poistaa</td><td><span class="keep">Säilyy</span>; lisäksi selitys <span class="d">E12</span></td><td>1, 2</td></tr>
+  <tr><td>Valinta aloittaa uuden kierroksen</td><td><span class="keep">Säilyy</span>, mutta vasta Aloita-painikkeesta <span class="d">E1</span></td><td>2</td></tr>
+  <tr><td>Eskari: neljä vaihtoehtoa, yksi oikea</td><td><span class="keep">Säilyy</span>; vaihtoehdot samanvärisiä <span class="d">E5</span></td><td>3</td></tr>
+  <tr><td>1. ja 2. luokka: numeronäppäimistö 1–9, ⌫, 0, OK; enintään 4 numeroa; tyhjä OK ei tee mitään</td><td><span class="keep">Säilyy</span>; luku näkyy laskun ruudussa <span class="d">E6</span></td><td>4</td></tr>
+  <tr><td>Tietokoneen näppäimet: numerot, Backspace, Enter</td><td><span class="keep">Säilyy</span></td><td>4, 5</td></tr>
+  <tr><td>Lasku luetaan ääneen ("plus", "miinus", "kertaa"), "🔊 Kuuntele lasku"</td><td><span class="keep">Säilyy</span>; Kuuntele on kehyksen painike</td><td>3</td></tr>
+  <tr><td>Oikein: satunnainen kehu, lasku täydentyy, vastaus luetaan</td><td><span class="keep">Säilyy</span>, samat kehut</td><td>5</td></tr>
+  <tr><td>Väärin: oikea vastaus näytetään</td><td><span class="keep">Säilyy</span>; viesti korjattu <span class="d">E3</span>, oma vastaus näkyy <span class="d">E4</span></td><td>6</td></tr>
+  <tr><td>Pisteet "oikein / vastattu", edistymispalkki</td><td><span class="keep">Säilyy</span>; palkki 10 lohkona <span class="d">E10</span></td><td>3–7</td></tr>
+  <tr><td>0–5 tähteä oikeiden osuuden mukaan</td><td><span class="keep">Säilyy</span> (yläpalkissa); alussa tyhjät <span class="d">E9</span></td><td>kaikki</td></tr>
+  <tr><td>"🔥 N peräkkäin oikein!" kun ≥ 3</td><td><span class="keep">Säilyy</span> sanasta sanaan</td><td>4, 5</td></tr>
+  <tr><td>Seuraava-painike</td><td><span class="keep">Säilyy</span>; viimeisessä "Katso tulos" <span class="d">E7</span></td><td>5, 7</td></tr>
+  <tr><td>Loppuruutu, konfetti, tulos, "Pelaa uudelleen"</td><td><span class="keep">Säilyy</span>; kolme versiota tuloksen mukaan <span class="d">E16</span> <span class="d">E8</span></td><td>8</td></tr>
+  <tr><td>Iso emoji laskun yläpuolella (➕ ➖ ✖️)</td><td>Poistettu <span class="d">E14</span> – laskumerkki näkyy laskussa</td><td>3</td></tr>
+  <tr><td>Otsikko "🔢 Matikkaseikkailu 🔢" pomppivana</td><td>Yläpalkin "Matikka" <span class="d">E15</span> (hyväksytty SEI-1:ssä)</td><td>kaikki</td></tr>
+</table>
+
+<h3>Kaikki erot</h3>
+<table class="diff">
+  <tr><th>#</th><th>Mikä on erilaista</th><th>Miksi</th></tr>
+  <tr><td><span class="d">E1</span></td><td>Taso ja laskut valitaan omalla ruudullaan ("Mitä lasketaan?"), joka tulee ensimmäisellä kerralla ja Vaihda-painikkeesta. Uusi kierros alkaa Aloita-painikkeesta. Ensimmäiseen kierrokseen tulee yksi napautus lisää.</td><td>Vanhassa yksi vahingossa napautettu taso hävitti kierroksen. Nyt kierros jatkuu etusivulla käynnin yli, joten sen ei pidä kadota yhdellä napautuksella. Valinnat veisivät myös tilaa laskulta tietokoneen matalassa ikkunassa.</td></tr>
+  <tr><td><span class="d">E2</span></td><td>Tasot Helppo, Keskitaso, Vaikea + esimerkkilasku (vanhat Eskari, 1. luokka, 2. luokka). Laskut ovat samat.</td><td>Pelaajat ovat 1.–2.-luokkalaisia; "Eskari" ei sovi heille. Samat nimet kuin Sanat-pelissä. Esimerkkilaskun voi "lukea", vaikka sanat olisivat vielä vaikeita.</td></tr>
+  <tr><td><span class="d">E3</span></td><td>Väärä vastaus: "Ei ihan. Oikea vastaus on 12." – myös ääneen. Ei "yritä uudelleen".</td><td>SEI-5: vanha kehotti yrittämään uudelleen, mutta se ei ollut mahdollista.</td></tr>
+  <tr><td><span class="d">E4</span></td><td>Kirjoitettu väärä vastaus jää näkyviin yliviivattuna oikean viereen.</td><td>Vanhassa se vaihtui oikeaksi alle sekunnissa, eikä lapsi ehtinyt nähdä omaa vastaustaan.</td></tr>
+  <tr><td><span class="d">E5</span></td><td>Vaihtoehdot ovat samanvärisiä; oikea vihreä ja rasti, väärä punainen ja risti.</td><td>Vanhassa yksi vaihtoehto oli aina valmiiksi punainen, ja valkoinen teksti vaaleilla väreillä oli vaikea lukea.</td></tr>
+  <tr><td><span class="d">E6</span></td><td>Kirjoitettu vastaus näkyy laskun sisällä: 7 + 5 = [12].</td><td>Lapsi näkee laskun ja vastauksensa yhdessä; säästää yhden rivin.</td></tr>
+  <tr><td><span class="d">E7</span></td><td>Kymmenennen jälkeen painike "Katso tulos"; loppuruutu ei tule itsestään.</td><td>Viimeinen palaute ehditään nähdä; iPad lukee tuloksen ääneen vain napautuksesta.</td></tr>
+  <tr><td><span class="d">E8</span></td><td>Loppuruutu pelin sisällä yläpalkin alla (ei tummaa peitettä); uusi painike "Vaihda laskuja".</td><td>Yhteinen kehys; tason vaihto ei enää ole laskunäkymässä.</td></tr>
+  <tr><td><span class="d">E9</span></td><td>Tähdet tyhjinä ennen ensimmäistä vastausta.</td><td>Vanha näytti viisi täyttä tähteä ennen kuin mitään oli laskettu.</td></tr>
+  <tr><td><span class="d">E10</span></td><td>Edistymispalkki 10 lohkona; täyttyy, kun vastataan.</td><td>Lohkot voi laskea; sama luku kuin etusivun Kesken-merkissä.</td></tr>
+  <tr><td><span class="d">E11</span></td><td>Palautteen ja "peräkkäin oikein" -tekstin värit tummemmat.</td><td>Vanhat värit olivat liian vaaleita valkoisella luettaviksi.</td></tr>
+  <tr><td><span class="d">E12</span></td><td>Viimeistä laskutapaa poistettaessa tulee selitys.</td><td>Vanhassa napautus ei tehnyt mitään eikä kertonut miksi.</td></tr>
+  <tr><td><span class="d">E13</span></td><td>Vastauksen jälkeen tietokoneen numeronäppäimet eivät muuta näkyvää lukua.</td><td>Vanhan pelin vika.</td></tr>
+  <tr><td><span class="d">E14</span></td><td>Iso emoji laskun yläpuolelta poistettu.</td><td>Laskumerkki näkyy laskussa; tila tarvitaan, jotta kaikki mahtuu ilman vieritystä.</td></tr>
+  <tr><td><span class="d">E15</span></td><td>Otsikko yläpalkissa "Matikka".</td><td>Hyväksytty SEI-1:ssä.</td></tr>
+  <tr><td><span class="d">E16</span></td><td>"Olet matikkamestari!" vain 10/10:stä; kolme loppuruutua.</td><td>SEI-6.</td></tr>
+  <tr><td><span class="d">E17</span></td><td>Poistonäppäin valkoinen kuvakkeella, ei punainen.</td><td>Punainen tarkoittaa nyt vain väärää vastausta.</td></tr>
+  <tr><td><span class="d">E18</span></td><td>Kesken jäänyt kierros jatkuu etusivulla käynnin jälkeen.</td><td>Hyväksytty SEI-1:ssä.</td></tr>
+  <tr><td><span class="d">E19</span></td><td>Kuuntele lukee myös valintaruudun ohjeen ("Mitä lasketaan? Valitse taso ja laskut. Paina sitten Aloita.") ja loppuruudun tuloksen.</td><td>Kuuntele näkyy kaikissa ruuduissa, joten sillä on aina jotain luettavaa.</td></tr>
+</table>
+
+<!-- ===================================================== 11 -->
+<h2>11. Painikkeet oikeassa koossa</h2>
+<p class="note">Tässä painikkeet ovat siinä koossa kuin iPadilla. Kaikki ovat vähintään 56 pikseliä korkeita.</p>
+<div class="spec app" style="height:auto">
+  <div class="m" style="display:contents">
+    <figure><span class="opt" style="width:150px">8</span><figcaption><b>Vaihtoehto</b></figcaption></figure>
+    <figure><span class="opt pr" style="width:150px">8</span><figcaption><b>Painettu</b></figcaption></figure>
+    <figure><span class="opt ok" style="width:150px">8<span class="mk"><svg><use href="#i-check"/></svg></span></span><figcaption><b>Oikea</b></figcaption></figure>
+    <figure><span class="opt bad" style="width:150px">6<span class="mk x"><svg><use href="#i-cross"/></svg></span></span><figcaption><b>Väärä valinta</b></figcaption></figure>
+    <figure><span class="opt dim" style="width:150px">4</span><figcaption><b>Lukittu</b> (muut)</figcaption></figure>
+  </div>
+</div>
+<div class="spec app" style="height:auto; margin-top:16px">
+  <div class="m" style="display:contents">
+    <figure><span class="key" style="width:96px">7</span><figcaption><b>Numero</b></figcaption></figure>
+    <figure><span class="key pr" style="width:96px">7</span><figcaption><b>Painettu</b></figcaption></figure>
+    <figure><span class="key" style="width:96px"><svg><use href="#i-bksp"/></svg></span><figcaption><b>Poista</b></figcaption></figure>
+    <figure><span class="key okk" style="width:96px">OK<svg><use href="#i-check"/></svg></span><figcaption><b>OK</b></figcaption></figure>
+    <figure><span class="key" style="width:96px; opacity:.45">7</span><figcaption><b>Lukittu</b></figcaption></figure>
+    <figure><span class="eq" style="font-size:56px"><span class="box empty">?</span></span><figcaption><b>Vastausruutu tyhjä</b></figcaption></figure>
+    <figure><span class="eq" style="font-size:56px"><span class="box typing">12</span></span><figcaption><b>Kirjoittaa</b></figcaption></figure>
+    <figure><span class="eq" style="font-size:56px"><span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></span><figcaption><b>Oikein</b></figcaption></figure>
+    <figure><span class="eq" style="font-size:56px"><span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span>&nbsp;<span class="yours">13<span class="mk x"><svg><use href="#i-cross"/></svg></span></span></span><figcaption><b>Väärin</b></figcaption></figure>
+  </div>
+</div>
+<div class="spec app" style="height:auto; margin-top:16px">
+  <div class="m" style="display:contents">
+    <figure><span class="tg on" style="width:226px"><span class="cb"><svg><use href="#i-check"/></svg></span><span class="sym">+</span>Yhteenlasku</span><figcaption><b>Laskutapa päällä</b></figcaption></figure>
+    <figure><span class="tg" style="width:226px"><span class="cb"></span><span class="sym">×</span>Kertolasku</span><figcaption><b>Laskutapa pois</b></figcaption></figure>
+    <figure><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span><figcaption><b>Seuraava</b></figcaption></figure>
+    <figure><span class="btn ok">Vaihda</span><figcaption><b>Vaihda</b></figcaption></figure>
+    <figure><span class="streak">🔥 3 peräkkäin oikein!</span><figcaption><b>Putkiteksti</b></figcaption></figure>
+  </div>
+</div>
+
+<!-- ===================================================== 12 -->
+<h2>12. Kysymys sinulle</h2>
+<div class="q">
+  <p><b>Tasojen nimet.</b> Tuntevatko lapset vanhan pelin tasot nimillä <b>Eskari, 1. luokka ja 2. luokka</b> ja käyttävätkö he niitä?
+  Tällä sivulla nimet ovat <b>Helppo, Keskitaso ja Vaikea</b> (samat kuin Sanat-pelissä), ja laskut ovat samat kuin ennen.<br>
+  Jos et osaa sanoa, pidämme uudet nimet.</p>
+</div>
+
+</div>
+</body>
+</html>

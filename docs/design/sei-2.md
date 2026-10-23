@@ -151,10 +151,11 @@ Täysi tähti: täyttö `#ffd23f`, reunus `#ffd23f`. Tyhjä tähti: ei täyttö�
 | 2 | ●●○ | `Keskitaso` | `12 + 7` | `Kirjoita vastaus` | 1. luokka | + summa ≤ 20; − luvusta 2–20; × 1–5 kertaa 1–10 |
 | 3 | ●●● | `Vaikea` | `45 + 38` | `Kirjoita vastaus` | 2. luokka | + summa ≤ 100; − luvusta 10–100; × 2–10 kertaa 2–10 |
 
-   Ulkoasu: valkoinen kortti, pyöristys 22 px, 3 px reunus `#c9cbd6`,
-   alavarjo 4 px `#c9cbd6`. Sisällä allekkain: pisteet (14 px ympyrät,
-   täysi = tunnusväri, tyhjä = 2 px tunnusvärinen reunus), nimi 28 px
-   lihava, esimerkki 30 px lihava muste, vastaustapa 20 px `#5b5f73`.
+   Ulkoasu: valkoinen kortti, korkeus 140 px, pyöristys 22 px, 3 px reunus
+   `#c9cbd6`, alavarjo 4 px `#c9cbd6`. Sisällä allekkain: pisteet (14 px
+   ympyrät, täysi = tunnusväri, tyhjä = 2 px tunnusvärinen reunus) ja nimi
+   samalla rivillä, nimi 28 px lihava; esimerkki 30 px lihava muste;
+   vastaustapa 20 px `#5b5f73`.
    **Valittu:** 4 px tunnusvärinen reunus, tausta `#e3f7ea`, oikeassa
    yläkulmassa valkoinen valintamerkki tunnusvärisessä 28 px ympyrässä.
    Valinta ei siis näy pelkkänä värinä.
@@ -168,10 +169,14 @@ Täysi tähti: täyttö `#ffd23f`, reunus `#ffd23f`. Tyhjä tähti: ei täyttö�
 | Vähennyslasku | `−` | `Vähennyslasku` | päällä |
 | Kertolasku | `×` | `Kertolasku` | pois |
 
-   Korkeus 72 px, pyöristys 999 px. **Päällä:** tausta `#e3f7ea`, 3 px
-   tunnusvärinen reunus, vasemmassa reunassa täytetty valintaruutu
+   Kortti 100 px korkea, pyöristys 22 px; merkki 42 px keskellä ylhäällä,
+   teksti 22 px lihava sen alla, valintaruutu 28 px vasemmassa yläkulmassa.
+   (Merkki ja teksti allekkain, koska `Vähennyslasku` ei mahdu rinnakkain
+   kolmannekseen 712 px:stä.) **Päällä:** tausta `#e3f7ea`, 3 px
+   tunnusvärinen reunus, merkki tunnusvärillä, täytetty valintaruutu
    (tunnusvärinen neliö, valkoinen ✓). **Pois:** valkoinen tausta, 3 px
-   `#c9cbd6` reunus, tyhjä valintaruutu (2 px `#8a8fa3` reunus).
+   `#c9cbd6` reunus, merkki musteella, tyhjä valintaruutu (2,5 px `#8a8fa3`
+   reunus).
 
 6. **Vihjerivi** (varattu 30 px korkeus, ettei asettelu hypi), tyhjä
    oletuksena. Ks. säännöt.
@@ -212,12 +217,12 @@ Paina sitten Aloita.` (nopeus 0,85). Ei lueta automaattisesti avattaessa.
 
 | Leveys | Tasopainikkeet | Kytkimet | Painikkeet |
 |---|---|---|---|
-| ≥ 600 px | kolme rinnakkain, kukin 1/3, korkeus 150 px | kolme rinnakkain | rinnakkain, keskitetty |
-| < 600 px | allekkain, korkeus 88 px; pisteet ja nimi vasemmalla, esimerkki oikealla, vastaustapa nimen alla | allekkain, koko leveys | allekkain koko leveydellä, pääpainike ylempänä |
+| ≥ 600 px | kolme rinnakkain, kukin 1/3, korkeus 140 px | kolme rinnakkain, 100 px | rinnakkain, keskitetty; toissijainen vasemmalla |
+| < 600 px | allekkain, korkeus 88 px; pisteet ja nimi vasemmalla, vastaustapa nimen alla, esimerkki oikealla | allekkain, 64 px, valintaruutu vasemmalla, merkki ja teksti rinnakkain | allekkain koko leveydellä |
 
-Korkeus: tietokoneella (548 px pelille) ruutu vie noin 510 px: kysymysrivi 56
-+ 20 + otsikko 30 + tasot 150 + 16 + otsikko 30 + kytkimet 72 + vihje 30 + 16 +
-painike 64 + välit. Ei vieritystä kolmessa kohdelaitteessa.
+Korkeus: tietokoneella (548 px pelille) ruutu vie noin 520 px: kysymysrivi 56
++ 20 + otsikko 30 + 10 + tasot 140 + 16 + otsikko 30 + 10 + kytkimet 100 + 8 +
+vihje 30 + 8 + painike 64. Ei vieritystä kolmessa kohdelaitteessa.
 
 **Tilat:** normaali; vihje näkyvissä; kesken kierroksen (kaksi painiketta).
 Tyhjä, lataus ja virhe eivät ole mahdollisia (kaikki on kiinteää, ei haeta
@@ -371,12 +376,12 @@ paikalla on otsikko, Kuuntele jää oikealle.
 | | 10 / 10 | 7–9 / 10 | 0–6 / 10 |
 |---|---|---|---|
 | Kuva (120 px ympyrä) | keltainen `#ffd23f` ympyrä, iso muste-reunainen tähti | tunnusvärinen ympyrä, valkoinen ✓ | vaaleansininen `#e8f1ff` ympyrä, muste-värinen ylös osoittava nuoli |
-| Otsikko (h2, 44 px lihava) | `Täydellinen tulos!` | `Hienoa!` | `Kierros valmis!` |
+| Otsikko (h2 kysymysrivillä, 40 px lihava) | `Täydellinen tulos!` | `Hienoa!` | `Kierros valmis!` |
 | Tulos (64 px lihava) | `10 / 10 oikein` | `8 / 10 oikein` | `2 / 10 oikein` |
 | Tähdet (40 px) | 5 täyttä | `round(n / 2)`: 7 → 4, 8 → 4, 9 → 5 | 0 → 0, 1 → 1, 2 → 1, 3 → 2, 4 → 2, 5 → 3, 6 → 3 |
 | Kolmas rivi (26 px) | `Olet matikkamestari!` | `Hyvin laskettu!` | `Harjoittelemalla oppii!` |
 | Konfetti | 100 palaa, 3,5 s (vanha r. 669) | 40 palaa, 3 s | ei konfettia |
-| Taustan sävy pelikortissa | yläosa `#fff4d6` | yläosa `#e3f7ea` | valkoinen |
+| Tulosalueen tausta (kuva, tulos, tähdet, kolmas rivi; pyöristys 24 px) | `#fff4d6` | `#e3f7ea` | valkoinen |
 | Ääneen (nopeus 0,85) | `Täydellinen tulos! Sait 10 oikein. Olet matikkamestari!` | `Hienoa! Sait 8 oikein. Hyvin laskettu!` | `Kierros valmis. Sait 2 oikein. Harjoittelemalla oppii!` |
 
 - **0 / 10:** näytöllä `0 / 10 oikein`, tähdet tyhjinä. Ääneen ilman lukua:
@@ -384,7 +389,9 @@ paikalla on otsikko, Kuuntele jää oikealle.
 - `Olet matikkamestari!` ja `Mahtavaa!` eivät esiinny missään muualla kuin
   10 / 10 -versiossa (SEI-6 kriteeri 1). (`Harjoittelemalla oppii!` on vanhan
   palautelistan lause, r. 300.)
-- Tuloksen alla harmaa rivi 20 px: `Helppo · + −` (mitä pelattiin).
+- Painikkeiden alla harmaa rivi 20 px: `Helppo · + −` (mitä pelattiin).
+- Järjestys ylhäältä: kysymysrivi (otsikko 40 px + Kuuntele), tulosalue,
+  painikkeet, valintarivi. Korkeus noin 520 px; mahtuu tietokoneen 548 px:iin.
 - **Painikkeet:** pääpainike `Pelaa uudelleen` (samat valinnat, uusi
   kierros, lasku 1 luetaan samasta napautuksesta; vanha r. 293) ja
   toissijainen `Vaihda laskuja` (valintaruutu). Rinnakkain ≥ 600 px, allekkain

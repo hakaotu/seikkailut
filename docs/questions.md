@@ -7,6 +7,13 @@
   seuraavaksi äänitetyt luonnolliset äänet (reitti B). (SEI-45)
   — avattu 2026-10-23
 
+- **Q20 (katso):** Matikan ulkoasuluonnos
+  (https://claude.ai/artifact/LAJorartbGKYxbgxFzPGmq): hyväksytkö, vai
+  mitä muutetaan? (SEI-2, SEI-5, SEI-6) — avattu 2026-10-23
+- **Q21 (tieto):** Käyttävätkö lapset vanhoja tasonimiä Eskari / 1. luokka
+  / 2. luokka? Oletus: uudet nimet Helppo / Keskitaso / Vaikea. (SEI-2)
+  — avattu 2026-10-23
+
 ## Vastatut
 
 - **Q18 (katso):** Kumpi kuulostaa sovelluksen "kissalta"? — omistaja
