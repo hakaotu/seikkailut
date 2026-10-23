@@ -835,3 +835,4 @@ Kriteerit:
   Harjoittelemalla oppii!", ei mestaria; Pelaa uudelleen, 10 oikein →
   "10 / 10 oikein, Olet matikkamestari!" ja konfetti. Kaikki puhe Satu
   (Enhanced). B (omistajan kuuntelu) Q24:ssä.
+- 2026-10-23: Matikan jatkokorjaus S1–S3 (c00873a, 9814d40, 33d4c25; kapealla ruudulla väärä kirjoitettu vastaus rivittyy laatikon alle). Pääsession ajo: unit 61/61, playwright 371/9/0. Julkaistu.
