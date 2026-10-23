@@ -16,7 +16,8 @@ for (const id of GAME_IDS) {
     await expect.poll(async () => (await speakCalls(page)).length).toBeGreaterThan(0);
     const calls = await speakCalls(page);
     expect(calls[0].inDispatch).toBe(true);
-    expect(calls.every((c) => c.inDispatch)).toBe(true);
+    // Only Sanat's second reading is spoken later, from a timer after the first one ends.
+    if (id !== 'sanat') expect(calls.every((c) => c.inDispatch)).toBe(true);
   });
 }
 
@@ -41,7 +42,7 @@ test('reload on #/sanat makes no speak call before a tap', async ({ page }) => {
   expect(await speakCalls(page)).toEqual([]);
 });
 
-test('Sanat queues two parts from one tap, the second slower', async ({ page }, testInfo) => {
+test('Sanat speaks kissa inside the tap, then slower after a pause that follows the first ending', async ({ page }, testInfo) => {
   await page.goto('/');
   await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
   await expect.poll(async () => (await speakCalls(page)).length).toBe(2);
@@ -49,4 +50,8 @@ test('Sanat queues two parts from one tap, the second slower', async ({ page }, 
   expect(calls.map((c) => c.text)).toEqual(['kissa', 'kissa']);
   expect(calls.map((c) => c.rate)).toEqual([0.78, 0.52]);
   expect(calls.every((c) => c.lang === 'fi-FI' && c.voice === 'fi-FI')).toBe(true);
+  expect(calls[0].inDispatch).toBe(true);
+  expect(calls[1].inDispatch).toBe(false);
+  // 700 ms after the first reading ended, less slack for the timer
+  expect(calls[1].at - calls[0].endedAt).toBeGreaterThanOrEqual(650);
 });

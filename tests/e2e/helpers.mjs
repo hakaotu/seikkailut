@@ -15,7 +15,8 @@ export async function press(locator, testInfo) {
 // opts.mode: 'normal' (onstart, then onend) | 'nostart' (speak accepted, nothing fires)
 //            | 'noend' (onstart fires, onend never) | 'absent' (no speechSynthesis at all)
 // opts.voices: language tags, e.g. ['fi-FI', 'es-ES'].
-// Records every speak() call in window.__speak, with whether it ran inside a click listener.
+// Records every speak() call in window.__speak, with whether it ran inside a click listener,
+// when it was called (at) and when its onend fired (endedAt, null until then).
 export async function installFakeSpeech(page, opts = {}) {
   await page.addInitScript(
     ({ mode, voices }) => {
@@ -80,6 +81,7 @@ export async function installFakeSpeech(page, opts = {}) {
           if (mode === 'noend') return;
           realTimeout(() => {
             if (u.__cancelled) return;
+            if (u.__record) u.__record.endedAt = performance.now();
             if (u.onend) u.onend({});
             next();
           }, 40);
@@ -89,13 +91,17 @@ export async function installFakeSpeech(page, opts = {}) {
       const synth = {
         get speaking() { return running !== null; },
         speak(u) {
-          window.__speak.push({
+          const record = {
             text: u.text,
             rate: u.rate,
             lang: u.lang,
             voice: u.voice ? u.voice.lang : null,
             inDispatch: window.__inListener > 0,
-          });
+            at: performance.now(),
+            endedAt: null, // set when the fake fires onend
+          };
+          u.__record = record;
+          window.__speak.push(record);
           if (mode === 'nostart') return;
           queue.push(u);
           if (!running) next();

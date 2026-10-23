@@ -90,7 +90,8 @@ test('(c) speech that never starts: Ei ääntä at 2 s, never disabled', async (
   await pausedAt(page, '/#/sanat');
   await expect(view(page, 'sanat').locator('.notice')).toBeHidden();
   await press(listen(page, 'sanat'), testInfo);
-  expect((await speakCalls(page)).length).toBe(2);
+  // part 1 never starts, so it never ends and part 2 is never spoken
+  expect((await speakCalls(page)).length).toBe(1);
   await expect(listen(page, 'sanat')).toBeEnabled();
 
   await page.clock.runFor(1900);
@@ -106,7 +107,7 @@ test('(c) speech that never starts: Ei ääntä at 2 s, never disabled', async (
   // tapping in Ei ääntä tries speaking again
   await press(view(page, 'sanat').locator('.ok-btn'), testInfo);
   await press(listen(page, 'sanat'), testInfo);
-  expect((await speakCalls(page)).length).toBe(4);
+  expect((await speakCalls(page)).length).toBe(2);
 });
 
 test('(d) speech that never ends: button back to ready at 12 s', async ({ page }, testInfo) => {

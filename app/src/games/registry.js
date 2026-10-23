@@ -22,8 +22,8 @@
 //   ctx.root        the game's own area inside the white game card, below the question row
 //   ctx.question    the question slot left of Kuuntele in the question row
 //   ctx.status      this game's element in the top-bar status slot (max 40 % width)
-//   ctx.speech.say(parts)  parts = [{ text, rate? }]. Speaks in the game's language; all
-//                   parts are queued in the same call. Drives this game's Kuuntele state.
+//   ctx.speech.say(parts)  parts = [{ text, rate?, pauseMs? }]. Speaks in the game's language;
+//                   all parts are queued in the same call. Drives this game's Kuuntele state.
 //                   Cancels anything already speaking, in any game.
 //   ctx.speech.stop()      stops speech
 //   ctx.reportProgress({ done, total, finished })
@@ -38,7 +38,8 @@
 //   2. Document/window listeners only between show and hide.
 //   3. No direct speechSynthesis. No timer or await between a tap and the say it
 //      causes. Speech chained by setTimeout from onend is replaced by one
-//      say([...parts]). Pauses between parts are not offered.
+//      say([...parts]). Pauses between parts are `pauseMs` on the later part; the
+//      first part is never delayed.
 //   4. No game control is disabled while waiting for speech.
 //   5. Static assets go under app/assets/ (no Drive fetch).
 //   6. localStorage keys are prefixed with the game id.
@@ -69,7 +70,7 @@ export const GAMES = [
       hint: 'kirjainruudut ja laatat – suunnitellaan myöhemmin',
       sample: [
         { text: 'kissa', rate: 0.78 },
-        { text: 'kissa', rate: 0.52 },
+        { text: 'kissa', rate: 0.52, pauseMs: 700 },
       ],
     }),
   },

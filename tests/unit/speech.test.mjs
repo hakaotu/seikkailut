@@ -290,3 +290,144 @@ test('stop() mid-speech: cancel, idle, later events ignored', () => {
   mock.timers.tick(20000);
   assert.deepEqual(cb.log, ['playing', 'idle']);
 });
+
+// ---- pauseMs: a later part is spoken from a timer after the previous part's onend ----
+
+const PAIR = [{ text: 'kissa', rate: 0.78 }, { text: 'kissa', rate: 0.52, pauseMs: 700 }];
+
+test('pauseMs: the first part is spoken at once, the second 700 ms after the first ends', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  assert.equal(synth.spoken.length, 1);
+  assert.equal(synth.spoken[0].rate, 0.78);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onend();
+  mock.timers.tick(699);
+  assert.equal(synth.spoken.length, 1);
+  mock.timers.tick(1);
+  assert.equal(synth.spoken.length, 2);
+  assert.equal(synth.spoken[1].rate, 0.52);
+});
+
+test('pauseMs: playing stays on across the pause, idle only after the second part', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onend();
+  assert.deepEqual(cb.log, ['playing']);
+  assert.equal(synth.spoken.length, 1);
+  mock.timers.tick(700);
+  assert.deepEqual(cb.log, ['playing']);
+  synth.spoken[1].onstart();
+  assert.deepEqual(cb.log, ['playing']);
+  synth.spoken[1].onend();
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+  mock.timers.tick(20000);
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+});
+
+test('pauseMs: stop() during the pause means the second part is never spoken', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onend();
+  mock.timers.tick(300);
+  speech.stop();
+  mock.timers.tick(5000);
+  assert.equal(synth.spoken.length, 1);
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+});
+
+test('pauseMs: a new say during the pause drops the old second part and leaves the new call alone', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const first = recorder();
+  const second = recorder();
+  speech.say('fi-FI', PAIR, first);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onend();
+  mock.timers.tick(300);
+  speech.say('fi-FI', [{ text: 'hola' }], second);
+  assert.deepEqual(first.log, ['playing', 'idle']);
+  synth.spoken[1].onstart();
+  mock.timers.tick(5000);
+  assert.deepEqual(synth.spoken.map((u) => u.text), ['kissa', 'hola']);
+  assert.deepEqual(first.log, ['playing', 'idle']);
+  assert.deepEqual(second.log, ['playing']);
+});
+
+test('pauseMs: a delayed part that never starts ends in idle after 2000 ms, not failed', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onend();
+  mock.timers.tick(700);
+  assert.equal(synth.spoken.length, 2);
+  const cancelsBefore = synth.cancels;
+  mock.timers.tick(1999);
+  assert.deepEqual(cb.log, ['playing']);
+  mock.timers.tick(1);
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+  assert.equal(synth.cancels, cancelsBefore + 1);
+  mock.timers.tick(20000);
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+});
+
+test('pauseMs: an error such as not-allowed on a delayed part gives idle, not failed', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onend();
+  mock.timers.tick(700);
+  synth.spoken[1].onerror({ error: 'not-allowed' });
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+  mock.timers.tick(20000);
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+});
+
+test('pauseMs: the 12 s cap runs from the first onstart, the pause counts against it', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  mock.timers.tick(500);
+  synth.spoken[0].onstart(); // t = 500
+  mock.timers.tick(100);
+  synth.spoken[0].onend(); // t = 600
+  assert.equal(synth.spoken.length, 1);
+  mock.timers.tick(700); // t = 1300, second part spoken
+  synth.spoken[1].onstart();
+  mock.timers.tick(11199); // t = 12499
+  assert.deepEqual(cb.log, ['playing']);
+  mock.timers.tick(1); // t = 12500 = 500 + 12000
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+});
+
+test('no pauseMs: parts stay queued together and an error on the second still fails', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', [{ text: 'a' }, { text: 'b' }], cb);
+  assert.equal(synth.spoken.length, 2);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onend();
+  mock.timers.tick(5000);
+  assert.equal(synth.spoken.length, 2);
+  synth.spoken[1].onerror({ error: 'synthesis-failed' });
+  assert.deepEqual(cb.log, ['playing', 'failed:error']);
+});
+
+test('pauseMs on the first part, or 0, or not a number, is ignored', () => {
+  for (const parts of [
+    [{ text: 'a', pauseMs: 700 }, { text: 'b' }],
+    [{ text: 'a' }, { text: 'b', pauseMs: 0 }],
+    [{ text: 'a' }, { text: 'b', pauseMs: 'x' }],
+    [{ text: 'a' }, { text: 'b', pauseMs: NaN }],
+  ]) {
+    const { synth, speech } = setup([voice('fi-FI')]);
+    speech.say('fi-FI', parts, recorder());
+    assert.equal(synth.spoken.length, 2);
+  }
+});
