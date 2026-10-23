@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-_(ei avoimia)_
+- **Q25 (päätös):** Matikan automaattinen siirtyminen: oletukset — vain
+  oikean vastauksen jälkeen, 4 s, Seuraava-napilla voi ohittaa odotuksen,
+  10. laskun jälkeen silti "Katso tulos". Käyvätkö? (SEI-46) — avattu 2026-10-23
 
 ## Vastatut
 

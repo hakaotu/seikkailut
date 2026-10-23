@@ -1,6 +1,6 @@
 # Backlog: Seikkailut
 
-Päivitetty 2026-10-23 (pm; SEI-45 lisätty). Syöte: `docs/brief.md` ja kolme kopiota
+Päivitetty 2026-10-23 (pm; SEI-46 lisätty). Syöte: `docs/brief.md` ja kolme kopiota
 hakemistossa `originals/`. Tämä tiedosto on pm:n tuotos; tilan (todo,
 in-progress, review, verifying, done) siirtää vain pääsessio.
 
@@ -397,6 +397,95 @@ Kriteerit:
    teksti ja ääni eivät väitä lasta mestariksi, vaan vastaavat tulosta.
 2. Annettu kierros päättyy tulokseen 10/10. Kun loppuruutu näkyy. Niin
    loppuruutu eroaa visuaalisesti ja tekstiltään tuloksesta 2/10.
+
+### SEI-46 — Matikka: oikean vastauksen jälkeen siirtyy itsestään seuraavaan laskuun
+Tila: todo
+Havainto (2026-10-23): omistaja kokeili julkaistua Matikkaa Macilla
+(https://hakaotu.github.io/seikkailut/) ja sanoi sanatarkasti:
+"matikkahommeliin voisi tehdä sellaisen automatiikan, että oikean vastauksen
+jälkeen tulee palaute ja sit progress bar about 3-5s, jonka jälkeen siirtyy
+automaattisesti seuraavaan laskuun ilman, että tarvii painaa seuraava".
+Ongelma: jokainen vastaus vaatii nyt Seuraava-napin painalluksen, myös
+oikean vastauksen jälkeen. Omistajan ehdottama ratkaisu on automaattinen
+siirtyminen (ajastin ja edistymispalkki). Mitä ongelmaa hän tarkoittaa
+(napin painaminen on työlästä, rytmi katkeaa, lapsi unohtaa painaa), ei
+ole tiedossa.
+Lähtötaso (`docs/design/sei-2.md`, hyväksytty Q20): jokaisen vastauksen
+jälkeen odotetaan Seuraavaa, 10. vastauksen jälkeen `Katso tulos`.
+Vanha peli hyppäsi loppuruutuun 1,5 s:n päästä; uusi suunnitelma korvasi
+sen tarkoituksella (E7: lapsi ehtii nähdä viimeisen palautteen, iPad lukee
+tuloksen ääneen vain napautuksesta). Tämä tehtävä ei kumoa E7:ää ilman
+omistajan päätöstä (ks. avoin kysymys 4).
+Perustelu: omistaja haluaa, ettei lapsen tarvitse painaa Seuraava jokaisen
+oikean vastauksen jälkeen.
+Riippuvuus: SEI-2 (done). Koskee ulkoasua ja viestejä: designer ennen
+arkkitehtia.
+Kriteerit (oletuksilla, ks. avoimet kysymykset; lapsen näkemä ja kuulema):
+1. Annettu lapsi vastaa laskuun oikein (mikä tahansa kolmesta tasosta,
+   laskuista 1–9). Kun kehu ja oikea vastaus ovat näkyvissä. Niin kehun
+   alle ilmestyy edistymispalkki, joka täyttyy tasaisesti oletuksella
+   4 sekunnin ajan (kysymys 2), ja täytyttyään seuraava lasku tulee ilman
+   yhtään napautusta.
+2. Annettu sama tilanne. Kun palkki on täyttymässä. Niin oikean vastauksen
+   lukeminen ääneen ehtii loppuun ennen kuin seuraava lasku tulee (ääni ei
+   katkea uuden laskun tullessa).
+3. Annettu seuraava lasku tuli itsestään. Kun se tulee näkyviin. Niin se
+   luetaan ääneen kuten nykyisin, ja edistymispalkki ja Seuraava-painike
+   ovat piilossa, kunnes taas on vastattu.
+4. Annettu lapsi vastaa väärin. Kun näkee palautteen "Ei ihan. Oikea
+   vastaus on …". Niin palkkia ei ole eikä seuraava lasku tule itsestään;
+   Seuraava-painike odottaa kuten nykyisin (oletus, kysymys 1). Lapsi
+   ehtii lukea oikean vastauksen niin kauan kuin haluaa.
+5. Annettu palkki on täyttymässä. Kun lapsi painaa Seuraavaa (painike on
+   näkyvissä ja toimii, oletus, kysymys 3). Niin seuraava lasku tulee heti,
+   palkki katoaa, eikä ajastin siirrä vielä yhtä laskua eteenpäin
+   (ei ohiteta kahta laskua).
+6. Annettu palkki on täyttymässä. Kun lapsi poistuu pelistä etusivulle,
+   vaihtaa tasoa tai laskutapoja tai aloittaa uuden kierroksen. Niin
+   ajastin ei tee mitään uudessa näkymässä (ei laskua ilmesty
+   etusivulle tai uuden kierroksen päälle).
+7. Annettu 10. lasku vastataan oikein. Kun palaute näkyy. Niin näkyvissä
+   on `Katso tulos` kuten nykyisin eikä palkkia; loppuruutu tulee vasta
+   napautuksesta (oletus, kysymys 4; E7 pysyy).
+8. Annettu käyttöjärjestelmän asetus "vähennä liikettä" päällä (kuten
+   nykyisen suunnitelman liikekohdat). Kun oikea vastaus on annettu. Niin
+   odotus näkyy silti (palkki ilman liikuttavaa animaatiota tai
+   vastaava), ja siirtyminen tapahtuu samassa ajassa. Designer päättää
+   tavan.
+9. Annettu ruudunlukija. Kun oikea vastaus annetaan. Niin ruudunlukija
+   kertoo, että seuraava lasku tulee itsestään (ennen siirtymistä), ja
+   uusi lasku ilmoitetaan kuten nykyisin.
+10. Annettu Macilla Chromella pelattu täysi kierros, kaikki oikein. Kun
+    lapsi ei napauta mitään oikeiden vastausten jälkeen. Niin laskut 2–10
+    tulevat itsestään, ja 10. laskun jälkeen odottaa `Katso tulos`.
+    Mittaus kirjataan: selain, tila, ja kesto kellolla napautuksesta
+    seuraavan laskun ilmestymiseen (tavoite oletuksella 4 s, ks.
+    kysymys 2).
+
+Avoimet kysymykset (oletus voimassa kunnes omistaja vastaa; ei päätöksiä):
+1. Väärä vastaus. Omistaja sanoi vain "oikean vastauksen jälkeen".
+   Oletus: väärän vastauksen jälkeen odotetaan edelleen Seuraavaa.
+2. Tarkka kesto. Omistaja sanoi "about 3-5s". Oletus: 4 s. Voi
+   tarkentaa kokeilemalla (iPad ja Mac).
+3. Voiko lapsi ohittaa odotuksen napauttamalla Seuraavaa. Oletus: kyllä
+   (kriteeri 5).
+4. Siirtyykö myös 10. vastauksen jälkeen itsestään loppuruutuun. Oletus:
+   ei, `Katso tulos` säilyy (kriteeri 7).
+5. (pm:n kysymys, ei omistajalle ellei designer tarvitse) Pitääkö lapsen
+   pystyä pysäyttämään odotus (esim. lukee vielä oikeaa vastausta)?
+   Oletuksessa ei; Seuraava ei estä muuta kuin siirtymistä.
+Riskit:
+- iPad: seuraava lasku luetaan ääneen ajastimesta, ei napautuksesta.
+  Sama tarkistamaton kysymys kuin SEI-45:n tauko: iPad-Safari voi estää
+  puheen, jota ei ole käynnistetty napautuksesta. Jos estää, lasku tulee
+  näkyviin mutta jää lukematta; peli ei silti saa jäädä jumiin (SEI-1
+  kriteeri 5). Tarkistetaan iPadilla SEI-2:n iPad-tarkistuksen
+  (suunnitelma §7 C) yhteydessä; ei tarkistettu.
+- Lukeva lapsi ehtii eri tahtia kuin toinen; kiinteä aika voi tuntua liian
+  nopealta tai hitaalta. Siksi kysymykset 2 ja 3.
+- Puhe oikeasta vastauksesta ja edistymispalkin aika voivat mennä
+  päällekkäin (kriteeri 2); puheen kesto vaihtelee laitteen äänen mukaan,
+  ei mitattu.
 
 ### SEI-7 — Sana: virheen jälkeen koko sanaa ei tyhjennetä, askelpalautin kaikilla tasoilla, ohitus
 Tila: todo
@@ -849,3 +938,4 @@ Kriteerit:
   (Enhanced). B (omistajan kuuntelu) Q24:ssä.
 - 2026-10-23: Matikan jatkokorjaus S1–S3 (c00873a, 9814d40, 33d4c25; kapealla ruudulla väärä kirjoitettu vastaus rivittyy laatikon alle). Pääsession ajo: unit 61/61, playwright 371/9/0. Julkaistu.
 - 2026-10-23: SEI-2, SEI-5, SEI-6 → done (Q24). Seuraavaksi SEI-3, SEI-7, SEI-8 (Sana) designerille.
+- 2026-10-23: lisätty SEI-46 (Matikka: automaattinen siirtyminen oikean vastauksen jälkeen), omistajan havainto Macilla julkaistusta Matikasta. Neljä avointa kysymystä oletuksineen (väärä vastaus, kesto 4 s, ohitus Seuraavalla, 10. vastaus). Tila todo.
