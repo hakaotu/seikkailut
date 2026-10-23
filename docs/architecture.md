@@ -4,7 +4,7 @@ As-is description after SEI-1. Intent and history live in `docs/plans/`; the des
 
 ## What this is
 
-Seikkailut: one static web app (Finnish UI, `lang="fi"`) meant to hold three children's games, Matikka, Sanat, Espanja, behind a front page. Target device is an iPad in Safari. Only the shell exists; all three games are the same placeholder. Nothing is deployed and no GitHub remote or `.github/` exists.
+Seikkailut: one static web app (Finnish UI, `lang="fi"`) meant to hold three children's games, Matikka, Sanat, Espanja, behind a front page. Target device is an iPad in Safari. Only the shell exists; all three games are the same placeholder. Hosted on GitHub Pages at https://hakaotu.github.io/seikkailut/ (see Layout).
 
 `originals/` holds the three old standalone HTML games and `vauhti.mp3`. They are reference material: not served, not imported, not modified.
 
@@ -13,6 +13,8 @@ Seikkailut: one static web app (Finnish UI, `lang="fi"`) meant to hold three chi
 - `app/` is the deployable unit: `index.html`, `styles/app.css`, `src/*.js`. No build step, no runtime dependencies, ES modules loaded directly by `<script type="module" src="src/app.js">`.
 - `scripts/serve.mjs` serves `app/` as web root (`node:http`). Flags `--port` (default 8080), `--host` (default 127.0.0.1; use 0.0.0.0 for a device on the LAN). Serves `.js` as `text/javascript`, sends `Cache-Control: no-cache`, returns 403 for paths outside `app/`.
 - `tests/unit/` (`node:test`, pure modules) and `tests/e2e/` (Playwright). `package.json` is `"type": "module"`; its only dependency is the dev dependency `@playwright/test` (pinned 1.64.1).
+- `.github/workflows/pages.yml` uploads `app/` as the Pages artifact and deploys it on push to `main` and on `workflow_dispatch`. It does not run the tests. The remote `origin` is https://github.com/hakaotu/seikkailut (public).
+- `README.md` (Finnish): one-paragraph description and the local run and test commands.
 - Commands: `npm run serve`, `npm run test:unit` (`node --test tests/unit/`), `npm run test:e2e` (`playwright test`), `npm test` (both).
 
 ## Module map (`app/src/`)
@@ -75,5 +77,5 @@ Shell side: `failed` sets the button to `novoice` (label `Ei ääntä`) and show
 ## Open questions
 
 - No iPad device check has been done: first-tap speech, queued two-part speech, `onstart` firing, and presence of Finnish/Spanish voices are unverified on the target device.
-- Hosting: GitHub Pages is intended, but no workflow, remote or deployment exists. Whether the `app/` root works under a subpath is untested.
+- Hosting: on 2026-10-23 the live site under the `/seikkailut/` subpath was loaded in WebKit (820x1130, touch) by the main session: the front page showed three cards, Matikka opened at `#/matikka`, Etusivu returned, no page errors. Speech was not heard. The iPad check above is still open for the hosted site.
 - Node v26.11.0 on the Mac in use (checked 2026-10-23) meets the plan's 20.4+ for `node:test` `mock.timers`.
