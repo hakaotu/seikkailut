@@ -1,4 +1,5 @@
 import { fileURLToPath } from 'node:url';
+import { expect } from '@playwright/test';
 import path from 'node:path';
 
 const fixtures = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures');
@@ -159,4 +160,71 @@ export function buttonRects(page, selector = 'button') {
         };
       });
   }, selector);
+}
+
+// The frame's own buttons (SEI-1): at least 56 px and 12 px apart. Matikka's game buttons are not in it.
+const FRAME = '.game-card, .back-btn, .listen, .ok-btn, .accent-btn';
+
+// Every visible button is at least 44 x 44 and has touch-action: manipulation; frame buttons are
+// at least 56 x 56 and 12 px apart.
+export async function checkSizes(page, what) {
+  for (const r of await buttonRects(page, 'button')) {
+    expect(r.width, `${what}: ${r.name} width`).toBeGreaterThanOrEqual(44);
+    expect(r.height, `${what}: ${r.name} height`).toBeGreaterThanOrEqual(44);
+  }
+  const frame = await buttonRects(page, FRAME);
+  for (const r of frame) {
+    expect(r.width, `${what}: frame ${r.name} width`).toBeGreaterThanOrEqual(56);
+    expect(r.height, `${what}: frame ${r.name} height`).toBeGreaterThanOrEqual(56);
+  }
+  for (let i = 0; i < frame.length; i++) {
+    for (let j = i + 1; j < frame.length; j++) {
+      const a = frame[i];
+      const b = frame[j];
+      const dx = Math.max(a.left - b.right, b.left - a.right, 0);
+      const dy = Math.max(a.top - b.bottom, b.top - a.bottom, 0);
+      expect(Math.hypot(dx, dy), `${what}: gap between ${a.name} and ${b.name}`).toBeGreaterThanOrEqual(12);
+    }
+  }
+  const noManipulation = await page.evaluate(() =>
+    Array.from(document.querySelectorAll('button'))
+      .filter((b) => b.getBoundingClientRect().width > 0)
+      .filter((b) => getComputedStyle(b).touchAction !== 'manipulation')
+      .map((b) => b.className),
+  );
+  expect(noManipulation, `${what}: buttons without touch-action: manipulation`).toEqual([]);
+}
+
+export async function noSidewaysOverflow(page, what) {
+  const m = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    innerWidth: window.innerWidth,
+  }));
+  expect(m.scrollWidth, `${what}: scrollWidth ${m.scrollWidth} vs innerWidth ${m.innerWidth}`).toBeLessThanOrEqual(m.innerWidth);
+  const vw = m.innerWidth;
+  for (const r of await buttonRects(page)) {
+    expect(r.left, `${what}: button ${r.name} left`).toBeGreaterThanOrEqual(0);
+    expect(r.right, `${what}: button ${r.name} right`).toBeLessThanOrEqual(vw);
+  }
+}
+
+// Replaces Math.random with a seeded generator (mulberry32) before the app loads, so a round is
+// the same every run. The game reads Math.random when it needs a number, so this is enough.
+export async function seedRandom(page, seed) {
+  await page.addInitScript((s) => {
+    let a = s;
+    Math.random = () => {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }, seed);
+}
+
+// Matikka ignores its own buttons for 500 ms after a screen change (design 3.8). Real time, not
+// page.clock: a paused clock also freezes performance.now(), which the guard reads.
+export function settle(page) {
+  return page.waitForTimeout(550);
 }

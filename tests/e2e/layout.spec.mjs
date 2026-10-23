@@ -1,22 +1,9 @@
 import { test, expect } from '@playwright/test';
-import { installFakeSpeech, press, buttonRects, GAME_IDS } from './helpers.mjs';
+import { installFakeSpeech, press, buttonRects, noSidewaysOverflow, GAME_IDS } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => {
   await installFakeSpeech(page);
 });
-
-async function noSidewaysOverflow(page, what) {
-  const m = await page.evaluate(() => ({
-    scrollWidth: document.documentElement.scrollWidth,
-    innerWidth: window.innerWidth,
-  }));
-  expect(m.scrollWidth, `${what}: scrollWidth ${m.scrollWidth} vs innerWidth ${m.innerWidth}`).toBeLessThanOrEqual(m.innerWidth);
-  const vw = m.innerWidth;
-  for (const r of await buttonRects(page)) {
-    expect(r.left, `${what}: button ${r.name} left`).toBeGreaterThanOrEqual(0);
-    expect(r.right, `${what}: button ${r.name} right`).toBeLessThanOrEqual(vw);
-  }
-}
 
 test('front page: no sideways scroll, buttons inside the screen', async ({ page }) => {
   await page.goto('/');

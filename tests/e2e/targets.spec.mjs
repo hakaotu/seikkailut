@@ -1,35 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { installFakeSpeech, press, buttonRects, GAME_IDS } from './helpers.mjs';
-
-const FRAME = '.game-card, .back-btn, .listen, .ok-btn, .accent-btn';
-
-async function checkSizes(page, what) {
-  for (const r of await buttonRects(page, 'button')) {
-    expect(r.width, `${what}: ${r.name} width`).toBeGreaterThanOrEqual(44);
-    expect(r.height, `${what}: ${r.name} height`).toBeGreaterThanOrEqual(44);
-  }
-  const frame = await buttonRects(page, FRAME);
-  for (const r of frame) {
-    expect(r.width, `${what}: frame ${r.name} width`).toBeGreaterThanOrEqual(56);
-    expect(r.height, `${what}: frame ${r.name} height`).toBeGreaterThanOrEqual(56);
-  }
-  for (let i = 0; i < frame.length; i++) {
-    for (let j = i + 1; j < frame.length; j++) {
-      const a = frame[i];
-      const b = frame[j];
-      const dx = Math.max(a.left - b.right, b.left - a.right, 0);
-      const dy = Math.max(a.top - b.bottom, b.top - a.bottom, 0);
-      expect(Math.hypot(dx, dy), `${what}: gap between ${a.name} and ${b.name}`).toBeGreaterThanOrEqual(12);
-    }
-  }
-  const noManipulation = await page.evaluate(() =>
-    Array.from(document.querySelectorAll('button'))
-      .filter((b) => b.getBoundingClientRect().width > 0)
-      .filter((b) => getComputedStyle(b).touchAction !== 'manipulation')
-      .map((b) => b.className),
-  );
-  expect(noManipulation, `${what}: buttons without touch-action: manipulation`).toEqual([]);
-}
+import { installFakeSpeech, press, checkSizes, GAME_IDS } from './helpers.mjs';
 
 test('front page buttons are large enough and apart', async ({ page }) => {
   await installFakeSpeech(page);
