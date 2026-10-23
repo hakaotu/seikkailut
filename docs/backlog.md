@@ -150,7 +150,7 @@ Kriteerit:
    napautuksesta (ei vaadi toista yritystä).
 
 ### SEI-45 — Luonnollisempi puheääni (suomi ja espanja)
-Tila: review
+Tila: verifying
 Havainto (2026-10-23): omistaja avasi https://hakaotu.github.io/seikkailut/
 Macilla ja sanoi sanatarkasti: "en tykkää tosta nykyisestä tietokoneäänestä.
 Eikö meillä voisi olla mitään luonnollisempaa puheääntä siihen?" Mitä ääntä
@@ -780,3 +780,7 @@ Kriteerit:
   in-progress; ilman designeria ja arkkitehtia, koska muutos rajautuu
   äänen valintaan `speech.js`:ssä.
 - 2026-10-23: SEI-45 toteutettu (f264f5f; developer: unit 27/27, playwright 194/2 ohitettu/0). → review.
+- 2026-10-23: SEI-45 reviewer APPROVED (f264f5f; reviewer: unit 27/27,
+  playwright 194/2/0). Should fix 1–4 (Enhanced-bonus vain hyville
+  äänille, voiceURI-tunnistus, kaksi testiä) jatkokorjauksena. Julkaistu.
+  → verifying: omistaja kuuntelee Macilla.

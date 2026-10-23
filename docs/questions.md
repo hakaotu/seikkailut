@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-_(ei avoimia)_
+- **Q17 (katso):** Kuuntele Macilla https://hakaotu.github.io/seikkailut/
+  Sanat ja Espanja: onko ääni nyt parempi kuin äsken? (SEI-45)
+  — avattu 2026-10-23
 
 ## Vastatut
 
