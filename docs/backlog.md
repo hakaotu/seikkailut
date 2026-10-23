@@ -161,6 +161,16 @@ kieleen. Omistajan Macissa on useita suomen ääniä, mm. Eddy, Flo, Grandma,
 Grandpa, Reed, Rocko, Sandy, Shelley (leluääniä) ja tavallinen Satu;
 espanjalle Mónica ja sama leluäänten joukko. Sovellus voi siis valita
 leluäänen. Tätä ei ole todennettu.
+Havainto (2026-10-23): omistaja Macilla, Chrome, https://hakaotu.github.io/seikkailut/,
+Sanat-kortti, sanatarkasti: "ja toistotahti pitäs olla sit rauhallisempi. Nyt
+se Kissakissa kuulostaa just tolta, että se olis yhteen kirjoitettuna."
+Omistaja tarkoittaa: toiston tahdin pitäisi olla rauhallisempi; sanan kaksi
+lukukertaa menevät nyt yhteen kuin yhteen kirjoitettuna.
+Koodista ja selaimesta luettua (pääsessio, 2026-10-23, Chrome Playwrightilla
+tällä Macilla; ei omistajan havainto): Sanat-kortin napautus puhuu "kissa"
+kahtena peräkkäin jonotettuna lausumana äänellä Satu (fi-FI), nopeuksilla
+0,78 ja 0,52, ilman taukoa niiden välillä. Omistaja vahvisti käyttävänsä
+Chromea.
 Perustelu: puhe on kaikissa kolmessa pelissä lapsen tapa kuulla sana tai
 lasku; omistajan mielestä nykyinen ääni kuulostaa keinotekoiselta.
 Riippuvuus: ei estä muita; kattaa kunkin pelin sitä mukaa kun SEI-2 – SEI-4
@@ -196,6 +206,15 @@ Kriteerit (mitä omistaja kuulee; Mac, https://hakaotu.github.io/seikkailut/):
    "Kuuntele" kerran. Niin ääni kuuluu tästä yhdestä napautuksesta
    (SEI-1 kriteeri 6 pätee edelleen). Tarkistetaan, kun iPad on käsillä
    (SEI-2:n yhteydessä).
+8. Annettu sana, joka luetaan kaksi kertaa (esim. KISSA Sanat-kortissa).
+   Kun painan sitä Macilla Chromessa. Niin kahden lukukerran välissä on
+   selvästi kuuluva tauko, eivätkä ne kuulosta yhdeltä sanalta (ei
+   "kissakissa"), ja omistaja sanoo toiston tahdin olevan rauhallinen.
+   Tauon pituus jätetään suunnitteluun (pm:llä ei ole perustetta
+   numerolle). Tauko ei saa viivästyttää tai estää ensimmäistä lukukertaa:
+   SEI-1 kriteeri 6 (ääni kuuluu ensimmäisestä napautuksesta iPadilla)
+   pätee edelleen; tarkistetaan iPadilla SEI-2:n yhteydessä kriteerin 7
+   kanssa.
 
 Avoimet kysymykset:
 - Reitti on auki, omistajalle esitetään kaksi vaihtoehtoa. A: käytetään

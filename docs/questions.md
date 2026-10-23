@@ -2,12 +2,17 @@
 
 ## Avoimet
 
-- **Q18 (katso):** Kumpi kuulostaa samalta kuin sovelluksen "kissa":
-  `say -v Eddy kissa` vai `say -v Satu kissa`? Ja millä selaimella?
-  (SEI-45) — avattu 2026-10-23
+- **Q19 (klikkaus):** Lataa Maciin Satun parannettu ääni (Enhanced/Premium),
+  käynnistä Chrome uudelleen ja kuuntele Sanat: kelpaako ääni? Jos ei,
+  seuraavaksi äänitetyt luonnolliset äänet (reitti B). (SEI-45)
+  — avattu 2026-10-23
 
 ## Vastatut
 
+- **Q18 (katso):** Kumpi kuulostaa sovelluksen "kissalta"? — omistaja
+  vastasi rivillä "! say -v Satu kissa", tulkittu: Satu. Selain Chrome.
+  Lisäksi: kaksi "kissaa" kuulostaa yhteen kirjoitetulta, tahti
+  rauhallisemmaksi (pm lisää SEI-45:een). (2026-10-23)
 - **Q17 (katso):** Onko ääni parempi? — "ei oo parempi. Kissa kuulostaa
   nyt kuin joku englantia puhuva yrittää lausua suomea." (2026-10-23)
 - **Q16 (päätös):** Luonnollisempi puheääni — A: valitaan laitteen paras
