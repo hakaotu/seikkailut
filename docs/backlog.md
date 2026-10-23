@@ -827,3 +827,11 @@ Kriteerit:
 - 2026-10-23: Q23 hyväksytty. SEI-2, SEI-5, SEI-6 → in-progress, developer käynnistetty.
 - 2026-10-23: SEI-2/5/6 toteutettu (5cc4043..bc62141; developer: unit 61/61, playwright 351/9 ohitettu/0). → review.
 - 2026-10-23: SEI-2/5/6 reviewer APPROVED (bc62141; reviewer: unit 61/61, playwright 351/9/0). Should fix S1–S3 jatkokorjauksena. Julkaistu. → verifying (suunnitelma §7 A ja B).
+- 2026-10-23: SEI-2/5/6 §7 A (pääsessio): https://hakaotu.github.io/seikkailut/
+  commitilla 253c20f, oikea Chrome (Playwright channel chrome, 1280×720,
+  ei headless) tällä Macilla. Matikka-kortti → valintaruutu, Helppo
+  valittuna, ei puhetta ennen Aloitaa. Aloita → Lasku 1/10, puhuttu
+  "0 plus 5" äänellä Satu (Enhanced). Kierros 2 oikein → "2 / 10 oikein,
+  Harjoittelemalla oppii!", ei mestaria; Pelaa uudelleen, 10 oikein →
+  "10 / 10 oikein, Olet matikkamestari!" ja konfetti. Kaikki puhe Satu
+  (Enhanced). B (omistajan kuuntelu) Q24:ssä.

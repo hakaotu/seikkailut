@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-_(ei avoimia)_
+- **Q24 (katso):** Matikka Macilla: Aloita, vastaa ensimmäiseen väärin —
+  kuuluuko lasku ja sitten "Ei ihan. Oikea vastaus on …"? (SEI-2/5/6)
+  — avattu 2026-10-23
 
 ## Vastatut
 

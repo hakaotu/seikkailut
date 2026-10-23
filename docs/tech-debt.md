@@ -64,6 +64,8 @@ Open items are listed first, with the item that most affects future work at the 
 
 ## TD-2: Two different descriptions of the game contract
 
+**Suljettu 2026-10-23:** `app/src/games/registry.js` kuvaa sopimuksen suunnitelman `docs/plans/sei-1.md` §3.1 -tarkennuksen mukaisesti (commit dfd9cbc, reviewer APPROVED SEI-2:n yhteydessä).
+
 - **Found:** SEI-1 review, 2026-10-23.
 - **Where:** `app/src/games/registry.js:8` says "A game is an object { create(ctx) }".
   Plan §3.1 says "an ES module whose default export is { create(ctx) }".
