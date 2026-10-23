@@ -279,15 +279,19 @@ export default {
 
     // Shrinks the problem row in 4 px steps until it fits beside Kuuntele (design 3.2). Reads
     // layout synchronously; it is not an await, so the tap rule holds. Hidden, it measures 0.
+    // The wrong-answer chip (.mk-yours) is part of the row, so it is measured too. If the row still
+    // does not fit at the floor on a narrow window, the chip drops under the box (is-wrapped).
     function fitProblem() {
       const wide = window.matchMedia('(min-width: 420px)').matches;
       const min = wide ? 36 : 28;
       let size = wide ? 56 : 40;
+      problemEl.classList.remove('is-wrapped');
       problemEl.style.fontSize = `${size}px`;
       while (size > min && problemEl.scrollWidth > problemEl.clientWidth) {
         size = Math.max(min, size - 4);
         problemEl.style.fontSize = `${size}px`;
       }
+      if (!wide && problemEl.scrollWidth > problemEl.clientWidth) problemEl.classList.add('is-wrapped');
     }
 
     function renderBox() {

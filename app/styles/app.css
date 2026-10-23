@@ -566,6 +566,8 @@ html[data-booted] .boot-error { display: none; }
   white-space: nowrap;
 }
 .game-view[data-game='matikka'] .mk-problem:focus { outline: none; }
+/* Narrow only: at the smallest size the wrong-answer chip drops under the box (fitProblem) */
+.game-view[data-game='matikka'] .mk-problem.is-wrapped { flex-wrap: wrap; row-gap: 0.2em; }
 .game-view[data-game='matikka'] .mk-op-symbol { color: var(--brand); }
 .game-view[data-game='matikka'] .mk-equals { color: var(--grey); }
 .game-view[data-game='matikka'] .mk-problem.is-appearing { animation: mk-appear 0.3s ease; }

@@ -64,6 +64,35 @@ test('SEI-1 / 3: the longest problem, 9999 typed, stays inside its row', async (
   await noSidewaysOverflow(page, '9999');
 });
 
+test('SEI-1 / 3: the longest problem, 100 - 100 answered wrong with 9999, stays inside its slot', async ({ page }, testInfo) => {
+  await page.addInitScript(() => { Math.random = () => 0.99999; }); // after the seed: forces 100 - 100
+  await openMatikka(page, testInfo);
+  await startRound(page, testInfo, { level: 'Vaikea', ops: ['sub'] });
+  expect(await view(page).locator('.mk-problem').getAttribute('aria-label')).toBe('Lasku 1 / 10: 100 miinus 100');
+  await typeNumber(page, testInfo, '9999');
+  await press(button(page, 'OK, tarkista vastaus'), testInfo);
+  await expect(view(page).locator('.mk-yours')).toBeVisible();
+  const fits = await page.evaluate(() => {
+    const p = document.querySelector('.game-view[data-game="matikka"] .mk-problem');
+    const y = p.querySelector('.mk-yours');
+    const slot = p.parentElement.getBoundingClientRect();
+    const mark = y.querySelector('.mk-mark').getBoundingClientRect();
+    const yr = y.getBoundingClientRect();
+    return {
+      scrollWidth: p.scrollWidth, clientWidth: p.clientWidth, font: p.style.fontSize,
+      yoursRight: Math.max(yr.right, mark.right), slotRight: slot.right, yoursLeft: yr.left, slotLeft: slot.left,
+    };
+  });
+  const info = JSON.stringify(fits);
+  expect(fits.scrollWidth, info).toBeLessThanOrEqual(fits.clientWidth);
+  expect(fits.yoursRight, info).toBeLessThanOrEqual(fits.slotRight);
+  expect(fits.yoursLeft, info).toBeGreaterThanOrEqual(fits.slotLeft);
+  await noSidewaysOverflow(page, '100 - 100 answered wrong');
+  // the device projects fit on one row; only the narrow window may drop the chip under the box
+  const wrapped = await view(page).locator('.mk-problem').evaluate((n) => n.classList.contains('is-wrapped'));
+  expect(wrapped, info).toBe(testInfo.project.name === 'narrow');
+});
+
 test('SEI-1 / 4: every button is at least 44 x 44 with touch-action: manipulation, on every screen', async ({ page }, testInfo) => {
   await eachScreen(page, testInfo, async (name) => {
     // On the narrow window the page scrolls while it is driven; the sticky bar would then cover
