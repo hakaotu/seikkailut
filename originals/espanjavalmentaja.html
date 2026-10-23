@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title¡>¡Hola! – Espanjan alkeet lapselle</title¡>
+  <title>¡Hola! – Espanjan alkeet lapselle</title>
+  <style>
+    :root{
+      --rojo:#c62828;
+      --amarillo:#ffd600;
+      --rojo-dark:#8e0000;
+      --paper:#fffaf0;
+      --ink:#1a1a1a;
+      --ok:#2e7d32;
+      --muted:#6b6b6b;
+      --btn:#fafafa;
+      --btn-border:#ddd;
+    }
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
+      color:var(--ink);
+      background:
+        linear-gradient(180deg, var(--rojo) 0 28%, var(--amarillo) 28% 56%, var(--rojo) 56% 100%);
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+    }
+    .card{
+      width:min(980px, 92vw);
+      margin:24px;
+      background:var(--paper);
+      border-radius:20px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    header{
+      background:linear-gradient(90deg, var(--rojo) 0 50%, var(--amarillo) 50% 100%);
+      color:#fff;
+      padding:16px 20px;
+      position:relative;
+    }
+    header h1{
+      margin:0;
+      font-size: clamp(1.2rem, 2.5vw + 1rem, 2.2rem);
+      display:flex;
+      align-items:center;
+      gap:.5rem;
+      text-shadow:0 2px 0 rgba(0,0,0,.25);
+    }
+    .flags{
+      font-size:1.6rem;
+      margin-left:auto;
+    }
+    .ribbon{
+      position:absolute; inset:auto 0 -12px 0; height:12px;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 32px, rgba(0,0,0,.08) 32px 64px);
+      opacity:.4;
+    }
+    .content{
+      padding:18px clamp(14px, 2vw, 28px) 28px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:18px;
+    }
+    .toolbar{
+      display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between;
+      background:#fff; border:1px solid var(--btn-border); border-radius:14px; padding:10px 12px;
+    }
+    .group{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+    .toggle{
+      display:inline-flex; border:2px solid var(--rojo); border-radius:999px; overflow:hidden;
+    }
+    .toggle button{
+      padding:8px 12px; background:#fff; border:0; font-weight:700; cursor:pointer;
+    }
+    .toggle button[aria-pressed="true"]{
+      background:var(--rojo); color:#fff;
+    }
+    .stat{
+      font-weight:700; color:var(--rojo-dark);
+    }
+    .progress{
+      block-size: 14px;
+      inline-size:100%;
+      background:#eee; border-radius:999px; overflow:hidden; border:1px solid #ddd;
+    }
+    .progress > span{
+      display:block; height:100%; width:0%; background:linear-gradient(90deg, var(--amarillo), #ffe46b);
+      transition:width .3s ease;
+    }
+    .question{
+      background:#fff;
+      border:1px solid var(--btn-border);
+      border-radius:16px;
+      padding:16px;
+    }
+    .qword{
+      font-size: clamp(1.4rem, 3.5vw + .5rem, 2.4rem);
+      font-weight:900;
+      letter-spacing:.5px;
+      display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    }
+    .qhint{
+      color:var(--muted); font-size:.95rem;
+    }
+    .answers{
+      display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      margin-top:12px;
+    }
+    .answers button{
+      padding:14px 12px; border-radius:14px; border:2px solid var(--btn-border); background:var(--btn);
+      font-size:1.1rem; cursor:pointer; text-align:center;
+      transition: transform .05s ease, border-color .2s ease, background .2s ease;
+    }
+    .answers button:active{ transform:scale(.98); }
+    .answers button.correct{ border-color: var(--ok); background:#f0fff0; }
+    .answers button.wrong{ border-color: #b00020; background:#fff0f0; }
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; margin-top:6px;
+    }
+    .controls button{
+      padding:10px 14px; border-radius:12px; border:1px solid var(--btn-border); background:#fff; cursor:pointer; font-weight:700;
+    }
+    .pill{
+      padding:6px 10px; border-radius:999px; background:#fff; border:1px dashed #ccc; font-size:.9rem;
+    }
+    .footer{
+      padding:12px 16px; color:#444; font-size:.9rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    }
+    .stars{font-size:1.2rem}
+    .sr-only{position:absolute !important; height:1px; width:1px; overflow:hidden; clip: rect(1px, 1px, 1px, 1px);}
+    /* Confetti canvas */
+    #confetti { position: fixed; inset: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+  <div class="card" role="application" aria-label="Espanjan harjoittelusivu lapselle">
+    <header>
+      <h1>¡Hola! Espanjaa leikkien <span class="flags" aria-hidden="true">🇪🇸🎈</span></h1>
+      <div class="ribbon" aria-hidden="true"></div>
+    </header>
+
+    <div class="content">
+      <div class="toolbar" role="region" aria-label="Harjoitusasetukset">
+        <div class="group" aria-label="Harjoitussuunta">
+          <span class="pill">Aihe: tervehdykset &amp; värit</span>
+          <div class="toggle" role="group" aria-label="Käännä suunta">
+            <button id="fi2es" aria-pressed="true" title="Suomi → Espanja">Suomi → Espanja</button>
+            <button id="es2fi" aria-pressed="false" title="Espanja → Suomi">Espanja → Suomi</button>
+          </div>
+        </div>
+
+        <div class="group">
+          <button id="speakBtn" title="Kuuntele espanjan ääntä">🔊 Kuuntele</button>
+          <span class="stat" id="score">Pisteet: 0/10</span>
+        </div>
+      </div>
+
+      <div class="question" role="region" aria-live="polite" aria-atomic="true">
+        <div class="qword">
+          <span id="promptWord">aloitetaan…</span>
+        </div>
+        <div class="qhint" id="hint">Valitse oikea käännös.</div>
+
+        <div class="answers" id="answers" role="group" aria-label="Vastausvaihtoehdot">
+          <!-- vastauspainikkeet tulevat tähän -->
+        </div>
+
+        <div class="controls">
+          <div class="progress" aria-label="Edistymispalkki"><span id="bar"></span></div>
+          <button id="skipBtn">Ohita ↻</button>
+          <button id="nextBtn">Seuraava ➜</button>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div>Vinkki: Klikkaa <strong>🔊 Kuuntele</strong>, niin sana ääntyy espanjaksi.</div>
+        <div class="stars" id="stars" title="Palkintotähdet">⭐</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* --- Sana-aineisto (teemat: tervehdykset & värit) --- */
+const WORDS = [
+  // tervehdykset
+  { fi:"hei", es:"hola", cat:"tervehdys" },
+  { fi:"moi moi / hei hei", es:"adiós", cat:"tervehdys" },
+  { fi:"hyvää huomenta", es:"buenos días", cat:"tervehdys" },
+  { fi:"hyvää iltaa", es:"buenas tardes", cat:"tervehdys" },
+  { fi:"hyvää yötä", es:"buenas noches", cat:"tervehdys" },
+  { fi:"kiitos", es:"gracias", cat:"tervehdys" },
+  { fi:"ole hyvä", es:"por favor", cat:"tervehdys" },
+  { fi:"mitä kuuluu?", es:"¿qué tal?", cat:"tervehdys" },
+  // värit
+  { fi:"punainen", es:"rojo", cat:"väri" },
+  { fi:"keltainen", es:"amarillo", cat:"väri" },
+  { fi:"sininen", es:"azul", cat:"väri" },
+  { fi:"vihreä", es:"verde", cat:"väri" },
+  { fi:"valkoinen", es:"blanco", cat:"väri" },
+  { fi:"musta", es:"negro", cat:"väri" },
+  { fi:"oranssi", es:"naranja", cat:"väri" },
+  { fi:"violetti", es:"morado", cat:"väri" },
+  { fi:"ruskea", es:"marrón", cat:"väri" },
+  { fi:"harmaa", es:"gris", cat:"väri" }
+];
+
+/* --- Tilat --- */
+let direction = "fi2es"; // tai es2fi
+let round = [];  // 10 kysymystä
+let idx = 0;     // nykyinen kysymys indeksinä
+let score = 0;
+let locked = false;
+
+/* --- Apurit --- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const shuffle = arr => arr.sort(() => Math.random() - .5);
+function choice(arr, n){
+  const copy = [...arr]; shuffle(copy); return copy.slice(0, n);
+}
+function speakES(text){
+  if(!('speechSynthesis' in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "es-ES";
+  u.rate = 0.9;
+  u.pitch = 1.0;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+/* --- Konfetti (yksinkertainen) --- */
+const confetti = (() => {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  let parts = [], running=false;
+  function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+  addEventListener('resize', resize); resize();
+  function burst(){
+    const colors = ['#ffd600','#ffec6b','#c62828','#ff8a80'];
+    for(let i=0;i<120;i++){
+      parts.push({
+        x: canvas.width/2, y: canvas.height/3,
+        vx: (Math.random()*4-2), vy: (Math.random()*-4 - 2),
+        g: .08 + Math.random()*.06,
+        size: 4 + Math.random()*6,
+        color: colors[Math.floor(Math.random()*colors.length)],
+        life: 120 + Math.random()*60
+      });
+    }
+    if(!running){ running=true; requestAnimationFrame(loop); }
+  }
+  function loop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    parts.forEach(p=>{
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.life--;
+      ctx.fillStyle = p.color; ctx.fillRect(p.x,p.y,p.size,p.size);
+    });
+    parts = parts.filter(p=>p.life>0 && p.y < canvas.height+20);
+    if(parts.length){ requestAnimationFrame(loop); } else { running=false; }
+  }
+  return { burst };
+})();
+
+/* --- Kierroksen luonti --- */
+function newRound(){
+  round = choice(WORDS, 10);
+  idx = 0; score = 0;
+  updateScore(); updateBar();
+  nextQuestion(true);
+}
+
+/* --- Kysymyksen muodostus --- */
+function buildQuestion(){
+  const item = round[idx];
+  const prompt = direction === "fi2es" ? item.fi : item.es;
+  const correct = direction === "fi2es" ? item.es : item.fi;
+
+  // väärät vaihtoehdot samasta kategoriasta, jotta tuntuu järkevältä
+  const pool = WORDS.filter(w => w !== item && w.cat === item.cat)
+  const distractors = choice(pool, 3).map(w => direction === "fi2es" ? w.es : w.fi);
+  const options = shuffle([correct, ...distractors]);
+
+  return { prompt, correct, options, cat: item.cat };
+}
+
+/* --- UI-päivitykset --- */
+function renderQuestion(){
+  const { prompt, correct, options, cat } = buildQuestion();
+  $('#promptWord').textContent = prompt;
+  $('#hint').textContent = (direction==="fi2es")
+    ? `Valitse espanjaksi (${cat}).`
+    : `Valitse suomeksi (${cat}).`;
+
+  const box = $('#answers'); box.innerHTML = '';
+  options.forEach(text=>{
+    const btn = document.createElement('button');
+    btn.type = "button";
+    btn.textContent = text;
+    btn.setAttribute('aria-label', `Vastaus ${text}`);
+    btn.addEventListener('click', ()=> checkAnswer(btn, text, correct));
+    box.appendChild(btn);
+  });
+}
+
+function lockButtons(state){
+  $$('#answers button').forEach(b=> b.disabled = state);
+  locked = state;
+}
+
+function checkAnswer(btn, given, correct){
+  if(locked) return;
+  lockButtons(true);
+  const all = $$('#answers button');
+  all.forEach(b=>{
+    const ok = b.textContent === correct;
+    b.classList.toggle('correct', ok);
+    if(!ok && b===btn){ b.classList.add('wrong'); }
+  });
+  if(given === correct){
+    score++; updateScore();
+    if(direction==="es2fi"){ /* jos kysymys espanjaksi, myös ääni auttaa vahvistusta */
+      speakES($('#promptWord').textContent.replace(/[¡!¿?]/g,''));
+    }
+  }
+}
+
+function updateScore(){
+  $('#score').textContent = `Pisteet: ${score}/10`;
+}
+function updateBar(){
+  const pct = (idx/10)*100;
+  $('#bar').style.width = `${pct}%`;
+}
+
+function nextQuestion(first=false){
+  if(!first && idx < 10){
+    idx++;
+  }
+  if(idx >= 10){
+    endRound();
+    return;
+  }
+  updateBar();
+  renderQuestion();
+  lockButtons(false);
+}
+
+/* --- Kierroksen päätös --- */
+function endRound(){
+  updateBar(); // 100% lopuksi
+  $('#bar').style.width = '100%';
+  const box = $('#answers');
+  const msg = document.createElement('div');
+  msg.style.padding = '8px 0';
+  const good = score >= 8;
+  msg.innerHTML = `<strong>Kierros valmis!</strong> Sait ${score}/10 pistettä.`;
+  box.innerHTML = '';
+  box.appendChild(msg);
+
+  const again = document.createElement('button');
+  again.textContent = 'Uusi kierros ▶';
+  again.addEventListener('click', newRound);
+  again.style.marginTop = '8px';
+  box.appendChild(again);
+
+  if(good){
+    addStar();
+    confetti.burst();
+  }
+}
+
+/* --- Tähdet talteen selaimeen --- */
+function getStars(){
+  return Number(localStorage.getItem('es_stars')||'0');
+}
+function setStars(n){
+  localStorage.setItem('es_stars', String(n));
+  $('#stars').textContent = '⭐'.repeat(Math.min(n,10)) + (n>10 ? ` ×${n}` : '');
+}
+function addStar(){
+  setStars(getStars()+1);
+}
+
+/* --- Tapahtumat --- */
+$('#fi2es').addEventListener('click', ()=>{
+  direction = "fi2es";
+  $('#fi2es').setAttribute('aria-pressed','true');
+  $('#es2fi').setAttribute('aria-pressed','false');
+  newRound();
+});
+$('#es2fi').addEventListener('click', ()=>{
+  direction = "es2fi";
+  $('#fi2es').setAttribute('aria-pressed','false');
+  $('#es2fi').setAttribute('aria-pressed','true');
+  newRound();
+});
+$('#nextBtn').addEventListener('click', ()=> nextQuestion());
+$('#skipBtn').addEventListener('click', ()=> { idx = Math.min(idx+1, 10); nextQuestion(true); });
+$('#speakBtn').addEventListener('click', ()=>{
+  if(direction==="fi2es"){
+    // ääntä espanja: luetaan kaikki vastausvaihtoehdot, jotta ääni altistaa
+    $$('#answers button').forEach((b,i)=> setTimeout(()=>speakES(b.textContent), i*600));
+  } else {
+    // ääntä kysymyssana espanjaksi
+    speakES($('#promptWord').textContent.replace(/[¡!¿?]/g,''));
+  }
+});
+
+/* --- Käynnistys --- */
+setStars(getStars());
+newRound();
+</script>
+</body>
+</html>

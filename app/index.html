@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seikkailut</title>
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+
+<!-- Shown only if the script has not set html[data-booted] within 3 s (see app.css). -->
+<div class="boot-error">
+  <p class="boot-error-title">Seikkailut ei käynnistynyt.</p>
+  <p class="boot-error-text">Lataa sivu uudelleen. iPadissa: napauta osoiterivin ↻-kuvaketta.</p>
+  <p class="boot-error-text">Jos se ei auta, kokeile toista selainta.</p>
+</div>
+
+<div id="live" class="sr-only" role="status" aria-live="polite"></div>
+
+<main id="home" class="home">
+  <h1>Seikkailut</h1>
+  <p class="sub">Mitä pelataan?</p>
+  <div class="cards">
+    <button type="button" class="game-card" data-game="matikka">
+      <span class="art" aria-hidden="true"><span class="glyph">1 + 2</span></span>
+      <span class="txt"><span class="t">Matikka</span><span class="d">Laske ja harjoittele numeroita</span></span>
+      <span class="badge" hidden><span class="badge-text" aria-hidden="true"></span><span class="sr-only"></span></span>
+    </button>
+    <button type="button" class="game-card" data-game="sanat">
+      <span class="art" aria-hidden="true"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></span>
+      <span class="txt"><span class="t">Sanat</span><span class="d">Rakenna suomen sanoja kirjaimista</span></span>
+      <span class="badge" hidden><span class="badge-text" aria-hidden="true"></span><span class="sr-only"></span></span>
+    </button>
+    <button type="button" class="game-card" data-game="espanja">
+      <span class="art" aria-hidden="true"><span class="hola">¡Hola!</span></span>
+      <span class="txt"><span class="t">Espanja</span><span class="d">Opi espanjan sanoja</span></span>
+      <span class="badge" hidden><span class="badge-text" aria-hidden="true"></span><span class="sr-only"></span></span>
+    </button>
+  </div>
+</main>
+
+<div id="game-views"></div>
+
+<script type="module" src="src/app.js"></script>
+</body>
+</html>

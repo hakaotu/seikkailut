@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Seikkailut – ulkoasuluonnos SEI-1</title>
+<style>
+  /* ---------- Esityssivun oma tyyli (ei sovelluksen) ---------- */
+  body { margin:0; background:#eceef3; color:#222; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .page { max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px; }
+  .page > h1 { font-size: 30px; margin: 0 0 6px; }
+  .lead { font-size: 17px; max-width: 860px; color:#333; }
+  .page h2 { font-size: 23px; margin: 56px 0 6px; padding-top: 18px; border-top: 2px solid #d5d8e0; }
+  .page h3 { font-size: 18px; margin: 28px 0 6px; }
+  .note { color:#444; max-width: 860px; margin: 4px 0 14px; }
+  .row { display:flex; flex-wrap:wrap; gap: 28px; align-items:flex-start; }
+  figure { margin:0; }
+  figcaption { font-size: 14.5px; color:#333; margin-top: 10px; max-width: 520px; }
+  figcaption b { color:#000; }
+  .toc { background:#fff; border-radius:12px; padding:14px 20px; max-width: 860px; }
+  .toc ol { margin: 6px 0; padding-left: 22px; }
+  .q { background:#fff7db; border:2px solid #e2b93b; border-radius:12px; padding:14px 20px; max-width: 860px; }
+
+  /* Laitekehys: --w, --h = laitteen näkyvä koko CSS-pikseleinä, --s = pienennys */
+  .dev { --ch: 50; width: calc(var(--w) * var(--s) * 1px); height: calc(var(--h) * var(--s) * 1px);
+         border: 8px solid #26272b; border-radius: 22px; overflow: hidden; background:#fff;
+         box-shadow: 0 10px 30px rgba(0,0,0,.18); position: relative; }
+  .dev.pc { border-radius: 10px; border-width: 6px; --ch: 80; }
+  .screen { width: calc(var(--w) * 1px); height: calc(var(--h) * 1px);
+            transform: scale(var(--s)); transform-origin: 0 0; position:absolute; top:0; left:0; }
+  .chrome { height: calc(var(--ch) * 1px); background:#f3f3f5; border-bottom:1px solid #d7d7dc;
+            display:flex; align-items:center; justify-content:center; font: 16px system-ui, sans-serif; color:#555; }
+  .chrome .addr { background:#e4e4e9; border-radius: 10px; padding: 6px 60px; }
+  .pc .chrome { flex-direction: column; justify-content: flex-end; padding-bottom: 8px; gap: 8px; }
+  .pc .chrome .tabs { align-self: flex-start; margin-left: 90px; background:#fff; border-radius: 8px 8px 0 0; padding: 4px 18px; font-size: 14px; }
+  .viewport { height: calc(100% - var(--ch) * 1px); position: relative; overflow: hidden; }
+
+  /* ---------- SOVELLUS (mittasuhteet kuten oikeassa sovelluksessa) ---------- */
+  .app { height:100%; box-sizing:border-box; color:#1f2340;
+         font-family: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', system-ui, sans-serif; }
+  .app * { box-sizing: border-box; }
+  .m { --a:#17803d; --ad:#0f5c2b; --al:#e3f7ea; }
+  .s { --a:#764ba2; --ad:#553578; --al:#efe8fb; }
+  .e { --a:#c62828; --ad:#8e0000; --al:#fdeceb; }
+
+  /* Etusivu */
+  .home { background: linear-gradient(180deg, #e8f1ff 0%, #fffaf0 65%); display:flex; flex-direction:column;
+          align-items:center; justify-content:center; padding: 40px 48px; text-align:center; }
+  .home h1 { font-size:56px; margin:0; line-height:1.15; }
+  .home .sub { font-size:28px; margin: 6px 0 32px; color:#1f2340; }
+  .cards { display:grid; grid-template-columns: repeat(3, 1fr); gap:28px; width:100%; max-width:1100px; text-align:left; }
+  .card { position:relative; background:#fff; border-radius:28px; overflow:hidden; display:flex; flex-direction:column;
+          box-shadow: 0 6px 0 rgba(31,35,64,.14), 0 14px 30px rgba(31,35,64,.10); }
+  .card .art { background: var(--a); height:150px; display:flex; align-items:center; justify-content:center; gap:10px; color:#fff; }
+  .card .txt { padding: 20px 24px 26px; }
+  .card .t { font-size:36px; font-weight:bold; line-height:1.15; }
+  .card .d { font-size:21px; color:#5b5f73; margin-top:6px; line-height:1.3; }
+  .glyph { font-size:64px; font-weight:bold; letter-spacing:2px; }
+  .tile { width:62px; height:62px; border-radius:14px; background:#fff; color: var(--a); font-size:38px; font-weight:bold;
+          display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 0 var(--ad); }
+  .tile:nth-child(1){ transform: rotate(-6deg); } .tile:nth-child(3){ transform: rotate(5deg); }
+  .hola { font-size:56px; font-weight:bold; border-bottom: 7px solid #ffd600; line-height:1.1; padding-bottom:2px; }
+  .badge { position:absolute; top:14px; right:14px; background:#fff; color:#1f2340; border-radius:999px;
+           padding:6px 16px; font-size:19px; font-weight:bold; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+  /* allekkain */
+  .home.stack .cards { grid-template-columns: 1fr; gap:20px; max-width: 724px; }
+  .home.stack .card { flex-direction:row; min-height:170px; }
+  .home.stack .card .art { width:200px; height:auto; flex: none; position:relative; }
+  .home.stack .card .txt { display:flex; flex-direction:column; justify-content:center; padding: 20px 28px; }
+  .home.stack .badge { top:auto; right:auto; bottom:12px; left:50%; transform: translateX(-50%); white-space:nowrap; font-size:17px; padding:4px 12px; }
+  /* kapea */
+  .home.narrow { padding: 24px 16px; }
+  .home.narrow h1 { font-size:40px; }
+  .home.narrow .sub { font-size:24px; margin-bottom:20px; }
+  .home.narrow .card { min-height:120px; }
+  .home.narrow .card .art { width:110px; }
+  .home.narrow .card .t { font-size:28px; }
+  .home.narrow .card .d { font-size:18px; }
+  .home.narrow .card .txt { padding: 14px 16px; }
+  .home.narrow .glyph { font-size:36px; } .home.narrow .hola { font-size:30px; border-bottom-width:5px; }
+  .home.narrow .tile { width:30px; height:30px; font-size:20px; border-radius:8px; } .home.narrow .card .art { gap:4px; }
+
+  /* Painikkeiden tilat */
+  .card.hover { transform: translateY(-2px); box-shadow: 0 8px 0 rgba(31,35,64,.14), 0 18px 36px rgba(31,35,64,.14); }
+  .card.pressed { transform: translateY(4px); box-shadow: 0 2px 8px rgba(31,35,64,.10); }
+  .f { outline: 3px solid #1f2340 !important; outline-offset: 2px; }
+  .card.f { box-shadow: 0 6px 0 rgba(31,35,64,.14), 0 0 0 9px #ffd23f; }
+
+  /* Pelin kehys */
+  .game { display:flex; flex-direction:column; background: var(--al); }
+  .gh { height:76px; flex:none; background: var(--a); color:#fff; display:flex; align-items:center; gap:18px; padding: 0 20px; }
+  .gh h1 { font-size:30px; margin:0; font-weight:bold; white-space:nowrap; }
+  .back { height:56px; display:inline-flex; align-items:center; gap:6px; padding: 0 22px 0 12px; border-radius:999px;
+          background:#fff; color: var(--a); font-size:22px; font-weight:bold; box-shadow: 0 4px 0 var(--ad); flex:none; }
+  .back svg { width:28px; height:28px; }
+  .back.pressed { transform: translateY(4px); box-shadow:none; }
+  .back.f { box-shadow: 0 4px 0 var(--ad), 0 0 0 9px #ffd23f; }
+  .back.icon { width:56px; padding:0; justify-content:center; }
+  .slot { margin-left:auto; max-width:40%; border: 2px dashed rgba(255,255,255,.7); border-radius:12px; padding: 6px 12px;
+          font-size:16px; color:#fff; text-align:center; line-height:1.25; }
+  .gbody { flex:1; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; min-height:0; }
+  .gcard { background:#fff; border-radius:30px; width:100%; max-width:760px; flex:1; padding:24px; display:flex; flex-direction:column; gap:20px;
+           box-shadow: 0 10px 30px rgba(31,35,64,.10); min-height:0; }
+  .qrow { display:flex; align-items:center; gap:16px; }
+  .qph { flex:1; min-height:72px; border:3px dashed #c9cbd6; border-radius:16px; display:flex; align-items:center; justify-content:center;
+         color:#5b5f73; font-size:20px; }
+  .playph { flex:1; border:3px dashed #c9cbd6; border-radius:20px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+            color:#5b5f73; font-size:22px; text-align:center; padding: 12px; }
+  .playph small { font-size:17px; margin-top:6px; }
+
+  /* Kuuntele */
+  .listen { height:56px; min-width:150px; display:inline-flex; align-items:center; justify-content:center; gap:10px; padding: 0 24px 0 18px;
+            border-radius:999px; border:3px solid var(--a); background:#fff; color: var(--a); font-size:22px; font-weight:bold;
+            box-shadow: 0 4px 0 var(--ad); flex:none; white-space:nowrap; font-family: 'Chalkboard SE','Comic Sans MS','Comic Neue',system-ui,sans-serif; }
+  .listen svg { width:28px; height:28px; flex:none; }
+  .listen.pressed { transform: translateY(4px); box-shadow:none; }
+  .listen.playing { background: var(--a); color:#fff; }
+  .listen.off { border-style:dashed; border-color:#8a8fa3; color:#5b5f73; box-shadow: 0 4px 0 #c9cbd6; }
+  .listen.f { box-shadow: 0 4px 0 var(--ad), 0 0 0 9px #ffd23f; }
+  .waves { display:inline-flex; gap:3px; align-items:center; height:22px; }
+  .waves i { display:block; width:4px; background: currentColor; border-radius:2px; animation: wv 0.9s ease-in-out infinite; }
+  .waves i:nth-child(1){ height:10px; } .waves i:nth-child(2){ height:20px; animation-delay:.15s; } .waves i:nth-child(3){ height:14px; animation-delay:.3s; }
+  @keyframes wv { 50% { transform: scaleY(.45); } }
+  @media (prefers-reduced-motion: reduce) { .waves i { animation:none; } }
+
+  /* Ei ääntä -ilmoitus */
+  .banner { width:100%; max-width:760px; background:#fff4d6; border:3px solid #b7791f; border-radius:20px; padding:16px 20px;
+            display:flex; gap:18px; align-items:center; flex:none; }
+  .banner .bt { flex:1; }
+  .banner p { margin:0; }
+  .b1 { font-size:24px; font-weight:bold; }
+  .b2 { font-size:22px; }
+  .b3 { font-size:16px; color:#5b5f73; margin-top:8px !important; font-family: system-ui, sans-serif; line-height:1.35; }
+  .btn { height:56px; min-width:120px; padding: 0 24px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center;
+         font-size:22px; font-weight:bold; flex:none; font-family: 'Chalkboard SE','Comic Sans MS','Comic Neue',system-ui,sans-serif; }
+  .btn.ok { background:#fff; color:#1f2340; border:3px solid #1f2340; box-shadow: 0 4px 0 #1f2340; }
+  .btn.ok.pressed { transform: translateY(4px); box-shadow:none; }
+  .btn.ok.f { box-shadow: 0 4px 0 #1f2340, 0 0 0 9px #ffd23f; }
+  .btn.acc { background: var(--a); color:#fff; box-shadow: 0 4px 0 var(--ad); }
+
+  /* Virheet ja lataus */
+  .center { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:12px; }
+  .e1 { font-size:32px; font-weight:bold; margin:0; }
+  .e2 { font-size:22px; margin:0 0 12px; max-width: 520px; }
+  .loading { font-size:22px; color:#5b5f73; }
+  .boot { background:#fffaf0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 40px; }
+
+  /* Komponenttitaulu todellisessa koossa */
+  .spec-grid { display:grid; grid-template-columns: 170px repeat(5, auto); gap: 18px 26px; align-items:center; background:#fff;
+               border-radius:16px; padding: 24px; overflow-x:auto; }
+  .spec-grid .lbl { font-size:14px; color:#444; }
+  .spec-grid .hd { font-size:14px; font-weight:bold; color:#222; }
+  .onbar { background: var(--a); padding: 12px; border-radius: 12px; display:inline-flex; }
+  .mini-card { width: 300px; }
+  .mini-card .art { height: 110px; }
+  .mini-card .t { font-size: 30px; }
+  .mini-card .d { font-size: 18px; }
+  .story { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .arrow { font-size: 28px; color:#888; }
+  .tap { position:absolute; width:70px; height:70px; border-radius:50%; background: rgba(255,210,63,.55); border: 4px solid #e2a800; pointer-events:none; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Seikkailut – miltä sovellus näyttää (SEI-1)</h1>
+<p class="lead">Tällä sivulla on etusivu, pelin valinta ja yhteinen kehys, jonka sisään kolme peliä myöhemmin tulevat.
+Pelien omat ruudut (laskut, kirjainlaatat, vaihtoehdot) suunnitellaan seuraavissa vaiheissa, joten pelin kohdalla
+näkyy tässä vain tyhjä kehys katkoviivoin. Laitteiden kuvat on pienennetty, mutta mittasuhteet ovat samat kuin oikeassa laitteessa,
+ja yläreunan harmaa palkki on selaimen oma palkki.</p>
+
+<div class="toc">
+  <b>Sivulla:</b>
+  <ol>
+    <li>Etusivu: iPad pystyssä, iPad vaakatasossa, tietokone</li>
+    <li>Etusivu, kun peli on jäänyt kesken, ja kapea ikkuna</li>
+    <li>Pelin kehys: Matikka, Sanat, Espanja</li>
+    <li>Siirtyminen etusivulta peliin ja takaisin</li>
+    <li>Painikkeet: tavallinen, painettu, näppäimistön kohdistus</li>
+    <li>Kun ääni ei toimi</li>
+    <li>Virheet ja lataus</li>
+    <li>Kaksi kysymystä sinulle</li>
+  </ol>
+</div>
+
+<!-- ===================================================== 1 -->
+<h2>1. Etusivu</h2>
+<p class="note">Kolme isoa korttia. Koko kortti on yksi painike, joten pienen kohdan osumista ei tarvita. Jokaisessa kortissa on kuva,
+joka ei vaadi lukemista (1 + 2, kirjainlaatat, ¡Hola!), ja kunkin pelin oma väri pysyy samana pelin sisällä.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home stack">
+            <h1>Seikkailut</h1>
+            <p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>iPad pystyssä.</b> Kortit allekkain, jokainen rivi koko leveydeltä. Kaikki mahtuu ilman vieritystä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home">
+            <h1>Seikkailut</h1>
+            <p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>iPad vaakatasossa.</b> Kolme korttia rinnakkain.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40">
+      <div class="screen">
+        <div class="chrome"><span class="tabs">Seikkailut</span><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home">
+            <h1>Seikkailut</h1>
+            <p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Tietokoneen selainikkuna.</b> Sama kuin iPad vaakatasossa; kortit eivät veny yli 1100 pikselin leveyden isollakaan näytöllä.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 2 -->
+<h2>2. Etusivu, kun peli on kesken, ja kapea ikkuna</h2>
+<p class="note">Jos lapsi palaa etusivulle kesken kierroksen, pelin korttiin tulee merkki <b>Kesken 4/10</b>.
+Saman kortin napautus jatkaa siitä mihin jäätiin. Merkki häviää, kun kierros on pelattu loppuun. Merkkiä ei muisteta, jos sivu ladataan uudelleen.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home">
+            <h1>Seikkailut</h1>
+            <p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div><div class="badge">Kesken 4/10</div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div><div class="badge">Kesken 9/10</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>iPad vaakatasossa, kaksi peliä kesken.</b> Matikassa 4 tehtävää kymmenestä tehty, Espanjassa 9.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home stack">
+            <h1>Seikkailut</h1>
+            <p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m"><div class="art"><span class="glyph">1 + 2</span><div class="badge">Kesken 4/10</div></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>iPad pystyssä, Matikka kesken.</b> Allekkain merkki on värillisen kuvan alalaidassa, ettei se peitä pelin nimeä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:375; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr" style="padding:6px 20px">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home stack narrow">
+            <h1>Seikkailut</h1>
+            <p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m"><div class="art"><span class="glyph">1+2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Kapea ikkuna</b> (iPadin jaettu näyttö tai kapea selainikkuna). Pienempi teksti, ei sivuttaista vieritystä.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 3 -->
+<h2>3. Pelin kehys</h2>
+<p class="note">Sama kehys kaikille kolmelle pelille: värillinen yläpalkki, jossa vasemmalla <b>Etusivu</b>-painike ja pelin nimi.
+Oikealla on paikka pelin omille tähdille ja pisteille (suunnitellaan peleittäin). Valkoisen kortin ylimpänä on tehtävä ja sen vieressä
+<b>Kuuntele</b>-painike, koska lapsi kuuntelee sitä mitä katsoo. Katkoviivoitetut alueet ovat paikkoja, jotka pelit täyttävät myöhemmin.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game m">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Matikka</h1>
+              <div class="slot">Pelin tähdet<br>ja pisteet</div>
+            </header>
+            <main class="gbody">
+              <div class="gcard">
+                <div class="qrow"><div class="qph">Tehtävä</div>
+                  <div class="listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele lasku</div></div>
+                <div class="playph">Matikan oma alue<small>vaihtoehdot tai numeronäppäimistö – suunnitellaan myöhemmin</small></div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Matikka, iPad pystyssä.</b> Pelille jää tilaa 724 × 958 pikseliä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game s">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Sanat</h1>
+              <div class="slot">Pelin tähdet ja pisteet</div>
+            </header>
+            <main class="gbody">
+              <div class="gcard">
+                <div class="qrow"><div class="qph">Kuva ja vihje</div>
+                  <div class="listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele sana</div></div>
+                <div class="playph">Sanojen oma alue<small>kirjainruudut ja laatat – suunnitellaan myöhemmin</small></div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Sanat, iPad vaakatasossa.</b> Matalin tila: pelille jää 712 × 598 pikseliä. Yläpalkki pysyy aina näkyvissä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40">
+      <div class="screen">
+        <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+        <div class="viewport">
+          <div class="app game e">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Espanja</h1>
+              <div class="slot">Pelin tähdet ja pisteet</div>
+            </header>
+            <main class="gbody">
+              <div class="gcard">
+                <div class="qrow"><div class="qph">Kysymyssana</div>
+                  <div class="listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele</div></div>
+                <div class="playph">Espanjan oma alue<small>neljä vastausvaihtoehtoa – suunnitellaan myöhemmin</small></div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Espanja, tietokone.</b> Välilehden nimi ja osoite kertovat pelin, joten selaimen takaisin-painike vie etusivulle.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:375; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr" style="padding:6px 20px">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game s">
+            <header class="gh" style="padding:0 12px; gap:12px">
+              <div class="back icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <h1 style="font-size:24px">Sanat</h1>
+              <div class="slot" style="font-size:14px">Tähdet</div>
+            </header>
+            <main class="gbody" style="padding:12px">
+              <div class="gcard" style="padding:16px">
+                <div class="qrow" style="flex-wrap:wrap"><div class="qph" style="flex-basis:100%">Kuva ja vihje</div>
+                  <div class="listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele sana</div></div>
+                <div class="playph">Pelin oma alue</div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Kapea ikkuna.</b> Etusivu-painikkeesta näkyy vain nuoli (yhä 56 × 56 pikseliä). Kuuntele siirtyy tehtävän alle.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 4 -->
+<h2>4. Siirtyminen etusivulta peliin ja takaisin</h2>
+<p class="note">Keltainen ympyrä on lapsen sormi. Sivu ei lataudu uudelleen missään vaiheessa. Etusivu-painike ei kysy "Haluatko varmasti?",
+koska kesken jäänyt kierros säilyy eikä vahingossa painamisesta menetä mitään. iPadissa myös pyyhkäisy vasemmasta reunasta palaa etusivulle.</p>
+
+<div class="story">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home">
+            <h1>Seikkailut</h1><p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m pressed"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div></div>
+            </div>
+          </div>
+          <div class="tap" style="left:230px; top:420px; transform:scale(1.8)"></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>1.</b> Napautus Matikkaan. Kortti painuu alas.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game m">
+            <header class="gh"><div class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div><h1>Matikka</h1><div class="slot">Tähdet ja pisteet</div></header>
+            <main class="gbody"><div class="gcard"><div class="qrow"><div class="qph">Tehtävä</div>
+              <div class="listen playing"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</div></div>
+              <div class="playph">Pelin oma alue</div></div></main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>2.</b> Matikka aukeaa heti, ja tehtävä luetaan ääneen samasta napautuksesta.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game m">
+            <header class="gh"><div class="back pressed"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div><h1>Matikka</h1><div class="slot">Tähdet ja pisteet</div></header>
+            <main class="gbody"><div class="gcard"><div class="qrow"><div class="qph">Tehtävä 5 / 10</div>
+              <div class="listen"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele lasku</div></div>
+              <div class="playph">Pelin oma alue</div></div></main>
+          </div>
+          <div class="tap" style="left:70px; top:0px; transform:scale(1.6)"></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>3.</b> Neljän tehtävän jälkeen napautus Etusivu-painikkeeseen.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app home">
+            <h1>Seikkailut</h1><p class="sub">Mitä pelataan?</p>
+            <div class="cards">
+              <div class="card m"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div><div class="badge">Kesken 4/10</div></div>
+              <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d">Rakenna suomen sanoja kirjaimista</div></div></div>
+              <div class="card e"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d">Opi espanjan sanoja</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>4.</b> Takaisin etusivulla. Matikassa merkki "Kesken 4/10"; Sanat tai Espanja voi nyt valita. Matikan napautus jatkaa tehtävästä 5.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 5 -->
+<h2>5. Painikkeet: tavallinen, painettu ja näppäimistön kohdistus</h2>
+<p class="note">Tässä painikkeet ovat <b>oikeassa koossa</b>. Painettu painike laskeutuu ja sen alla oleva varjo katoaa (sama tapa kuin nykyisissä
+peleissä). Kohdistus näkyy vain tietokoneella, kun liikutaan sarkainnäppäimellä: keltainen ja tumma rengas, joka erottuu sekä valkoisella
+että värillisellä pohjalla. iPadilla napauttaessa kohdistusrengasta ei näy. Hiiren päällä kortti nousee hieman (vain tietokoneella).</p>
+
+<h3>Pelikortti etusivulla (pienennetty kortti, samat tilat)</h3>
+<div class="row" style="background:#fff; padding:24px; border-radius:16px; gap:36px">
+  <figure><div class="app" style="height:auto"><div class="card m mini-card"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div></div><figcaption><b>Tavallinen</b></figcaption></figure>
+  <figure><div class="app" style="height:auto"><div class="card m mini-card hover"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div></div><figcaption><b>Hiiri päällä</b> (vain tietokone)</figcaption></figure>
+  <figure><div class="app" style="height:auto"><div class="card m mini-card pressed"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div></div><figcaption><b>Painettu</b></figcaption></figure>
+  <figure><div class="app" style="height:auto"><div class="card m mini-card f"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d">Laske ja harjoittele numeroita</div></div></div></div><figcaption><b>Kohdistus</b> (näppäimistö)</figcaption></figure>
+</div>
+
+<h3>Etusivu-painike ja Kuuntele-painike</h3>
+<div class="spec-grid app" style="height:auto">
+  <span class="hd"></span><span class="hd">Tavallinen</span><span class="hd">Painettu</span><span class="hd">Soi (puhe käynnissä)</span><span class="hd">Ei ääntä</span><span class="hd">Kohdistus</span>
+
+  <span class="lbl">Etusivu, Matikan yläpalkissa</span>
+  <span class="onbar m"><span class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></span></span>
+  <span class="onbar m"><span class="back pressed"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></span></span>
+  <span class="lbl">–</span><span class="lbl">–</span>
+  <span class="onbar m" style="padding:16px"><span class="back f"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></span></span>
+
+  <span class="lbl">Kuuntele, Matikka</span>
+  <span class="listen m"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele lasku</span>
+  <span class="listen m pressed"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele lasku</span>
+  <span class="listen m playing"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span>
+  <span class="listen m off"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Ei ääntä</span>
+  <span class="listen m f"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele lasku</span>
+
+  <span class="lbl">Kuuntele, Sanat</span>
+  <span class="listen s"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele sana</span>
+  <span class="listen s pressed"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele sana</span>
+  <span class="listen s playing"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele sana</span>
+  <span class="listen s off"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Ei ääntä</span>
+  <span class="listen s f"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele sana</span>
+
+  <span class="lbl">Kuuntele, Espanja</span>
+  <span class="listen e"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele</span>
+  <span class="listen e pressed"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele</span>
+  <span class="listen e playing"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span>
+  <span class="listen e off"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Ei ääntä</span>
+  <span class="listen e f"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Kuuntele</span>
+
+  <span class="lbl">Selvä (ääni-ilmoituksessa)</span>
+  <span class="btn ok">Selvä</span>
+  <span class="btn ok pressed">Selvä</span>
+  <span class="lbl">–</span><span class="lbl">–</span>
+  <span class="btn ok f">Selvä</span>
+</div>
+<p class="note" style="margin-top:12px">Kuuntele-painiketta ei koskaan lukita: sitä voi napauttaa aina. Kun puhe soi, uusi napautus aloittaa lukemisen alusta.
+"Ei ääntä" -tilassakin napautus yrittää vielä kerran ja kertoo, jos ääni ei vieläkään toimi.</p>
+
+<!-- ===================================================== 6 -->
+<h2>6. Kun ääni ei toimi</h2>
+<p class="note">Jos laitteesta puuttuu suomen tai espanjan puheääni, tai puhe ei käynnisty, pelin yläosaan tulee ilmoitus. Peli on silti pelattavissa
+loppuun: mikään ei jää odottamaan ääntä. Ilmoituksen kaksi ensimmäistä riviä ovat lapselle, pienellä kirjoitettu rivi aikuiselle.
+Kun lapsi napauttaa <b>Selvä</b>, ilmoitus sulkeutuu ja Kuuntele-painikkeessa lukee "Ei ääntä".
+Väärällä kielellä ei lueta: jos suomen ääntä ei ole, suomea ei lueta esimerkiksi englannin äänellä.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game s">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Sanat</h1><div class="slot">Pelin tähdet<br>ja pisteet</div>
+            </header>
+            <main class="gbody">
+              <div class="banner" role="status">
+                <div class="bt">
+                  <p class="b1">Ääni ei toimi nyt.</p>
+                  <p class="b2">Voit pelata ilman ääntä.</p>
+                  <p class="b3"><b>Aikuiselle:</b> tästä laitteesta puuttuu suomen puheääni. iPadissa sen voi lisätä: Asetukset › Käyttöapu › Puhuttu sisältö › Äänet › Suomi.</p>
+                </div>
+                <div class="btn ok">Selvä</div>
+              </div>
+              <div class="gcard">
+                <div class="qrow"><div class="qph">Kuva ja vihje</div>
+                  <div class="listen off"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Ei ääntä</div></div>
+                <div class="playph">Pelin oma alue<small>toimii normaalisti</small></div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Sanat, iPad pystyssä, suomen ääni puuttuu.</b> Ilmoitus näkyy, kun peli avataan, tai kun Kuuntele ei saa ääntä aikaan.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game e">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Espanja</h1><div class="slot">Pelin tähdet ja pisteet</div>
+            </header>
+            <main class="gbody">
+              <div class="banner" role="status">
+                <div class="bt">
+                  <p class="b1">Ääni ei toimi nyt.</p>
+                  <p class="b2">Voit pelata ilman ääntä.</p>
+                  <p class="b3"><b>Aikuiselle:</b> tästä laitteesta puuttuu espanjan puheääni. iPadissa sen voi lisätä: Asetukset › Käyttöapu › Puhuttu sisältö › Äänet › Espanja.</p>
+                </div>
+                <div class="btn ok">Selvä</div>
+              </div>
+              <div class="gcard">
+                <div class="qrow"><div class="qph">Kysymyssana</div>
+                  <div class="listen off"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Ei ääntä</div></div>
+                <div class="playph">Pelin oma alue<small>toimii normaalisti</small></div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Espanja, iPad vaakatasossa, espanjan ääni puuttuu.</b> Sama ilmoitus, kieli vaihtuu.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game s">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Sanat</h1><div class="slot">Pelin tähdet<br>ja pisteet</div>
+            </header>
+            <main class="gbody">
+              <div class="gcard">
+                <div class="qrow"><div class="qph">Kuva ja vihje</div>
+                  <div class="listen off"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Ei ääntä</div></div>
+                <div class="playph">Pelin oma alue<small>pelataan ilman ääntä</small></div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Selvä-napautuksen jälkeen.</b> Ilmoitus on poissa, painikkeessa lukee "Ei ääntä". Ilmoitus tulee uudestaan vain, jos lapsi napauttaa painiketta eikä ääni vieläkään toimi.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40">
+      <div class="screen">
+        <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+        <div class="viewport">
+          <div class="app game m">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Matikka</h1><div class="slot">Pelin tähdet ja pisteet</div>
+            </header>
+            <main class="gbody">
+              <div class="banner" role="status">
+                <div class="bt">
+                  <p class="b1">Ääni ei toimi nyt.</p>
+                  <p class="b2">Voit pelata ilman ääntä.</p>
+                  <p class="b3"><b>Aikuiselle:</b> tämä selain ei osaa lukea ääneen. Kokeile Safaria tai Chromea.</p>
+                </div>
+                <div class="btn ok">Selvä</div>
+              </div>
+              <div class="gcard">
+                <div class="qrow"><div class="qph">Tehtävä</div>
+                  <div class="listen off"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Ei ääntä</div></div>
+                <div class="playph">Pelin oma alue</div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Selain, joka ei osaa lukea ääneen lainkaan</b> (tietokone). Aikuisen rivi on erilainen.</figcaption>
+  </figure>
+</div>
+<p class="note">Rajoitus, jota mikään ilmoitus ei voi korjata: jos laitteen äänenvoimakkuus on nollassa, sovellus ei tiedä sitä, eikä ilmoitusta tule.</p>
+
+<!-- ===================================================== 7 -->
+<h2>7. Virheet ja lataus</h2>
+<p class="note">Näitä ei pitäisi nähdä, mutta jos jotain menee rikki, lapsi tai aikuinen tietää mitä tehdä.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game e">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Espanja</h1>
+            </header>
+            <main class="gbody">
+              <div class="gcard">
+                <div class="center">
+                  <p class="e1">Peli ei auennut.</p>
+                  <p class="e2">Palaa etusivulle ja kokeile uudelleen.</p>
+                  <div class="btn acc">Etusivulle</div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Peli ei auennut.</b> Yläpalkki näkyy normaalisti; Etusivulle-painike tekee saman kuin yläpalkin Etusivu.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app boot">
+            <p class="e1">Seikkailut ei käynnistynyt.</p>
+            <p class="e2" style="margin-top:12px">Lataa sivu uudelleen. iPadissa: napauta osoiterivin ↻-kuvaketta.</p>
+            <p class="e2">Jos se ei auta, kokeile toista selainta.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Sovellus ei käynnistynyt.</b> Teksti on aikuiselle. Ei painikkeita, koska uudelleenlataus tehdään selaimesta.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42">
+      <div class="screen">
+        <div class="chrome"><span class="addr">seikkailut</span></div>
+        <div class="viewport">
+          <div class="app game m">
+            <header class="gh">
+              <div class="back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Etusivu</span></div>
+              <h1>Matikka</h1>
+            </header>
+            <main class="gbody">
+              <div class="gcard"><div class="center"><p class="loading">Peli aukeaa…</p></div></div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Peli aukeaa.</b> Näkyy vain, jos avaaminen kestää yli 0,3 sekuntia; tavallisesti peli on heti auki eikä tätä näe.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 8 -->
+<h2>8. Kaksi kysymystä sinulle</h2>
+<div class="q">
+  <p><b>1. Pelien nimet etusivulla.</b> Tällä sivulla nimet ovat lyhyet: <b>Matikka, Sanat, Espanja</b>. Vaihtoehto on pitää vanhat nimet,
+  jotka lapset ehkä tuntevat: Matikkaseikkailu, Sanaseikkailu, Espanjavalmentaja.<br>
+  Jos et osaa sanoa, pidämme lyhyet nimet: ne ovat helpompia juuri lukemaan oppineelle ja mahtuvat joka ruudulle.</p>
+  <p><b>2. Kesken jäänyt peli.</b> Kun lapsi palaa etusivulle kesken kierroksen ja avaa saman pelin uudelleen, jatkuuko kierros siitä mihin jäi (kuten tällä sivulla),
+  vai alkaako uusi kierros?<br>
+  Jos et osaa sanoa, kierros jatkuu, eikä Etusivu-painike kysy "Haluatko varmasti?".</p>
+</div>
+
+</div>
+</body>
+</html>

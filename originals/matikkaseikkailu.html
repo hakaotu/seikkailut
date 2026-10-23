@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matikkaseikkailu 🔢</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 50%, #4facfe 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* ── Header ── */
+    .header { text-align: center; padding: 18px 10px 8px; color: white; }
+    .header h1 {
+      font-size: 2.6em;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.2);
+      animation: bounce 2.5s infinite;
+    }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .stars-display { font-size: 1.9em; margin-top: 5px; letter-spacing: 3px; }
+
+    /* ── Card ── */
+    .game-container {
+      background: white;
+      border-radius: 30px;
+      padding: 24px 22px 28px;
+      margin: 14px;
+      max-width: 700px;
+      width: 93%;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      text-align: center;
+    }
+
+    /* ── Difficulty buttons ── */
+    .level-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 18px; flex-wrap: wrap; }
+    .level-btn {
+      padding: 10px 18px;
+      border: 3px solid transparent;
+      border-radius: 22px;
+      font-size: .95em;
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all .2s;
+      opacity: .65;
+    }
+    .level-btn.easy   { background: #d4f5d4; color: #2a7a2a; border-color: #2a7a2a; }
+    .level-btn.medium { background: #fff0c2; color: #a06000; border-color: #a06000; }
+    .level-btn.hard   { background: #ffd4d4; color: #900;    border-color: #900; }
+    .level-btn.active { opacity: 1; transform: scale(1.07); box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+
+    /* ── Operation filter ── */
+    .ops-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+    .ops-btn {
+      padding: 8px 16px;
+      border: 3px solid #bbb;
+      border-radius: 22px;
+      font-size: .95em;
+      font-family: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all .2s;
+      background: #f0f0f0;
+      color: #555;
+    }
+    .ops-btn.active { opacity: 1; transform: scale(1.05); }
+    .ops-btn.active.op-add { background: #d4f5d4; border-color: #2a7a2a; color: #2a7a2a; }
+    .ops-btn.active.op-sub { background: #ffe0cc; border-color: #c05000; color: #c05000; }
+    .ops-btn.active.op-mul { background: #e0d4ff; border-color: #5a2d82; color: #5a2d82; }
+
+    /* ── Score / progress ── */
+    .score-display { font-size: 1.15em; color: #2a7a2a; font-weight: bold; margin-bottom: 6px; }
+    .progress-bar-container { background: #eee; border-radius: 10px; height: 14px; overflow: hidden; }
+    .progress-bar { height: 100%; background: linear-gradient(90deg,#43e97b,#4facfe); border-radius: 10px; transition: width .5s ease; }
+
+    /* ── Problem area ── */
+    .problem-area {
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 18px 0 8px;
+      flex-direction: column;
+    }
+    .problem-emoji {
+      font-size: 3em;
+      margin-bottom: 8px;
+      animation: appear .45s ease;
+    }
+    .problem-text {
+      font-size: 3.2em;
+      font-weight: bold;
+      color: #333;
+      animation: appear .45s ease;
+      letter-spacing: 4px;
+    }
+    .problem-text .op-symbol { color: #4facfe; }
+    .problem-text .equals { color: #aaa; }
+    @keyframes appear { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* ── Speak button ── */
+    .speak-btn {
+      background: linear-gradient(135deg,#43e97b,#38f9d7);
+      color: white; border: none; border-radius: 50px;
+      padding: 11px 28px; font-size: 1.1em;
+      font-family: inherit; cursor: pointer; margin: 5px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.2);
+      transition: transform .2s;
+    }
+    .speak-btn:hover  { transform: scale(1.06); }
+    .speak-btn:active { transform: scale(.94); }
+    .speak-btn.playing { background: linear-gradient(135deg,#a18cd1,#fbc2eb); }
+
+    /* ── Answer options (multiple choice) ── */
+    .answer-options {
+      display: flex; justify-content: center; gap: 12px;
+      flex-wrap: wrap; margin: 18px 0 8px;
+    }
+    .answer-btn {
+      width: 80px; height: 80px;
+      border: none; border-radius: 18px;
+      font-size: 2.2em; font-weight: bold;
+      font-family: inherit; cursor: pointer; color: white;
+      box-shadow: 0 5px 0 rgba(0,0,0,.2);
+      transition: all .14s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .answer-btn:active  { transform: translateY(5px); box-shadow: none; }
+    .answer-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+    .answer-btn:nth-child(4n+1) { background: #FF6B6B; }
+    .answer-btn:nth-child(4n+2) { background: #4ECDC4; }
+    .answer-btn:nth-child(4n+3) { background: #45B7D1; }
+    .answer-btn:nth-child(4n+0) { background: #f0a500; }
+
+    /* ── Number pad (type mode) ── */
+    .numpad {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 8px; margin: 14px auto; max-width: 280px;
+    }
+    .num-btn {
+      width: 70px; height: 70px;
+      border: 2px solid #bbb; border-radius: 14px;
+      font-size: 2em; font-weight: bold;
+      font-family: inherit; cursor: pointer;
+      background: #f8f4ff; color: #555;
+      box-shadow: 0 3px 0 #bbb;
+      transition: all .12s;
+    }
+    .num-btn:hover  { border-color: #43e97b; color: #2a7a2a; background: #e0ffe8; }
+    .num-btn:active { transform: translateY(3px); box-shadow: none; }
+    .num-btn.wide { width: 150px; font-size: 1.2em; }
+    .num-btn.ok { background: #43e97b; color: white; border-color: #2a7a2a; }
+    .num-btn.ok:hover { background: #2dcc6f; }
+    .num-btn.del { background: #FF6B6B; color: white; border-color: #d44; }
+    .num-btn.del:hover { background: #e44; }
+
+    .typed-answer {
+      font-size: 3em; font-weight: bold; color: #2a7a2a;
+      min-height: 60px; display: flex; align-items: center;
+      justify-content: center; letter-spacing: 3px;
+      border-bottom: 4px dashed #bbb; margin: 0 auto 10px;
+      min-width: 120px; max-width: 200px;
+    }
+    .typed-answer.empty { color: #ccc; }
+
+    /* ── Feedback ── */
+    .feedback { font-size: 1.7em; min-height: 52px; display:flex; align-items:center; justify-content:center; font-weight:bold; }
+    .feedback.success { color: #4CAF50; }
+    .feedback.error   { color: #f44336; }
+
+    @keyframes correctAnim { 0%{transform:scale(1)} 50%{transform:scale(1.18)} 100%{transform:scale(1)} }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
+
+    /* ── Next button ── */
+    .next-btn {
+      background: linear-gradient(135deg,#43e97b,#38f9d7);
+      color: white; border: none; border-radius: 50px;
+      padding: 13px 36px; font-size: 1.2em;
+      font-family: inherit; cursor: pointer;
+      margin: 10px auto; display: block;
+      box-shadow: 0 4px 15px rgba(0,0,0,.2);
+      transition: transform .2s;
+    }
+    .next-btn:hover { transform: scale(1.06); }
+
+    /* ── Streak indicator ── */
+    .streak-display {
+      font-size: 1em; color: #f0a500; font-weight: bold;
+      min-height: 1.4em; margin-bottom: 4px;
+    }
+
+    /* ── Celebration overlay ── */
+    .celebration {
+      position: fixed; inset: 0;
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,.65); z-index: 100;
+    }
+    .celebration.show { display: flex; }
+    .celebration-content {
+      background: white; border-radius: 30px;
+      padding: 38px 34px; text-align: center;
+      animation: zoomIn .45s ease;
+    }
+    @keyframes zoomIn { from{transform:scale(0)} to{transform:scale(1)} }
+    .celebration-content h2 { font-size: 2.5em; color: #2a7a2a; margin-bottom: 10px; }
+
+    /* Confetti */
+    .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 99; }
+    .confetti { position: absolute; width: 10px; height: 10px; animation: fall linear forwards; }
+    @keyframes fall { to { transform: translateY(105vh) rotate(720deg); opacity: 0; } }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .header h1    { font-size: 1.9em; }
+      .problem-text { font-size: 2.4em; }
+      .answer-btn   { width: 65px; height: 65px; font-size: 1.8em; }
+      .num-btn      { width: 58px; height: 58px; font-size: 1.6em; }
+      .num-btn.wide { width: 125px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🔢 Matikkaseikkailu 🔢</h1>
+  <div class="stars-display" id="starsDisplay">☆☆☆☆☆</div>
+</div>
+
+<div class="game-container">
+
+  <!-- Difficulty buttons -->
+  <div class="level-row">
+    <button class="level-btn easy active" id="btn-easy" onclick="setDifficulty('easy')">🟢 Eskari</button>
+    <button class="level-btn medium" id="btn-medium" onclick="setDifficulty('medium')">🟡 1. luokka</button>
+    <button class="level-btn hard" id="btn-hard" onclick="setDifficulty('hard')">🔴 2. luokka</button>
+  </div>
+
+  <!-- Operation filter -->
+  <div class="ops-row">
+    <button class="ops-btn op-add active" id="btn-op-add" onclick="toggleOp('add')">➕ Yhteenlasku</button>
+    <button class="ops-btn op-sub active" id="btn-op-sub" onclick="toggleOp('sub')">➖ Vähennyslasku</button>
+    <button class="ops-btn op-mul" id="btn-op-mul" onclick="toggleOp('mul')">✖️ Kertolasku</button>
+  </div>
+
+  <!-- Score + progress -->
+  <div class="streak-display" id="streakDisplay"></div>
+  <div class="score-display" id="scoreDisplay">Pisteet: 0</div>
+  <div class="progress-bar-container">
+    <div class="progress-bar" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <!-- Problem area -->
+  <div class="problem-area" id="problemArea">
+    <div class="problem-emoji" id="problemEmoji">🧮</div>
+    <div class="problem-text" id="problemText"></div>
+  </div>
+
+  <!-- Speak button -->
+  <button class="speak-btn" id="speakBtn" onclick="speakProblem()">🔊 Kuuntele lasku</button>
+
+  <!-- Answer options (easy mode) -->
+  <div class="answer-options" id="answerOptions"></div>
+
+  <!-- Numpad (medium/hard mode) -->
+  <div class="typed-answer" id="typedAnswer"></div>
+  <div class="numpad" id="numpad"></div>
+
+  <!-- Feedback -->
+  <div class="feedback" id="feedback"></div>
+
+  <!-- Next -->
+  <button class="next-btn" id="nextBtn" style="display:none" onclick="nextProblem()">Seuraava ➡️</button>
+
+</div>
+
+<!-- Celebration -->
+<div class="celebration" id="celebration">
+  <div class="confetti-container" id="confettiContainer"></div>
+  <div class="celebration-content">
+    <h2>🎉 Mahtavaa! 🎉</h2>
+    <p style="font-size:1.35em;margin:10px 0" id="celebrationScore"></p>
+    <p style="font-size:1.05em;color:#555">Olet matikkamestari!</p>
+    <button class="next-btn" onclick="restartGame()" style="display:block;margin:20px auto 0">🔄 Pelaa uudelleen!</button>
+  </div>
+</div>
+
+<script>
+// ── Constants ──────────────────────────────────────────────────────────────
+const PRAISE_OK  = ['Hienoa! 🌟','Oikein! ⭐','Mahtavaa! 🎉','Tosi hyvä! 🏆','Loistavaa! 🌈','Upea! 💪','Bravo! 🎊','Mestari! 🧙'];
+const PRAISE_ERR = ['Ei ihan, yritä uudelleen! 💪','Melkein! Kokeile vielä! 🤗','Harjoittelemalla oppii! 📚','Kokeile uudestaan! 🔢'];
+const CONFETTI_COLORS = ['#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEAA7','#DDA0DD','#FFB347'];
+const MAX_QUESTIONS = 10;
+
+const OP_EMOJIS = { add: '➕', sub: '➖', mul: '✖️' };
+const OP_SYMBOLS = { add: '+', sub: '−', mul: '×' };
+const OP_WORDS = { add: 'plus', sub: 'miinus', mul: 'kertaa' };
+const REWARD_EMOJIS = ['🌟','⭐','🎯','🏅','💎','🦄','🚀','🎪','🎠','🎨'];
+
+// ── State ──────────────────────────────────────────────────────────────────
+let difficulty = 'easy';
+let ops = { add: true, sub: true, mul: false };
+let deck = [];
+let qIndex = 0;
+let score = 0;
+let answered = 0;
+let streak = 0;
+let typedValue = '';
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const shuffle = arr => [...arr].sort(() => Math.random() - .5);
+
+// ── Speech ─────────────────────────────────────────────────────────────────
+let fiVoice = null;
+
+function initVoices() {
+  const load = () => {
+    const voices = speechSynthesis.getVoices();
+    if (!voices.length) return;
+    fiVoice =
+      voices.find(v => v.lang === 'fi-FI' && v.localService) ||
+      voices.find(v => v.lang === 'fi-FI') ||
+      voices.find(v => v.lang.startsWith('fi')) ||
+      null;
+  };
+  load();
+  speechSynthesis.addEventListener('voiceschanged', load);
+}
+
+function speak(text, rate = 0.85) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  if (fiVoice) u.voice = fiVoice;
+  u.lang = 'fi-FI';
+  u.rate = rate;
+  u.pitch = 1.05;
+  u.volume = 1;
+  speechSynthesis.speak(u);
+}
+
+function speakProblem() {
+  if (!deck.length) return;
+  const p = deck[qIndex];
+  const text = `${p.a} ${OP_WORDS[p.op]} ${p.b}`;
+  speak(text, 0.75);
+}
+
+// ── Problem generation ─────────────────────────────────────────────────────
+function generateProblem() {
+  const activeOps = Object.keys(ops).filter(k => ops[k]);
+  if (activeOps.length === 0) return { a: 1, b: 1, op: 'add', answer: 2 };
+  const op = activeOps[rand(0, activeOps.length - 1)];
+  let a, b, answer;
+
+  if (difficulty === 'easy') {
+    // Eskari: numbers 0-10
+    if (op === 'add') {
+      a = rand(0, 10); b = rand(0, 10 - a);
+      answer = a + b;
+    } else if (op === 'sub') {
+      a = rand(1, 10); b = rand(0, a);
+      answer = a - b;
+    } else {
+      a = rand(1, 5); b = rand(1, 5);
+      answer = a * b;
+    }
+  } else if (difficulty === 'medium') {
+    // 1. luokka: add/sub 0-20, mul small
+    if (op === 'add') {
+      a = rand(1, 15); b = rand(1, 20 - a);
+      answer = a + b;
+    } else if (op === 'sub') {
+      a = rand(2, 20); b = rand(1, a);
+      answer = a - b;
+    } else {
+      a = rand(1, 5); b = rand(1, 10);
+      answer = a * b;
+    }
+  } else {
+    // 2. luokka: add/sub 0-100, mul up to 10x10
+    if (op === 'add') {
+      a = rand(5, 80); b = rand(5, 100 - a);
+      answer = a + b;
+    } else if (op === 'sub') {
+      a = rand(10, 100); b = rand(1, a);
+      answer = a - b;
+    } else {
+      a = rand(2, 10); b = rand(2, 10);
+      answer = a * b;
+    }
+  }
+
+  return { a, b, op, answer };
+}
+
+function generateChoices(answer) {
+  const choices = new Set([answer]);
+  const range = difficulty === 'easy' ? 5 : difficulty === 'medium' ? 8 : 15;
+  let attempts = 0;
+  while (choices.size < 4 && attempts < 50) {
+    let wrong = answer + rand(-range, range);
+    if (wrong < 0) wrong = rand(0, range);
+    if (wrong !== answer) choices.add(wrong);
+    attempts++;
+  }
+  // Fill if needed
+  while (choices.size < 4) choices.add(answer + choices.size);
+  return shuffle([...choices]);
+}
+
+// ── Game init ──────────────────────────────────────────────────────────────
+function setDifficulty(d) {
+  difficulty = d;
+  ['easy','medium','hard'].forEach(x =>
+    $('btn-' + x).classList.toggle('active', x === d)
+  );
+  // Enable mul by default for hard
+  if (d === 'hard' && !ops.mul) {
+    ops.mul = true;
+    $('btn-op-mul').classList.add('active');
+  }
+  initGame();
+}
+
+function toggleOp(op) {
+  const activeCount = Object.values(ops).filter(Boolean).length;
+  // Don't allow disabling all ops
+  if (ops[op] && activeCount <= 1) return;
+  ops[op] = !ops[op];
+  $('btn-op-' + op).classList.toggle('active', ops[op]);
+  initGame();
+}
+
+function initGame() {
+  deck = [];
+  for (let i = 0; i < MAX_QUESTIONS; i++) {
+    deck.push(generateProblem());
+  }
+  qIndex = 0;
+  score = 0;
+  answered = 0;
+  streak = 0;
+  typedValue = '';
+  updateHUD();
+  loadQuestion();
+}
+
+// ── Load question ──────────────────────────────────────────────────────────
+function loadQuestion() {
+  const p = deck[qIndex];
+  typedValue = '';
+
+  // Emoji
+  $('problemEmoji').textContent = OP_EMOJIS[p.op] || '🧮';
+
+  // Problem text
+  $('problemText').innerHTML =
+    `${p.a} <span class="op-symbol">${OP_SYMBOLS[p.op]}</span> ${p.b} <span class="equals">=</span> <span class="equals">?</span>`;
+
+  $('feedback').textContent = '';
+  $('feedback').className = 'feedback';
+  $('nextBtn').style.display = 'none';
+
+  if (difficulty === 'easy') {
+    // Multiple choice
+    $('answerOptions').style.display = 'flex';
+    $('typedAnswer').style.display = 'none';
+    $('numpad').style.display = 'none';
+    buildChoices(p.answer);
+  } else {
+    // Type answer
+    $('answerOptions').style.display = 'none';
+    $('typedAnswer').style.display = 'flex';
+    $('numpad').style.display = 'flex';
+    $('typedAnswer').textContent = '';
+    $('typedAnswer').classList.add('empty');
+    buildNumpad();
+  }
+
+  updateHUD();
+  setTimeout(speakProblem, 500);
+}
+
+// ── Multiple choice (easy) ─────────────────────────────────────────────────
+function buildChoices(answer) {
+  const container = $('answerOptions');
+  container.innerHTML = '';
+  const choices = generateChoices(answer);
+  choices.forEach(val => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = val;
+    btn.onclick = () => checkChoice(val, answer, btn);
+    container.appendChild(btn);
+  });
+}
+
+function checkChoice(val, answer, btn) {
+  // Disable all buttons
+  document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+  if (val === answer) {
+    btn.style.background = '#4CAF50';
+    btn.style.boxShadow = '0 0 20px #4CAF50';
+    registerResult(true);
+  } else {
+    btn.style.background = '#f44336';
+    btn.style.animation = 'shake .5s ease';
+    // Highlight correct
+    document.querySelectorAll('.answer-btn').forEach(b => {
+      if (parseInt(b.textContent) === answer) {
+        b.style.background = '#4CAF50';
+        b.style.boxShadow = '0 0 20px #4CAF50';
+      }
+    });
+    registerResult(false);
+  }
+}
+
+// ── Numpad (medium/hard) ────────────────────────────────────────────────────
+function buildNumpad() {
+  const pad = $('numpad');
+  pad.innerHTML = '';
+  for (let i = 1; i <= 9; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn';
+    btn.textContent = i;
+    btn.onclick = () => pressNum(String(i));
+    pad.appendChild(btn);
+  }
+  // Delete button
+  const del = document.createElement('button');
+  del.className = 'num-btn del';
+  del.textContent = '⌫';
+  del.onclick = () => pressDelete();
+  pad.appendChild(del);
+
+  // Zero
+  const zero = document.createElement('button');
+  zero.className = 'num-btn';
+  zero.textContent = '0';
+  zero.onclick = () => pressNum('0');
+  pad.appendChild(zero);
+
+  // OK button
+  const ok = document.createElement('button');
+  ok.className = 'num-btn ok';
+  ok.textContent = 'OK ✓';
+  ok.onclick = () => submitTyped();
+  pad.appendChild(ok);
+}
+
+function pressNum(digit) {
+  if (typedValue.length >= 4) return;
+  typedValue += digit;
+  $('typedAnswer').textContent = typedValue;
+  $('typedAnswer').classList.remove('empty');
+}
+
+function pressDelete() {
+  typedValue = typedValue.slice(0, -1);
+  $('typedAnswer').textContent = typedValue || '';
+  if (!typedValue) $('typedAnswer').classList.add('empty');
+}
+
+function submitTyped() {
+  if (typedValue === '') return;
+  const answer = deck[qIndex].answer;
+  const val = parseInt(typedValue);
+
+  // Disable numpad
+  document.querySelectorAll('.num-btn').forEach(b => b.disabled = true);
+
+  if (val === answer) {
+    $('typedAnswer').style.color = '#4CAF50';
+    registerResult(true);
+  } else {
+    $('typedAnswer').style.color = '#f44336';
+    $('typedAnswer').style.animation = 'shake .5s ease';
+    // Show correct answer
+    setTimeout(() => {
+      $('typedAnswer').textContent = answer;
+      $('typedAnswer').style.color = '#4CAF50';
+    }, 800);
+    registerResult(false);
+  }
+}
+
+// ── Result ──────────────────────────────────────────────────────────────────
+function registerResult(correct) {
+  answered++;
+  if (correct) {
+    score++;
+    streak++;
+  } else {
+    streak = 0;
+  }
+  showFeedback(correct);
+  updateHUD();
+
+  // Update problem text to show answer
+  const p = deck[qIndex];
+  $('problemText').innerHTML =
+    `${p.a} <span class="op-symbol">${OP_SYMBOLS[p.op]}</span> ${p.b} <span class="equals">=</span> <b style="color:#4CAF50">${p.answer}</b>`;
+
+  if (qIndex + 1 >= MAX_QUESTIONS) {
+    setTimeout(showCelebration, 1500);
+  } else {
+    $('nextBtn').style.display = 'block';
+  }
+}
+
+function showFeedback(correct) {
+  const fb = $('feedback');
+  const msgs = correct ? PRAISE_OK : PRAISE_ERR;
+  fb.textContent = msgs[Math.floor(Math.random() * msgs.length)];
+  fb.className = 'feedback ' + (correct ? 'success' : 'error');
+  if (correct) fb.style.animation = 'correctAnim .5s ease';
+  else fb.style.animation = '';
+  if (correct) speak(deck[qIndex].answer.toString(), 0.9);
+}
+
+function nextProblem() {
+  qIndex++;
+  if (qIndex >= MAX_QUESTIONS) { showCelebration(); return; }
+  // Reset typed answer style
+  $('typedAnswer').style.color = '#2a7a2a';
+  $('typedAnswer').style.animation = '';
+  loadQuestion();
+}
+
+// ── HUD ─────────────────────────────────────────────────────────────────────
+function updateHUD() {
+  $('scoreDisplay').textContent = `Pisteet: ${score} / ${answered}`;
+  $('progressBar').style.width = ((qIndex / MAX_QUESTIONS) * 100) + '%';
+  const ratio = answered > 0 ? score / answered : 1;
+  const full = Math.round(ratio * 5);
+  $('starsDisplay').textContent =
+    Array.from({length:5}, (_,i) => i < full ? '⭐' : '☆').join('');
+
+  if (streak >= 3) {
+    $('streakDisplay').textContent = '🔥 ' + streak + ' peräkkäin oikein!';
+  } else {
+    $('streakDisplay').textContent = '';
+  }
+}
+
+// ── Celebration ─────────────────────────────────────────────────────────────
+function showCelebration() {
+  const pct = Math.round((score / MAX_QUESTIONS) * 100);
+  $('celebrationScore').textContent =
+    pct === 100 ? `Täydellinen tulos! ${score}/${MAX_QUESTIONS} 🏆` :
+    pct >= 70   ? `Hienoa! ${score}/${MAX_QUESTIONS} oikein! 🌟` :
+                  `${score}/${MAX_QUESTIONS} oikein — harjoittele lisää! 💪`;
+
+  const cont = $('confettiContainer');
+  cont.innerHTML = '';
+  for (let i = 0; i < 100; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.cssText = `
+      left:${Math.random()*100}vw; top:-14px;
+      background:${CONFETTI_COLORS[i % CONFETTI_COLORS.length]};
+      border-radius:${Math.random()>.5?'50%':'3px'};
+      animation-duration:${(Math.random()*2+1.3).toFixed(2)}s;
+      animation-delay:${(Math.random()*1.8).toFixed(2)}s;
+    `;
+    cont.appendChild(c);
+  }
+  $('celebration').classList.add('show');
+  setTimeout(() => speak('Mahtavaa! Olet matikkamestari!', 0.75), 600);
+}
+
+function restartGame() {
+  $('celebration').classList.remove('show');
+  $('confettiContainer').innerHTML = '';
+  initGame();
+}
+
+// ── Keyboard support ─────────────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+  if ($('celebration').classList.contains('show')) return;
+  if (difficulty === 'easy') return;
+
+  if (e.key >= '0' && e.key <= '9') {
+    pressNum(e.key);
+  } else if (e.key === 'Backspace') {
+    e.preventDefault();
+    pressDelete();
+  } else if (e.key === 'Enter') {
+    if ($('nextBtn').style.display === 'block') {
+      nextProblem();
+    } else {
+      submitTyped();
+    }
+  }
+});
+
+// ── Boot ────────────────────────────────────────────────────────────────────
+initVoices();
+initGame();
+</script>
+</body>
+</html>
