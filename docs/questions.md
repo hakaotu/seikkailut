@@ -2,7 +2,15 @@
 
 ## Avoimet
 
-_(ei avoimia)_
+- **Q26 (katso):** Sanojen ulkoasuluonnos
+  (https://claude.ai/artifact/BtskZGwLgxmvBK4HFKCNJ2): hyväksytkö, vai
+  mitä muutetaan? (SEI-3, SEI-7, SEI-8) — avattu 2026-10-23
+- **Q27 (päätös):** Ohitettu sana: näytetäänkö ja luetaanko se ensin
+  (sitten Seuraava), vai tuleeko seuraava sana heti? Oletus: näytetään
+  ensin. (SEI-7) — avattu 2026-10-23
+- **Q28 (päätös):** Siirtyykö myös Sanat oikean sanan jälkeen itsestään
+  seuraavaan (kuten Matikka, SEI-46)? Oletus: kyllä, samoin säännöin.
+  — avattu 2026-10-23
 
 ## Vastatut
 
