@@ -2,11 +2,11 @@
 
 ## Avoimet
 
-- **Q23 (päätös):** Hyväksytkö Matikan toteutussuunnitelman
-  (`docs/plans/sei-2.md`)? (SEI-2, SEI-5, SEI-6) — avattu 2026-10-23
+_(ei avoimia)_
 
 ## Vastatut
 
+- **Q23 (päätös):** Matikan toteutussuunnitelma — hyväksytty. (2026-10-23)
 - **Q20 (katso):** Matikan ulkoasuluonnos (SEI-2, SEI-5, SEI-6) — "joo",
   hyväksytty. (2026-10-23)
 - **Q22 (klikkaus):** Mónican parannettu ääni ja tauko — "parempi"
