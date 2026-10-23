@@ -822,3 +822,4 @@ Kriteerit:
 - 2026-10-23: SEI-45 kriteeri 8 reviewer APPROVED (e1e24c8; reviewer: unit 40/40, playwright 194/2/0; mutaatiot M2, M3 havaittu, M1 ei). Should fix 1–2 ja nice 3 jatkokorjauksena. Julkaistu; omistajan kuuntelu Q22:ssa.
 - 2026-10-23: SEI-45 jatkokorjaus 96d8cc0 (reviewerin should fix 1–2, nice 3). Pääsession ajo: unit 43/43, playwright 194/2/0; mutaatio M1 kaatuu nyt 2 testiin. Julkaistu.
 - 2026-10-23: SEI-45 → done (Q22). Q21: tasonimet Helppo/Keskitaso/Vaikea (oletus).
+- 2026-10-23: Matikan ulkoasu `docs/design/sei-2.md`, `.html` (SEI-2, SEI-5, SEI-6) hyväksytty omistajalla (Q20). Tasonimet Helppo/Keskitaso/Vaikea (Q21). → arkkitehti.

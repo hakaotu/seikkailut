@@ -2,11 +2,12 @@
 
 ## Avoimet
 
-- **Q20 (katso):** Matikan ulkoasuluonnos
-  (https://claude.ai/artifact/LAJorartbGKYxbgxFzPGmq): hyväksytkö, vai
-  mitä muutetaan? (SEI-2, SEI-5, SEI-6) — avattu 2026-10-23
+_(ei avoimia)_
+
 ## Vastatut
 
+- **Q20 (katso):** Matikan ulkoasuluonnos (SEI-2, SEI-5, SEI-6) — "joo",
+  hyväksytty. (2026-10-23)
 - **Q22 (klikkaus):** Mónican parannettu ääni ja tauko — "parempi"
   (tulkittu koskemaan molempia: hola ja kaksi erillistä kissaa). (2026-10-23)
 - **Q21 (tieto):** Vanhat tasonimet — "en tiedä" → oletus: Helppo,
