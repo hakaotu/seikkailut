@@ -811,3 +811,4 @@ Kriteerit:
   "hola" es-ES äänellä Mónica. Selaimen fi-äänet: Satu + Eloquence-sarja.
   Omistajan selainta ja kuultua ääntä ei tiedetä (Q18). Tila pysyy
   verifying.
+- 2026-10-23: SEI-45 kriteerin 8 suunnitelma `docs/plans/sei-45.md` valmis (tauko ajastimella ensimmäisen lukukerran jälkeen, 700 ms). Odottaa omistajan hyväksyntää, kun Q19–Q21 on vastattu.
