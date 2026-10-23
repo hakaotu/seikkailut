@@ -9,6 +9,10 @@
   / 2. luokka? Oletus: uudet nimet Helppo / Keskitaso / Vaikea. (SEI-2)
   — avattu 2026-10-23
 
+- **Q22 (klikkaus):** Lataa Mónican parannettu espanjan ääni samasta
+  paikasta kuin Satu ja kuuntele Espanja: kelpaako? (SEI-45)
+  — avattu 2026-10-23
+
 ## Vastatut
 
 - **Q19 (klikkaus):** Satun parannettu ääni ladattu Maciin — "Q19 on nyt
