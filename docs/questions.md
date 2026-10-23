@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q24 (katso):** Matikka Macilla: Aloita, vastaa ensimmäiseen väärin —
-  kuuluuko lasku ja sitten "Ei ihan. Oikea vastaus on …"? (SEI-2/5/6)
-  — avattu 2026-10-23
+_(ei avoimia)_
 
 ## Vastatut
 
+- **Q24 (katso):** Matikka Macilla, väärä vastaus — "kyllä": lasku ja
+  "Ei ihan. Oikea vastaus on …" kuuluivat. (2026-10-23)
 - **Q23 (päätös):** Matikan toteutussuunnitelma — hyväksytty. (2026-10-23)
 - **Q20 (katso):** Matikan ulkoasuluonnos (SEI-2, SEI-5, SEI-6) — "joo",
   hyväksytty. (2026-10-23)

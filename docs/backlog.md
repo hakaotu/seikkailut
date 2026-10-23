@@ -240,7 +240,11 @@ Avoimet kysymykset:
 ## B. Nykyisen toiminnan säilyttäminen (jokainen nykyinen käyttötapaus)
 
 ### SEI-2 — Matikka: kaikki nykyiset toiminnot uudessa sovelluksessa
-Tila: verifying
+Tila: done
+Havainto (2026-10-23): pääsessio pelasi julkaistun Matikan Chromella
+(Satu (Enhanced), 2/10 ja 10/10 eri loppuruudut); omistaja Macilla Chromella
+(Q24): lasku ja "Ei ihan. Oikea vastaus on …" kuuluivat. iPad (suunnitelma
+§7 C) myöhemmin.
 Perustelu: omistaja vaati kaikki use caset; tämä on Matikkaseikkailun
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -363,7 +367,11 @@ mukana ensimmäisessä versiossa vain jos K1 niin ratkaisee. Vakavuutta ei
 anneta.
 
 ### SEI-5 — Matikka: virhepalaute ja tapahtuma vastaavat toisiaan
-Tila: verifying
+Tila: done
+Havainto (2026-10-23): pääsessio pelasi julkaistun Matikan Chromella
+(Satu (Enhanced), 2/10 ja 10/10 eri loppuruudut); omistaja Macilla Chromella
+(Q24): lasku ja "Ei ihan. Oikea vastaus on …" kuuluivat. iPad (suunnitelma
+§7 C) myöhemmin.
 Perustelu: lähtötaso: väärän vastauksen viesti kehottaa yrittämään
 uudelleen, mutta napit lukittuvat ja peli jatkaa.
 Riippuvuus: SEI-2. Designer päättää, saako lapsi uuden yrityksen vai ei.
@@ -376,7 +384,11 @@ Kriteerit:
    Niin sama sääntö kuin kohdassa 1 pätee.
 
 ### SEI-6 — Loppuruutu kertoo todellisen tuloksen (Matikka)
-Tila: verifying
+Tila: done
+Havainto (2026-10-23): pääsessio pelasi julkaistun Matikan Chromella
+(Satu (Enhanced), 2/10 ja 10/10 eri loppuruudut); omistaja Macilla Chromella
+(Q24): lasku ja "Ei ihan. Oikea vastaus on …" kuuluivat. iPad (suunnitelma
+§7 C) myöhemmin.
 Perustelu: lähtötaso: Matikan loppuruutu sanoo "Olet matikkamestari!"
 riippumatta tuloksesta.
 Riippuvuus: SEI-2.
@@ -836,3 +848,4 @@ Kriteerit:
   "10 / 10 oikein, Olet matikkamestari!" ja konfetti. Kaikki puhe Satu
   (Enhanced). B (omistajan kuuntelu) Q24:ssä.
 - 2026-10-23: Matikan jatkokorjaus S1–S3 (c00873a, 9814d40, 33d4c25; kapealla ruudulla väärä kirjoitettu vastaus rivittyy laatikon alle). Pääsession ajo: unit 61/61, playwright 371/9/0. Julkaistu.
+- 2026-10-23: SEI-2, SEI-5, SEI-6 → done (Q24). Seuraavaksi SEI-3, SEI-7, SEI-8 (Sana) designerille.
