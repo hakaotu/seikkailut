@@ -146,10 +146,38 @@ test('Google network voice ranks below a local good voice but above an unknown o
 });
 
 test('the exact tag still beats a prefix match within the same rank', () => {
-  const mx = named('Paulina', 'es-MX');
-  const es = named('Jorge', 'es-ES');
+  const mx = named('Mónica', 'es-MX');
+  const es = named('Mónica', 'es-ES');
   assert.equal(setup([mx, es]).speech.pickVoice('es-ES'), es);
+  assert.equal(setup([es, mx]).speech.pickVoice('es-ES'), es);
+  const otherMx = named('Whatever', 'es-MX');
+  const otherEs = named('Whatever', 'es-ES');
+  assert.equal(setup([otherMx, otherEs]).speech.pickVoice('es-ES'), otherEs);
   assert.equal(setup([voice('es-MX'), voice('es-ES', false)]).speech.pickVoice('es-ES').lang, 'es-ES');
+});
+
+test('two good voices with the same tag: the one earlier in the list wins, whatever the device order', () => {
+  const jorge = named('Jorge', 'es-ES');
+  const monica = named('Mónica', 'es-ES');
+  assert.equal(setup([jorge, monica]).speech.pickVoice('es-ES'), monica);
+  assert.equal(setup([monica, jorge]).speech.pickVoice('es-ES'), monica);
+});
+
+test('the Enhanced bonus applies only to known good voices', () => {
+  const satu = named('Satu', 'fi-FI');
+  const mystery = named('Mystery (Enhanced)', 'fi-FI');
+  assert.equal(setup([mystery, satu]).speech.pickVoice('fi-FI'), satu);
+  assert.equal(setup([satu, mystery]).speech.pickVoice('fi-FI'), satu);
+  const google = named('Google suomi (Premium)', 'fi-FI', false);
+  assert.equal(setup([google, satu]).speech.pickVoice('fi-FI'), satu);
+  assert.equal(setup([satu, google]).speech.pickVoice('fi-FI'), satu);
+});
+
+test('Enhanced or Premium in the voiceURI counts, not only in the name', () => {
+  const enhanced = { ...named('Satu', 'fi-FI'), voiceURI: 'com.apple.voice.enhanced.fi-FI.Satu' };
+  const compact = { ...named('Satu', 'fi-FI'), voiceURI: 'com.apple.voice.compact.fi-FI.Satu' };
+  assert.equal(setup([compact, enhanced]).speech.pickVoice('fi-FI'), enhanced);
+  assert.equal(setup([enhanced, compact]).speech.pickVoice('fi-FI'), enhanced);
 });
 
 test('two parts are both spoken synchronously, in order', () => {

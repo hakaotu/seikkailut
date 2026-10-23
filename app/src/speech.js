@@ -14,8 +14,9 @@ function normalise(lang) {
 // Voice names for pickVoice, lower case and without accents. Edit the lists here.
 // GOOD: natural-sounding device voices, in order of preference, by language prefix.
 // AVOID: Apple's robotic "Eloquence" set and its novelty voices; used only when
-// nothing else matches the language. A name containing Enhanced, Premium or Siri
-// is a bonus. Google's network voices rank below the local good ones.
+// nothing else matches the language. A voice with Enhanced, Premium or Siri
+// in its name or voiceURI is a bonus, but only for a voice listed in GOOD. Google's
+// network voices rank below the local good ones.
 const GOOD_VOICES = {
   fi: ['satu', 'onni'],
   es: ['monica', 'jorge', 'marisol', 'paulina'],
@@ -25,7 +26,8 @@ const AVOID_VOICES = new Set([
   'albert', 'bad news', 'bahh', 'bells', 'boing', 'bubbles', 'cellos', 'good news',
   'jester', 'organ', 'superstar', 'trinoids', 'whisper', 'wobble', 'zarvox',
 ]);
-const BONUS_NAME = /enhanced|premium|siri/;
+const BONUS_NAME = /enhanced|premium|siri/i;
+const BONUS_URI = /enhanced|premium/i;
 
 // "Satu (Enhanced)" and "Eddy (suomi (Suomi))" both reduce to the part before " (".
 function baseName(name) {
@@ -44,11 +46,13 @@ function voiceRank(v, tag, prefix) {
   let score = 0;
   if (AVOID_VOICES.has(full)) score = -100;
   else {
-    if (good >= 0) score = 20;
-    else if (full.startsWith('google')) score = 10;
-    if (BONUS_NAME.test(String(v.name || '').toLowerCase())) score += 30;
+    if (good >= 0) {
+      score = 20;
+      if (BONUS_NAME.test(String(v.name || '')) || BONUS_URI.test(String(v.voiceURI || ''))) score += 30;
+    } else if (full.startsWith('google')) score = 10;
   }
   const exact = normalise(v.lang) === tag;
+  // -good: between good voices of equal score and tag match, the one earlier in GOOD wins.
   return [score, exact ? (v.localService ? 2 : 1) : 0, -good];
 }
 
