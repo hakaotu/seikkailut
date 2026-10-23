@@ -2,7 +2,10 @@
 
 ## Avoimet
 
-_(ei avoimia)_
+- **Q16 (päätös):** Luonnollisempi puheääni: A) valitaan laitteen paras
+  oma ääni (nopea, ilmainen), B) valmiiksi äänitetyt luonnolliset äänet
+  tekoälypalvelulla (iso työ, mahdollisesti pieni kulu), vai ensin A ja B
+  vain jos A ei riitä? Oletus: ensin A. (SEI-45) — avattu 2026-10-23
 
 ## Vastatut
 

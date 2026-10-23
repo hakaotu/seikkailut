@@ -1,6 +1,6 @@
 # Backlog: Seikkailut
 
-Päivitetty 2026-10-22 (pm). Syöte: `docs/brief.md` ja kolme kopiota
+Päivitetty 2026-10-23 (pm; SEI-45 lisätty). Syöte: `docs/brief.md` ja kolme kopiota
 hakemistossa `originals/`. Tämä tiedosto on pm:n tuotos; tilan (todo,
 in-progress, review, verifying, done) siirtää vain pääsessio.
 
@@ -148,6 +148,71 @@ Kriteerit:
 6. Annettu iPad, peli juuri avattu eikä mitään ole vielä napautettu.
    Kun painan "Kuuntele" kerran. Niin ääni kuuluu heti tästä yhdestä
    napautuksesta (ei vaadi toista yritystä).
+
+### SEI-45 — Luonnollisempi puheääni (suomi ja espanja)
+Tila: todo
+Havainto (2026-10-23): omistaja avasi https://hakaotu.github.io/seikkailut/
+Macilla ja sanoi sanatarkasti: "en tykkää tosta nykyisestä tietokoneäänestä.
+Eikö meillä voisi olla mitään luonnollisempaa puheääntä siihen?" Mitä ääntä
+hän kuuli ja missä pelissä, ei tiedetä.
+Koodista luettua (pääsessio, 2026-10-23; ei havainto): `app/src/speech.js`
+`pickVoice` (rivit noin 46–55) ottaa ensimmäisen laitteen äänen, joka sopii
+kieleen. Omistajan Macissa on useita suomen ääniä, mm. Eddy, Flo, Grandma,
+Grandpa, Reed, Rocko, Sandy, Shelley (leluääniä) ja tavallinen Satu;
+espanjalle Mónica ja sama leluäänten joukko. Sovellus voi siis valita
+leluäänen. Tätä ei ole todennettu.
+Perustelu: puhe on kaikissa kolmessa pelissä lapsen tapa kuulla sana tai
+lasku; omistajan mielestä nykyinen ääni kuulostaa keinotekoiselta.
+Riippuvuus: ei estä muita; kattaa kunkin pelin sitä mukaa kun SEI-2 – SEI-4
+tuovat sen sovellukseen. Ei sido toteutustapaa (ks. avoimet kysymykset).
+Kriteerit (mitä omistaja kuulee; Mac, https://hakaotu.github.io/seikkailut/):
+1. Annettu suomenkielinen sana tai lasku (esim. sana KISSA, "Kuuntele").
+   Kun kuuntelen sen Macilla. Niin ääni ei ole leluääni (ei huvittava,
+   vääristetty tai hahmoääni; ei Eddy, Flo, Grandma, Grandpa, Reed, Rocko,
+   Sandy eikä Shelley, jos ääni tulee laitteesta), ja omistaja sanoo sen
+   kuulostavan luonnolliselta. Jos hän sanoo sen yhä kuulostavan
+   tietokoneelta, kriteeri ei täyty.
+2. Annettu espanjankielinen sana (esim. "rojo", "hola"). Kun kuuntelen sen.
+   Niin se lausutaan espanjaksi espanjaa puhuvalla äänellä (ei suomalaisella
+   äänellä espanjaa lukien), eikä ääni ole leluääni; omistaja sanoo sen
+   kuulostavan luonnolliselta.
+3. Annettu sama sana kuunneltuna kahdesti peräkkäin ja sivun
+   uudelleenlatauksen jälkeen kolmannen kerran. Kun vertaan. Niin ääni on
+   joka kerralla sama (ei vaihdu äänestä toiseen).
+4. Annettu jokainen kohta, jossa nykyinen sovellus puhuu: Matikan lasku
+   ("plus", "miinus", "kertaa") ja vastaus, Sanojen sana, tavut ja
+   valitut kirjaimet sekä hitaampi toisto, Espanjan sanat. Kun kuuntelen
+   jokaisen. Niin yksikään ei käytä vanhaa ääntä; tarkistetaan pelikohtaisesti
+   kun peli on sovelluksessa.
+5. Annettu napautus "Kuuntele". Kun mittaan ajan napautuksesta ääneen
+   Macilla. Niin ääni alkaa alle 1 sekunnissa (pm:n ehdotus, ei omistajan
+   raja; vahvistetaan tai muutetaan suunnittelussa). Mittaustapa ja
+   selain kirjataan tehtävään.
+6. Annettu laite, jolla toivottua ääntä ei ole (tai ääni ei lataudu).
+   Kun painan "Kuuntele" ja pelaan kierroksen. Niin ääni silti kuuluu
+   jollakin äänellä tai peli ei jää odottamaan (SEI-1 kriteeri 5 pätee
+   edelleen: mikään painike ei lukkiudu).
+7. Annettu iPad, peli juuri avattu eikä mitään ole napautettu. Kun painan
+   "Kuuntele" kerran. Niin ääni kuuluu tästä yhdestä napautuksesta
+   (SEI-1 kriteeri 6 pätee edelleen). Tarkistetaan, kun iPad on käsillä
+   (SEI-2:n yhteydessä).
+
+Avoimet kysymykset:
+- Reitti on auki, omistajalle esitetään kaksi vaihtoehtoa. A: käytetään
+  parasta laitteessa jo olevaa ääntä (esim. Satu ja Mónica, ja parannettu
+  versio jos asennettu). B: kerran valmiiksi tehdyt luonnolliset
+  äänitiedostot, jotka toimitetaan sovelluksen mukana. Kriteerit on
+  kirjoitettu kumpaankin sopiviksi. Arkkitehti ottaa kantaa, kun omistaja on
+  päättänyt.
+- Mitä ääntä omistaja kuuli ja millä selaimella? Ei tiedossa. Pääsessio voi
+  selvittää, minkä äänen sovellus valitsee tässä Macissa; selainta ei tiedetä.
+- Riittääkö Mac, vai pitääkö ääni kuulostaa samalta iPadilla? A:ssa ääni
+  riippuu laitteesta, B:ssä ei. Omistajalla ei ole iPadia käsillä.
+- Tarvitaanko toimintaa ilman verkkoa (SEI-18, ehdotus, ei hyväksytty)?
+  Vaikuttaa reitin valintaan.
+- B kattaa vain etukäteen tiedetyt tekstit (sanalistat, kehut); Matikan
+  laskuja ja lukuja tulee olla rajattu joukko. Kuka tarkistaa espanjan
+  ääntämisen (K3:n tarkistaja ei ole nimetty)?
 
 ## B. Nykyisen toiminnan säilyttäminen (jokainen nykyinen käyttötapaus)
 
@@ -708,3 +773,6 @@ Kriteerit:
   kuultu. SEI-1 odottaa iPad-tarkistusta (Q15).
 - 2026-10-23: SEI-1 → done omistajan Mac-havainnon perusteella (Q15).
   iPad-tarkistus siirtyy SEI-2:n yhteyteen.
+- 2026-10-23: lisätty SEI-45 (luonnollisempi puheääni), omistajan havainto
+  Macilla julkaistusta sovelluksesta. Reitti A/B auki, odottaa omistajan
+  päätöstä. Tila todo.
