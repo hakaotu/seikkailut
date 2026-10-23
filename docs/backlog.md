@@ -784,3 +784,4 @@ Kriteerit:
   playwright 194/2/0). Should fix 1–4 (Enhanced-bonus vain hyville
   äänille, voiceURI-tunnistus, kaksi testiä) jatkokorjauksena. Julkaistu.
   → verifying: omistaja kuuntelee Macilla.
+- 2026-10-23: SEI-45 should fix 1–4 korjattu (701b44e; unit 30/30 pääsession ajossa, playwright 194/2/0 developerin ajossa, mutaatiot tarkistettu). Julkaistu.
