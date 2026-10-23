@@ -240,7 +240,7 @@ Avoimet kysymykset:
 ## B. Nykyisen toiminnan säilyttäminen (jokainen nykyinen käyttötapaus)
 
 ### SEI-2 — Matikka: kaikki nykyiset toiminnot uudessa sovelluksessa
-Tila: review
+Tila: verifying
 Perustelu: omistaja vaati kaikki use caset; tämä on Matikkaseikkailun
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -363,7 +363,7 @@ mukana ensimmäisessä versiossa vain jos K1 niin ratkaisee. Vakavuutta ei
 anneta.
 
 ### SEI-5 — Matikka: virhepalaute ja tapahtuma vastaavat toisiaan
-Tila: review
+Tila: verifying
 Perustelu: lähtötaso: väärän vastauksen viesti kehottaa yrittämään
 uudelleen, mutta napit lukittuvat ja peli jatkaa.
 Riippuvuus: SEI-2. Designer päättää, saako lapsi uuden yrityksen vai ei.
@@ -376,7 +376,7 @@ Kriteerit:
    Niin sama sääntö kuin kohdassa 1 pätee.
 
 ### SEI-6 — Loppuruutu kertoo todellisen tuloksen (Matikka)
-Tila: review
+Tila: verifying
 Perustelu: lähtötaso: Matikan loppuruutu sanoo "Olet matikkamestari!"
 riippumatta tuloksesta.
 Riippuvuus: SEI-2.
@@ -826,3 +826,4 @@ Kriteerit:
 - 2026-10-23: Matikan suunnitelma `docs/plans/sei-2.md` valmis, odottaa omistajan hyväksyntää (Q23). Pääsessio hyväksyi O1:n (Enter numeronäppäimellä = OK) ja O3:n (suljetaan Mac-tarkistuksilla A ja B, iPad C myöhemmin).
 - 2026-10-23: Q23 hyväksytty. SEI-2, SEI-5, SEI-6 → in-progress, developer käynnistetty.
 - 2026-10-23: SEI-2/5/6 toteutettu (5cc4043..bc62141; developer: unit 61/61, playwright 351/9 ohitettu/0). → review.
+- 2026-10-23: SEI-2/5/6 reviewer APPROVED (bc62141; reviewer: unit 61/61, playwright 351/9/0). Should fix S1–S3 jatkokorjauksena. Julkaistu. → verifying (suunnitelma §7 A ja B).
