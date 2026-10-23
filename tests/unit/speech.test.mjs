@@ -419,6 +419,33 @@ test('no pauseMs: parts stay queued together and an error on the second still fa
   assert.deepEqual(cb.log, ['playing', 'failed:error']);
 });
 
+test('pauseMs: an error on the first part still fails, even though a later part is delayed', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  synth.spoken[0].onerror({ error: 'synthesis-failed' });
+  assert.deepEqual(cb.log, ['failed:error']);
+});
+
+test('pauseMs: an error on the first part after it started still fails', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  synth.spoken[0].onstart();
+  synth.spoken[0].onerror({ error: 'synthesis-failed' });
+  assert.deepEqual(cb.log, ['playing', 'failed:error']);
+});
+
+test('pauseMs: a dropped onend on the first part ends in idle at the 12 s cap, the second is never spoken', () => {
+  const { synth, speech } = setup([voice('fi-FI')]);
+  const cb = recorder();
+  speech.say('fi-FI', PAIR, cb);
+  synth.spoken[0].onstart();
+  mock.timers.tick(12000);
+  assert.deepEqual(cb.log, ['playing', 'idle']);
+  assert.equal(synth.spoken.length, 1);
+});
+
 test('pauseMs on the first part, or 0, or not a number, is ignored', () => {
   for (const parts of [
     [{ text: 'a', pauseMs: 700 }, { text: 'b' }],

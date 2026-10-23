@@ -23,7 +23,9 @@
 //   ctx.question    the question slot left of Kuuntele in the question row
 //   ctx.status      this game's element in the top-bar status slot (max 40 % width)
 //   ctx.speech.say(parts)  parts = [{ text, rate?, pauseMs? }]. Speaks in the game's language;
-//                   all parts are queued in the same call. Drives this game's Kuuntele state.
+//                   parts without pauseMs are queued in the same call, a part with
+//                   pauseMs is spoken that many ms after the previous part ends.
+//                   Drives this game's Kuuntele state.
 //                   Cancels anything already speaking, in any game.
 //   ctx.speech.stop()      stops speech
 //   ctx.reportProgress({ done, total, finished })
