@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q25 (päätös):** Matikan automaattinen siirtyminen: oletukset — vain
-  oikean vastauksen jälkeen, 4 s, Seuraava-napilla voi ohittaa odotuksen,
-  10. laskun jälkeen silti "Katso tulos". Käyvätkö? (SEI-46) — avattu 2026-10-23
+_(ei avoimia)_
 
 ## Vastatut
 
+- **Q25 (päätös):** Matikan automaattinen siirtyminen — "ok": vain oikean
+  jälkeen, 4 s, Seuraava ohittaa, 10. laskun jälkeen "Katso tulos". (2026-10-23)
 - **Q24 (katso):** Matikka Macilla, väärä vastaus — "kyllä": lasku ja
   "Ei ihan. Oikea vastaus on …" kuuluivat. (2026-10-23)
 - **Q23 (päätös):** Matikan toteutussuunnitelma — hyväksytty. (2026-10-23)

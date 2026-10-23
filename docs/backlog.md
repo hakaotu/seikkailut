@@ -939,3 +939,4 @@ Kriteerit:
 - 2026-10-23: Matikan jatkokorjaus S1–S3 (c00873a, 9814d40, 33d4c25; kapealla ruudulla väärä kirjoitettu vastaus rivittyy laatikon alle). Pääsession ajo: unit 61/61, playwright 371/9/0. Julkaistu.
 - 2026-10-23: SEI-2, SEI-5, SEI-6 → done (Q24). Seuraavaksi SEI-3, SEI-7, SEI-8 (Sana) designerille.
 - 2026-10-23: lisätty SEI-46 (Matikka: automaattinen siirtyminen oikean vastauksen jälkeen), omistajan havainto Macilla julkaistusta Matikasta. Neljä avointa kysymystä oletuksineen (väärä vastaus, kesto 4 s, ohitus Seuraavalla, 10. vastaus). Tila todo.
+- 2026-10-23: SEI-46 avoimet kysymykset 1–4 ratkaistu oletusten mukaan (Q25: "ok"). Odottaa designeria Sanat-luonnoksen katselmoinnin jälkeen.
