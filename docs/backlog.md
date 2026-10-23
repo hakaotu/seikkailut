@@ -785,3 +785,10 @@ Kriteerit:
   äänille, voiceURI-tunnistus, kaksi testiä) jatkokorjauksena. Julkaistu.
   → verifying: omistaja kuuntelee Macilla.
 - 2026-10-23: SEI-45 should fix 1–4 korjattu (701b44e; unit 30/30 pääsession ajossa, playwright 194/2/0 developerin ajossa, mutaatiot tarkistettu). Julkaistu.
+- 2026-10-23: SEI-45 havainto (Q17): omistajan mukaan ei parempi; "kissa"
+  kuulostaa englantia puhuvan suomelta. Pääsessio tarkisti samana päivänä
+  Chromella (Playwright, channel chrome, tämä Mac) julkaistusta sivusta:
+  Sanat lausuu "kissa" fi-FI äänellä Satu (rate 0,78 ja 0,52), Espanja
+  "hola" es-ES äänellä Mónica. Selaimen fi-äänet: Satu + Eloquence-sarja.
+  Omistajan selainta ja kuultua ääntä ei tiedetä (Q18). Tila pysyy
+  verifying.

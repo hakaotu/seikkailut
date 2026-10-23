@@ -2,12 +2,14 @@
 
 ## Avoimet
 
-- **Q17 (katso):** Kuuntele Macilla https://hakaotu.github.io/seikkailut/
-  Sanat ja Espanja: onko ääni nyt parempi kuin äsken? (SEI-45)
-  — avattu 2026-10-23
+- **Q18 (katso):** Kumpi kuulostaa samalta kuin sovelluksen "kissa":
+  `say -v Eddy kissa` vai `say -v Satu kissa`? Ja millä selaimella?
+  (SEI-45) — avattu 2026-10-23
 
 ## Vastatut
 
+- **Q17 (katso):** Onko ääni parempi? — "ei oo parempi. Kissa kuulostaa
+  nyt kuin joku englantia puhuva yrittää lausua suomea." (2026-10-23)
 - **Q16 (päätös):** Luonnollisempi puheääni — A: valitaan laitteen paras
   oma ääni. (2026-10-23)
 - **Q15 (katso):** Testi osoitteessa https://hakaotu.github.io/seikkailut/
