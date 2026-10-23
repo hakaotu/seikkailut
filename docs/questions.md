@@ -2,14 +2,13 @@
 
 ## Avoimet
 
-- **Q15 (katso):** iPad-testi osoitteessa
-  https://hakaotu.github.io/seikkailut/ — kolme havaintoa (Sanat:
-  "kissa" kahdesti yhdellä napautuksella; Espanja: "hola" vai keltainen
-  ilmoitus; Kuuntele-nappi värjäytyy ilman ilmoitusta). (SEI-1)
-  — avattu 2026-10-23
+_(ei avoimia)_
 
 ## Vastatut
 
+- **Q15 (katso):** Testi osoitteessa https://hakaotu.github.io/seikkailut/
+  — omistaja ajoi Macilla: sivu aukeaa ja äänet kuuluvat. "Jatketaan."
+  iPadilla ei vielä kokeiltu. (2026-10-23)
 - **Q14 (päätös):** Julkiseksi GitHub-sivuksi? — Ensin "ei julkiseksi",
   sitten samana päivänä: saa olla julkinen, kunhan iät poistetaan ja
   sanotaan vain "tarkoitettu 1.–2.-luokkalaisille". Q11 A pysyy. (2026-10-23)

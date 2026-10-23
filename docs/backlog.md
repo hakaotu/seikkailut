@@ -119,7 +119,11 @@ yhtä nykyistä käyttötapausta, ja ne kaikki säilytetään.
 ## A. Yhteinen runko
 
 ### SEI-1 — Yksi sovellus: etusivu ja pelin valinta, toimii tietokoneella ja iPadilla
-Tila: verifying
+Tila: done
+Havainto (2026-10-23): omistaja avasi https://hakaotu.github.io/seikkailut/
+Macilla; sivu aukeaa ja äänet kuuluvat. iPadilla ei kokeiltu: ääni
+ensimmäisestä napautuksesta iPad-Safarissa (R2, R3) on yhä tarkistamatta
+ja tarkistetaan SEI-2:n yhteydessä, kun iPad on käsillä.
 Perustelu: omistaja päätti yhden yhteisen sovelluksen; ilman runkoa
 kolmea peliä ei voi yhdistää.
 Riippuvuus: ei mitään (tämä ensin).
@@ -702,3 +706,5 @@ Kriteerit:
   WebKitillä 820×1130 kosketuksella: kolme korttia, Matikka aukeaa
   osoitteeseen #/matikka, Etusivu palaa, ei sivuvirheitä. Ääntä ei
   kuultu. SEI-1 odottaa iPad-tarkistusta (Q15).
+- 2026-10-23: SEI-1 → done omistajan Mac-havainnon perusteella (Q15).
+  iPad-tarkistus siirtyy SEI-2:n yhteyteen.
