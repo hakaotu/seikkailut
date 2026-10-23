@@ -2,7 +2,11 @@
 
 ## Avoimet
 
-_(ei avoimia)_
+- **Q15 (katso):** iPad-testi osoitteessa
+  https://hakaotu.github.io/seikkailut/ — kolme havaintoa (Sanat:
+  "kissa" kahdesti yhdellä napautuksella; Espanja: "hola" vai keltainen
+  ilmoitus; Kuuntele-nappi värjäytyy ilman ilmoitusta). (SEI-1)
+  — avattu 2026-10-23
 
 ## Vastatut
 

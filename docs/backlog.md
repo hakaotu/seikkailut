@@ -695,3 +695,10 @@ Kriteerit:
   poistetaan ja käyttäjät kuvataan vain "1.–2.-luokkalaisille". Iät ja
   lapsikohtaiset lukutaitotiedot poistettu dokumenteista; README lisätty.
   Julkaisu tuoreena historiana (suunnitelma §9, tarkennus 2026-10-23).
+- 2026-10-23: julkaistu. Repo https://github.com/hakaotu/seikkailut
+  (julkinen, yksi commit dabd721; vanha historia vain paikallisessa
+  haarassa local-history). Pages: https://hakaotu.github.io/seikkailut/,
+  deploy-ajo 39918840857 onnistui. Pääsessio tarkisti 2026-10-23
+  WebKitillä 820×1130 kosketuksella: kolme korttia, Matikka aukeaa
+  osoitteeseen #/matikka, Etusivu palaa, ei sivuvirheitä. Ääntä ei
+  kuultu. SEI-1 odottaa iPad-tarkistusta (Q15).
