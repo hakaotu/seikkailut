@@ -380,3 +380,266 @@ test('names, groups and the focus after right, skip and wrong', async ({ page },
   await expect(button(page, 'Seuraava sana')).toBeFocused();
   await expect(view(page).locator('.sn-live')).toHaveText(`Ohitettu. Sana on ${skipped}. Pisteet 0 / 2.`);
 });
+
+// ---- B6: Vaihda, Takaisin sanaan, resume, guard ----
+
+const hint = (page) => view(page).locator('.sn-hint');
+const change = (page) => view(page).locator('.sn-change');
+const radio = (page, name) => view(page).getByRole('radio', { name: new RegExp(`^${name}`) });
+const badge = (page) => page.locator('.badge:visible');
+
+async function openChoose(page, testInfo) {
+  await press(change(page), testInfo);
+  await settle(page);
+}
+
+test('hint and buttons: the choose screen in the middle of a round; the list hint wins over the level hint', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await openChoose(page, testInfo);
+  await expect(button(page, 'Takaisin sanaan')).toBeVisible();
+  await expect(button(page, 'Aloita uusi kierros')).toBeVisible();
+  await expect(button(page, 'Aloita')).toBeHidden();
+  await expect(hint(page)).toHaveText('');
+  await press(radio(page, 'Vaikea'), testInfo);
+  await expect(hint(page)).toHaveText('Sama sana alkaa alusta uudella tasolla.');
+  await expect(button(page, 'Takaisin sanaan')).toBeVisible();
+  await press(radio(page, 'Harry Potter'), testInfo);
+  await expect(hint(page)).toHaveText('Toiset sanat alkavat uudella kierroksella.');
+  await expect(button(page, 'Takaisin sanaan')).toBeHidden();
+  await expect(button(page, 'Aloita uusi kierros')).toBeVisible();
+  await press(radio(page, 'Normaali'), testInfo);
+  await expect(hint(page)).toHaveText('Sama sana alkaa alusta uudella tasolla.');
+  await expect(button(page, 'Takaisin sanaan')).toBeVisible();
+  await press(radio(page, 'Helppo'), testInfo);
+  await expect(hint(page)).toHaveText('');
+});
+
+test('hint and buttons: a level change on a finished word has no hint; the end screen\'s Vaihda valintoja gives the Aloita form', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await skip(page, testInfo);
+  await openChoose(page, testInfo);
+  await press(radio(page, 'Vaikea'), testInfo);
+  await expect(hint(page)).toHaveText('');
+  await press(button(page, 'Takaisin sanaan'), testInfo);
+  await settle(page);
+  await next(page, testInfo); // the next word
+  await playRound(page, testInfo, 'FFFFFFFFF');
+  await press(button(page, 'Vaihda valintoja'), testInfo);
+  await settle(page);
+  await expect(button(page, 'Aloita')).toBeVisible();
+  await expect(button(page, 'Takaisin sanaan')).toBeHidden();
+  await expect(button(page, 'Aloita uusi kierros')).toBeHidden();
+  await expect(radio(page, 'Vaikea')).toHaveAttribute('aria-checked', 'true');
+});
+
+test('SEI-3 / 2: a new list needs Aloita uusi kierros; the new round has ten Harry Potter words and no points', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await skip(page, testInfo);
+  await openChoose(page, testInfo);
+  await press(radio(page, 'Harry Potter'), testInfo);
+  await press(button(page, 'Aloita uusi kierros'), testInfo);
+  await expect(view(page).locator('.sn-play')).toBeVisible();
+  await settle(page);
+  await expect(view(page).locator('.sn-score')).toHaveText('Pisteet: 0 / 0');
+  const words = await wordsOfRound(page, testInfo);
+  expect(new Set(words).size).toBe(10);
+  for (const w of words) expect(HP_WORDS.map((e) => e.word), w).toContain(w);
+});
+
+test('SEI-3 / 6: a level change on an open word restarts it on the new level, keeps the points, and reads it in the tap', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await skip(page, testInfo);
+  await next(page, testInfo);
+  const word = await currentWord(page);
+  await spell(page, testInfo, word.slice(0, 2));
+  await openChoose(page, testInfo);
+  await press(radio(page, 'Vaikea'), testInfo);
+  const before = (await speakCalls(page)).length;
+  await press(button(page, 'Takaisin sanaan'), testInfo);
+  await expect(view(page).locator('.sn-play')).toBeVisible();
+  expect(await currentWord(page)).toBe(word);
+  expect((await slotLetters(page)).every((l) => l === '')).toBe(true);
+  await expect(view(page).locator('.sn-letters.is-alphabet')).toBeVisible();
+  await expect(view(page).locator('.sn-tile')).toHaveCount(0);
+  await expect(view(page).locator('.sn-mystery')).toBeVisible();
+  await expect(view(page).locator('.sn-score')).toHaveText('Pisteet: 0 / 1');
+  await expect.poll(async () => (await speakCalls(page)).length).toBe(before + 2);
+  const calls = (await speakCalls(page)).slice(before);
+  expect(calls.map((c) => [c.text, c.rate])).toEqual([[word.toLowerCase(), 0.78], [word.toLowerCase(), 0.52]]);
+  expect(calls[0].inDispatch).toBe(true);
+  await expect(view(page).locator('.sn-live')).toContainText('Sana 2 / 10.');
+});
+
+test('SEI-3 / 6: the attempt count survives a level change, so the word cannot be right first time any more', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await spellWrong(page, testInfo);
+  await openChoose(page, testInfo);
+  await press(radio(page, 'Keskitaso'), testInfo);
+  await press(button(page, 'Takaisin sanaan'), testInfo);
+  await settle(page);
+  await expect(feedback(page)).toBeEmpty(); // the word starts again: no message
+  await spellRight(page, testInfo);
+  await next(page, testInfo);
+  await playRound(page, testInfo, 'FFFFFFFFF');
+  await expect(view(page).locator('.sn-result-score')).toHaveText('9 / 10');
+  await expect(view(page).locator('.sn-rows')).toContainText('1 sana oikein uudella yrityksellä');
+});
+
+test('SEI-3 / 6: a level change on a finished word shows the same finished word, reads nothing, and applies from the next word', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  const word = await spellRight(page, testInfo);
+  await openChoose(page, testInfo);
+  await press(radio(page, 'Vaikea'), testInfo);
+  const before = (await speakCalls(page)).length;
+  await press(button(page, 'Takaisin sanaan'), testInfo);
+  await expect(view(page).locator('.sn-play')).toBeVisible();
+  expect(await slotLetters(page)).toEqual([...word]);
+  await expect(feedback(page)).toHaveAttribute('data-kind', 'right');
+  await expect(view(page).locator('.sn-tile')).toHaveCount(word.length); // still the old level's tiles
+  await page.waitForTimeout(400);
+  expect((await speakCalls(page)).length).toBe(before);
+  await settle(page);
+  await next(page, testInfo);
+  await expect(view(page).locator('.sn-letters.is-alphabet')).toBeVisible();
+  await expect(view(page).locator('.sn-tile')).toHaveCount(0);
+});
+
+test('SEI-3 / 7: tavutus changed in the middle of a word keeps the letters, adds the hyphens and reads the word; Takaisin sanaan with nothing changed reads nothing', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  const word = await currentWord(page);
+  await spell(page, testInfo, word.slice(0, 2));
+  const placed = await slotLetters(page);
+  // nothing changed: the same state, no reading
+  await openChoose(page, testInfo);
+  let before = (await speakCalls(page)).length;
+  await press(button(page, 'Takaisin sanaan'), testInfo);
+  await settle(page);
+  expect(await slotLetters(page)).toEqual(placed);
+  expect((await speakCalls(page)).length).toBe(before);
+  // tavutus on
+  await openChoose(page, testInfo);
+  await press(button(page, 'Tavutus'), testInfo);
+  await expect(hint(page)).toHaveText(''); // no hint for tavutus
+  before = (await speakCalls(page)).length;
+  await press(button(page, 'Takaisin sanaan'), testInfo);
+  await expect(view(page).locator('.sn-play')).toBeVisible();
+  expect(await slotLetters(page)).toEqual(placed); // the letters stayed (design E2)
+  await expect(view(page).locator('.sn-dash')).toHaveCount(syllabify(word).length - 1);
+  await expect.poll(async () => (await speakCalls(page)).length, { timeout: 6000 }).toBe(before + 1 + syllabify(word).length);
+  const calls = (await speakCalls(page)).slice(before);
+  expect(calls[0].inDispatch).toBe(true);
+  expect(calls.map((c) => c.rate)).toEqual([0.78, ...syllabify(word).map(() => 0.62)]);
+  // the tiles that were used are still used
+  await expect(view(page).locator('.sn-tile.is-used')).toHaveCount(2);
+  // and the word can still be finished from where it was
+  await spell(page, testInfo, word.slice(2));
+  await expect(feedback(page)).toHaveAttribute('data-kind', 'right');
+});
+
+test('Resume: nothing done yet with letters placed, Etusivu, the card tap reads the word and keeps the letters; no badge', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  const word = await currentWord(page);
+  await spell(page, testInfo, word.slice(0, 2));
+  const placed = await slotLetters(page);
+  await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+  await expect(page.locator('#home')).toBeVisible();
+  await expect(badge(page)).toHaveCount(0);
+  const before = (await speakCalls(page)).length;
+  await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
+  await expect(view(page).locator('.sn-play')).toBeVisible();
+  expect(await slotLetters(page)).toEqual(placed);
+  await expect.poll(async () => (await speakCalls(page)).length).toBe(before + 2);
+  const calls = (await speakCalls(page)).slice(before);
+  expect(calls[0].text).toBe(word.toLowerCase());
+  expect(calls[0].inDispatch).toBe(true);
+});
+
+test('Resume: three words done show Kesken 3/10 and a return changes nothing and says nothing; after word 10 it reads Kesken 10/10; after Katso tulos there is no badge and the same end screen comes back quietly', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  for (let i = 0; i < 3; i++) {
+    await skip(page, testInfo);
+    await next(page, testInfo);
+  }
+  const word = await currentWord(page);
+  await spell(page, testInfo, word.slice(0, 1));
+  await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+  await expect(badge(page)).toHaveText(/Kesken 3\/10/);
+  const before = (await speakCalls(page)).length;
+  await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
+  await expect(view(page).locator('.sn-play')).toBeVisible();
+  expect((await slotLetters(page))[0]).toBe(word[0]);
+  await expect(view(page).locator('.sn-score')).toHaveText('Pisteet: 0 / 3');
+  await page.waitForTimeout(400);
+  expect((await speakCalls(page)).length).toBe(before);
+  // up to the tenth word
+  await press(button(page, 'Aloita sana alusta'), testInfo);
+  await skip(page, testInfo);
+  await next(page, testInfo);
+  await playRound(page, testInfo, 'SSSSS');
+  await skip(page, testInfo);
+  await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+  await expect(badge(page)).toHaveText(/Kesken 10\/10/);
+  await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
+  await expect(button(page, 'Katso tulos')).toBeVisible();
+  await settle(page);
+  await next(page, testInfo);
+  await expect(view(page).locator('.sn-end')).toBeVisible();
+  await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+  await expect(badge(page)).toHaveCount(0);
+  const spoken = (await speakCalls(page)).length;
+  await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
+  await expect(view(page).locator('.sn-end')).toBeVisible();
+  await expect(view(page).locator('.sn-confetti')).toHaveCount(0);
+  await page.waitForTimeout(400);
+  expect((await speakCalls(page)).length).toBe(spoken);
+});
+
+test('Resume: Etusivu while the victory clip plays pauses it at once', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await spellRight(page, testInfo);
+  await expect.poll(async () => (await audioCalls(page)).length).toBe(1);
+  await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+  await expect.poll(async () => (await audioCalls(page)).length, { timeout: 1000 }).toBe(2);
+  const [play, pause] = await audioCalls(page);
+  expect(pause.kind).toBe('pause');
+  expect(pause.at - play.at).toBeLessThan(1500);
+  await page.waitForTimeout(3300);
+  expect((await audioCalls(page)).length).toBe(2); // the 3 s timer was cleared, no second pause
+});
+
+test('Resume: leaving during the confetti removes it', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' });
+  await playRound(page, testInfo, 'FFFFFFFFFF');
+  await expect(view(page).locator('.sn-confetti')).toHaveCount(1);
+  await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+  await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
+  await expect(view(page).locator('.sn-confetti')).toHaveCount(0);
+});
+
+test('Guard: a tap on the new screen\'s buttons within 500 ms of a screen change is ignored; after settle() it works', async ({ page }, testInfo) => {
+  await openSanat(page, testInfo);
+  await press(radio(page, 'Helppo'), testInfo);
+  await settle(page);
+  // in one task: Aloita, then at once a tile
+  await page.evaluate(() => {
+    const v = document.querySelector('.game-view[data-game="sanat"]');
+    [...v.querySelectorAll('button')].find((b) => b.textContent === 'Aloita').click();
+    v.querySelector('.sn-tile').click();
+  });
+  expect((await slotLetters(page)).every((l) => l === '')).toBe(true);
+  await settle(page);
+  const word = await currentWord(page);
+  await spell(page, testInfo, word[0]);
+  expect((await slotLetters(page))[0]).toBe(word[0]);
+});

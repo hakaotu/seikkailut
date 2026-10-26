@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { installFakeSpeech, seedRandom, press, speakCalls, settle } from './helpers.mjs';
-import { openSanat, startRound as startSanat } from './sanat-helpers.mjs';
+import { installFakeSpeech, seedRandom, press, speakCalls, settle, recordAudio, audioCalls } from './helpers.mjs';
+import * as sn from './sanat-helpers.mjs';
 import { openMatikka, startRound, answerRight, answerWrong, next, view, button } from './matikka-helpers.mjs';
 
 test.beforeEach(async ({ page }) => {
@@ -48,15 +48,15 @@ test('reload on #/sanat makes no speak call before a tap', async ({ page }) => {
 
 test('Sanat: the card tap reads nothing, the choose screen is silent', async ({ page }, testInfo) => {
   await seedRandom(page, 11);
-  await openSanat(page, testInfo);
+  await sn.openSanat(page, testInfo);
   await page.waitForTimeout(300);
   expect(await speakCalls(page)).toEqual([]);
 });
 
 test('Sanat: Aloita reads the word inside the tap, then slowly from a timer after a pause that follows the first ending', async ({ page }, testInfo) => {
   await seedRandom(page, 12);
-  await openSanat(page, testInfo);
-  await startSanat(page, testInfo, { level: 'Helppo' });
+  await sn.openSanat(page, testInfo);
+  await sn.startRound(page, testInfo, { level: 'Helppo' });
   await expect.poll(async () => (await speakCalls(page)).length).toBe(2);
   const calls = await speakCalls(page);
   expect(calls[0].text).toBe(calls[1].text);
@@ -66,6 +66,84 @@ test('Sanat: Aloita reads the word inside the tap, then slowly from a timer afte
   expect(calls[1].inDispatch).toBe(false);
   // 700 ms after the first reading ended, less slack for the timer
   expect(calls[1].at - calls[0].endedAt).toBeGreaterThanOrEqual(650);
+});
+
+test('Sanat: every spoken event starts inside its tap; only the parts after a pause start from a timer', async ({ page }, testInfo) => {
+  await recordAudio(page);
+  await seedRandom(page, 13);
+  await sn.openSanat(page, testInfo);
+  const radio = (name) => sn.view(page).getByRole('radio', { name: new RegExp(`^${name}`) });
+  // Runs `act` and checks that the first speak it causes started inside the tap.
+  async function event(name, act) {
+    const before = (await speakCalls(page)).length;
+    await act();
+    await expect.poll(async () => (await speakCalls(page)).length, { message: `${name} speaks` }).toBeGreaterThan(before);
+    expect((await speakCalls(page))[before].inDispatch, `${name}: the first speak is inside the tap`).toBe(true);
+  }
+  await event('Kuuntele on the choose screen', () => press(sn.view(page).locator('.listen'), testInfo));
+  await press(radio('Helppo'), testInfo);
+  await event('Aloita', () => press(sn.button(page, 'Aloita'), testInfo));
+  await settle(page);
+  let word = await sn.currentWord(page);
+  await event('a letter', () => sn.spell(page, testInfo, word[0]));
+  await event('Kuuntele on the word screen', () => press(sn.view(page).locator('.listen'), testInfo));
+  await event('the picture', () => press(sn.button(page, 'Kuva. Kuuntele sana.'), testInfo));
+  await sn.spell(page, testInfo, word.slice(1, -1));
+  await event('the last letter, right', () => sn.spell(page, testInfo, word.slice(-1)));
+  const play = (await audioCalls(page)).filter((a) => a.kind === 'play');
+  expect(play.length).toBe(1);
+  expect(play[0].inDispatch).toBe(true);
+  await event('Seuraava', () => sn.next(page, testInfo));
+  word = await sn.currentWord(page);
+  const wrong = sn.wrongSpelling(word, false);
+  await sn.spell(page, testInfo, wrong.slice(0, -1));
+  await event('the last letter, wrong', () => sn.spell(page, testInfo, wrong.slice(-1)));
+  await event('Ohita', () => press(sn.button(page, 'Ohita sana'), testInfo));
+  await sn.next(page, testInfo);
+  // a level change on an open word
+  await press(sn.view(page).locator('.sn-change'), testInfo);
+  await settle(page);
+  await event('Kuuntele on the choose screen in the middle of a round', () => press(sn.view(page).locator('.listen'), testInfo));
+  await press(radio('Vaikea'), testInfo);
+  await event('Takaisin sanaan after a level change', () => press(sn.button(page, 'Takaisin sanaan'), testInfo));
+  await settle(page);
+  for (let i = 3; i <= 10; i++) {
+    await sn.skip(page, testInfo);
+    if (i === 10) break;
+    await sn.next(page, testInfo);
+  }
+  await event('Katso tulos', () => press(sn.button(page, 'Katso tulos'), testInfo));
+  await settle(page);
+  await event('Kuuntele on the end screen', () => press(sn.view(page).locator('.listen'), testInfo));
+  await event('Pelaa uudelleen', () => press(sn.button(page, 'Pelaa uudelleen'), testInfo));
+  await settle(page);
+  await press(sn.view(page).locator('.sn-change'), testInfo);
+  await settle(page);
+  await event('Aloita uusi kierros', () => press(sn.button(page, 'Aloita uusi kierros'), testInfo));
+  await settle(page);
+  await page.waitForTimeout(1500); // the last reading's later part
+  const calls = await speakCalls(page);
+  calls.forEach((c, i) => {
+    if (c.inDispatch) return;
+    // from a timer: it must be a part after a pause, which starts at least 250 ms after the one before ended
+    expect(calls[i - 1], `call ${i} (${c.text}) has a call before it`).toBeTruthy();
+    expect(calls[i - 1].endedAt, `call ${i} (${c.text}): the one before it ended`).not.toBeNull();
+    expect(c.at - calls[i - 1].endedAt, `call ${i} (${c.text}) waited for a pause`).toBeGreaterThanOrEqual(250);
+  });
+});
+
+test('Sanat: nothing done yet, Etusivu, the card tap reads the current word inside the tap', async ({ page }, testInfo) => {
+  await seedRandom(page, 14);
+  await sn.openSanat(page, testInfo);
+  await sn.startRound(page, testInfo, { level: 'Keskitaso' });
+  const word = await sn.currentWord(page);
+  const before = (await speakCalls(page)).length;
+  await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+  await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
+  await expect.poll(async () => (await speakCalls(page)).length).toBeGreaterThan(before);
+  const calls = await speakCalls(page);
+  expect(calls[before].inDispatch).toBe(true);
+  expect(calls[before].text).toBe(word.toLowerCase());
 });
 
 // ---- Matikka (SEI-2): every reading starts inside the tap or key press that causes it ----

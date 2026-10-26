@@ -13,7 +13,8 @@
 import {
   MAX_WORDS, THEMES, LEVELS, pickPraise, newDeck, newWordState, startWord, place, removeAt, removeLast,
   clearAll, isFull, check, skip, starsFor, endTexts, syllabify, wordSpeech, letterSpeech, wrongSpeech,
-  skipSpeech, chooseSpeech, selectionLine, selectionLabel, ALPHABET,
+  skipSpeech, chooseSpeech, selectionLine, selectionLabel, changeLabel, chooseHint, backToWord as planBackToWord,
+  ALPHABET,
 } from './sanat-logic.js';
 
 const GUARD_MS = 500; // design 3.9: a new screen's buttons ignore taps for this long
@@ -131,7 +132,9 @@ export default {
       `<div class="sn-levels" role="radiogroup" aria-label="Taso">${Object.keys(LEVELS).map(levelButtonHtml).join('')}</div>` +
       '<div class="sn-hint" role="status"></div>' +
       '<div class="sn-actions">' +
+      '<button type="button" class="sn-secondary sn-big sn-back-to-word" hidden>Takaisin sanaan</button>' +
       '<button type="button" class="sn-primary sn-big sn-start">Aloita</button>' +
+      '<button type="button" class="sn-primary sn-big sn-restart" hidden>Aloita uusi kierros</button>' +
       '</div>' +
       '</section>' +
       '<section class="sn-screen sn-play" hidden>' +
@@ -145,7 +148,8 @@ export default {
       '<div class="sn-foot"><div class="sn-foot-left">' +
       `<button type="button" class="sn-secondary sn-clear" aria-label="Aloita sana alusta">${REPEAT}Aloita alusta</button>` +
       `<button type="button" class="sn-secondary sn-skip" aria-label="Ohita sana">${SKIP}Ohita</button>` +
-      '</div></div>' +
+      '</div>' +
+      '<button type="button" class="sn-secondary sn-change">Vaihda</button></div>' +
       '</section>' +
       '<section class="sn-screen sn-end" hidden>' +
       '<div class="sn-result" data-tier="done"><span class="sn-medal" aria-hidden="true"></span>' +
@@ -171,6 +175,9 @@ export default {
     const tavutusState = $('.sn-toggle-state');
     const hintEl = $('.sn-hint');
     const startBtn = $('.sn-start');
+    const restartBtn = $('.sn-restart');
+    const backBtn = $('.sn-back-to-word');
+    const changeBtn = $('.sn-change');
     const scoreEl = $('.sn-score');
     const barEl = $('.sn-bar');
     const barBlocks = [...barEl.children];
@@ -281,7 +288,18 @@ export default {
       tavutusBtn.setAttribute('aria-pressed', String(draft.tavutus));
       tavutusBtn.classList.toggle('is-on', draft.tavutus);
       tavutusState.textContent = draft.tavutus ? 'päällä' : 'pois';
-      hintEl.textContent = '';
+      const open = roundOpen();
+      const wordOpen = open && cur().result === 'open';
+      hintEl.textContent = chooseHint(draft, open ? { theme: round.theme, level: settings.level } : null, wordOpen);
+      // Takaisin sanaan is for the same list only; a new list needs a new round (design 3.1).
+      backBtn.hidden = !open || draft.theme !== round.theme;
+      restartBtn.hidden = !open;
+      startBtn.hidden = open;
+    }
+
+    // Vaihda's name tells a screen reader what is chosen now.
+    function renderSettings() {
+      changeBtn.setAttribute('aria-label', changeLabel(settings));
     }
 
     function renderStars(node, stars, label) {
@@ -687,9 +705,32 @@ export default {
       focusEl(questions.choose);
     }
 
+    // Aloita, Aloita uusi kierros: everything in the draft is committed and a new round starts.
     function startFromDraft() {
       settings = copySettings(draft);
+      renderSettings();
       beginRound();
+    }
+
+    // Takaisin sanaan (design 3.1): the level and tavutus of the draft are taken into use. What happens
+    // to the word is decided by backToWord in sanat-logic.js: an open word starts again on a new
+    // level, a tavutus change only changes the hyphens, and either reads an open word in this tap.
+    function backToWord() {
+      const ws = cur();
+      const plan = planBackToWord({ settings, draft, wordOpen: ws.result === 'open' });
+      settings = { ...settings, level: draft.level, tavutus: draft.tavutus };
+      renderSettings();
+      if (plan.restart) {
+        startWord(ws, settings.level);
+        buildLetters();
+      }
+      goTo('word');
+      renderWord();
+      focusQuestion();
+      if (plan.read) {
+        announceWord(ws);
+        readWord();
+      }
     }
 
     // ---------- listeners ----------
@@ -711,6 +752,9 @@ export default {
       renderChoose();
     }));
     startBtn.addEventListener('click', guarded(startFromDraft));
+    restartBtn.addEventListener('click', guarded(startFromDraft));
+    backBtn.addEventListener('click', guarded(backToWord));
+    changeBtn.addEventListener('click', guarded(openChoose));
     nextBtn.addEventListener('click', guarded(() => next()));
     clearBtn.addEventListener('click', guarded(clearWord));
     skipBtn.addEventListener('click', guarded(skipWord));
@@ -721,6 +765,7 @@ export default {
     // ---------- the game instance ----------
 
     renderChoose();
+    renderSettings();
     renderHud();
 
     return {
