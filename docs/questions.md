@@ -2,16 +2,14 @@
 
 ## Avoimet
 
-- **Q35 (päätös):** Saanko julkaista Matikan automaattisen siirtymisen
-  verkkosivulle (https://hakaotu.github.io/seikkailut/)? Julkaisu vie
-  samalla kaikki tähän asti tehdyt muutokset sivulle. Oletus: kyllä.
-  (SEI-46) — avattu 2026-10-26
-- **Q36 (päätös):** Aloitetaanko Sanat jo, vaikka Matikan siirtyminen
-  odottaa vielä katsomistasi? Oletus: kyllä, katsot Matikan kun ehdit.
-  (SEI-3, 7, 8, 47) — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q35 (päätös):** Matikan automaattisen siirtymisen julkaisu
+  verkkosivulle — "joo". (SEI-46) (2026-10-26)
+- **Q36 (päätös):** Sanat aloitetaan, vaikka Matikka odottaa katsomista —
+  "joo". (2026-10-26)
 - **Q34 (päätös):** Espanjan toteutussuunnitelma (SEI-4, 9, 10, 48) —
   "joo", hyväksytty; tehdään Sanojen jälkeen. (2026-10-26)
 - **Q31 (katso):** Espanjan ulkoasuluonnos (SEI-4, SEI-10) — "ok",
