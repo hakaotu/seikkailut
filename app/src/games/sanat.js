@@ -678,6 +678,7 @@ export default {
 
     // `auto` is true only when the wait's timer calls this: the new word is then read from a timer.
     function next({ auto: byTimer = false } = {}) {
+      // backstop: moving focus already cancels the wait, so no test can observe this call
       auto.cancel();
       if (cur().result === 'open') return;
       if (round.index === MAX_WORDS - 1) {

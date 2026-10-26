@@ -477,7 +477,7 @@ test.describe('Sanat', () => {
     await page.waitForTimeout(WAIT);
     expect(await itemNo(page)).toBe(1);
     expect(await isCounting(page, d)).toBe(false);
-    // tap the first box (a wrong letter sits there, because two letters were swapped) and the second, then fix them
+    // two letters were swapped; start the word again and spell it right
     await press(sn.button(page, 'Aloita sana alusta'), testInfo);
     await sn.spellRight(page, testInfo);
     await expect(nextBtn(page, d)).toHaveClass(/aa-counting/);

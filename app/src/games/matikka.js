@@ -536,6 +536,7 @@ export default {
 
     // `auto` is true only when the wait's timer calls this: the new problem is then read from a timer.
     function next({ auto: byTimer = false } = {}) {
+      // backstop: moving focus already cancels the wait, so no test can observe this call
       auto.cancel();
       if (cur().given === null) return;
       if (round.index === MAX_QUESTIONS - 1) {

@@ -76,8 +76,16 @@ test('Sanat: every spoken event starts inside its tap; only the parts after a pa
   const radio = (name) => sn.view(page).getByRole('radio', { name: new RegExp(`^${name}`) });
   // Runs `act` and checks that the first speak it causes started inside the tap.
   async function event(name, act) {
-    await page.waitForTimeout(1000); // the later part of an earlier reading has been spoken by now
-    const before = (await speakCalls(page)).length;
+    // The later parts of an earlier reading start from timers (a pause is 300-700 ms, plus the
+    // time the one before takes to be spoken): wait until no speak has started for 1200 ms.
+    let before = (await speakCalls(page)).length;
+    for (let quietSince = Date.now(); Date.now() - quietSince < 1200; await page.waitForTimeout(100)) {
+      const n = (await speakCalls(page)).length;
+      if (n !== before) {
+        before = n;
+        quietSince = Date.now();
+      }
+    }
     await act();
     await expect.poll(async () => (await speakCalls(page)).length, { message: `${name} speaks` }).toBeGreaterThan(before);
     expect((await speakCalls(page))[before].inDispatch, `${name}: the first speak is inside the tap`).toBe(true);
