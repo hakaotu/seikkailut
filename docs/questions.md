@@ -2,18 +2,16 @@
 
 ## Avoimet
 
-- **Q26 (katso):** Sanojen ulkoasuluonnos
-  (https://claude.ai/artifact/BtskZGwLgxmvBK4HFKCNJ2): hyväksytkö, vai
-  mitä muutetaan? (SEI-3, SEI-7, SEI-8) — avattu 2026-10-23
-- **Q27 (päätös):** Ohitettu sana: näytetäänkö ja luetaanko se ensin
-  (sitten Seuraava), vai tuleeko seuraava sana heti? Oletus: näytetään
-  ensin. (SEI-7) — avattu 2026-10-23
-- **Q28 (päätös):** Siirtyykö myös Sanat oikean sanan jälkeen itsestään
-  seuraavaan (kuten Matikka, SEI-46)? Oletus: kyllä, samoin säännöin.
-  — avattu 2026-10-23
+(ei avoimia)
 
 ## Vastatut
 
+- **Q26 (katso):** Sanojen ulkoasuluonnos (SEI-3, SEI-7, SEI-8) — "ok ja
+  jatka", hyväksytty. (2026-10-26)
+- **Q27 (päätös):** Ohitettu sana — "joo", tulkittu oletukseksi: sana
+  näytetään ja luetaan ensin, sitten Seuraava. (SEI-7) (2026-10-26)
+- **Q28 (päätös):** Sanat siirtyy oikean sanan jälkeen itsestään kuten
+  Matikka — "joo", samoin säännöin kuin Q25. (2026-10-26)
 - **Q25 (päätös):** Matikan automaattinen siirtyminen — "ok": vain oikean
   jälkeen, 4 s, Seuraava ohittaa, 10. laskun jälkeen "Katso tulos". (2026-10-23)
 - **Q24 (katso):** Matikka Macilla, väärä vastaus — "kyllä": lasku ja
