@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q37 (katso):** Matikka Macilla: aloita, vastaa ensimmäiseen oikein
+  äläkä napauta mitään. Täyttyykö Seuraava-nappi, tuleeko seuraava lasku
+  itsestään ja luetaanko se ääneen: kyllä / ei? (SEI-46) — avattu 2026-10-26
 
 ## Vastatut
 
