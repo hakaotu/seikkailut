@@ -2,12 +2,15 @@
 
 ## Avoimet
 
-- **Q39 (katso):** Sanojen loppuruutu Macilla: pelaa kierros loppuun ja
-  paina Kuuntele. Kuulostaako tulos nyt suomelta: kyllä / ei? (SEI-49)
-  — avattu 2026-10-26
+- **Q40 (päätös):** Miten rivi "1 sana oikein uudella yrityksellä"
+  sanotaan (ruudulla ja ääneen)? Vaihtoehdot: A "1 sana korjattu",
+  B "1 sana oikein toisella yrittämällä", C oma sanamuoto. Oletus: A.
+  (SEI-49) — avattu 2026-10-26
 
 ## Vastatut
 
+- **Q39 (katso):** Sanojen loppuruudun Kuuntele — "1 sana oikein uudella
+  yrityksellä --> tää ei oo suomea vielä". (SEI-49) (2026-10-26)
 - **Q38 (katso):** Sanat Macilla, voittoääni ja automaattinen siirtyminen —
   "toimii". (SEI-3, 7, 8, 47) (2026-10-26)
 - **Q37 (katso):** Matikka Macilla, oikea vastaus ilman napautusta —
