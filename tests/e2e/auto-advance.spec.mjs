@@ -7,6 +7,7 @@ import { installFakeSpeech, seedRandom, press, speakCalls, settle } from './help
 import { AUTO_ADVANCE_MS } from '../../app/src/games/auto-advance.js';
 import * as mk from './matikka-helpers.mjs';
 import * as sn from './sanat-helpers.mjs';
+import * as es from './espanja-helpers.mjs';
 
 // The design's number, written out here on purpose: a test that reads the app's constant would
 // follow it when it is changed by mistake. 47/14 below checks the app's constant against this one.
@@ -66,7 +67,34 @@ const sanat = {
   backName: 'Takaisin sanaan',
   endSel: '.sn-end',
 };
-const GAMES = [matikka, sanat];
+// Espanja is driven in Espanja -> Suomi, so that a new question is read from the timer and the shared "new item is
+// read once" rows apply. Suomi -> Espanja reads nothing on a new question and has its own rows below.
+const espanja = {
+  name: 'Espanja',
+  view: es.view,
+  cardSel: 'button.game-card[data-game="espanja"]',
+  open: es.openEspanja,
+  start: (page, testInfo) => es.startRound(page, testInfo, { direction: 'es2fi' }),
+  right: es.answerRight,
+  wrong: es.answerWrong,
+  next: es.next,
+  probe: { sel: '.es-word', attr: 'aria-label' },
+  focusSel: '.es-word',
+  itemLabelStart: (n) => `Kysymys ${n} /`,
+  newItemLive: (n) => new RegExp(`^Kysymys ${n} / 10: .*\\.$`),
+  readParts: 1,
+  wrongShowsNext: true,
+  lockedSel: '.es-option',
+  nextSel: '.es-next',
+  nextName: 'Seuraava kysymys',
+  lastLabel: 'Katso tulos',
+  autoSentence: 'Seuraava kysymys tulee itsestään.',
+  liveSel: '.es-live',
+  changeSel: '.es-change',
+  backName: 'Takaisin kysymykseen',
+  endSel: '.es-end',
+};
+const GAMES = [matikka, sanat, espanja];
 
 const isDesktop = (testInfo) => testInfo.project.name === 'desktop';
 
@@ -232,7 +260,7 @@ for (const d of GAMES) {
         { nextSel: d.nextSel, target: d.itemLabelStart(3) },
       );
       await d.right(page, testInfo);
-      expect(await racing).toMatch(/^(Lasku|Sana) 3 \//);
+      expect(await racing).toMatch(/^(Lasku|Sana|Kysymys) 3 \//);
       await page.waitForTimeout(600);
       expect(await itemNo(page)).toBe(3);
       await expect(nextBtn(page, d)).toBeHidden(); // unanswered
@@ -576,5 +604,101 @@ test.describe('Sanat', () => {
     expect(byTimer.end).toContain('8 / 10');
     expect(byTimer.end).toContain('1 sana oikein uudella yrityksellä');
     expect(byTimer.end).toContain('1 sana ohitettu');
+  });
+});
+
+// ---- Espanja only (SEI-48): what has no counterpart in Matikka or Sanat ----
+
+test.describe('Espanja', () => {
+  const d = espanja;
+  const fi2es = { ...espanja, start: (page, testInfo) => es.startRound(page, testInfo, { direction: 'fi2es' }) };
+  const home = (page, testInfo) => press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
+
+  test('48/3: a skipped question starts no wait; it waits for Seuraava', async ({ page }, testInfo) => {
+    await begin(page, testInfo, d);
+    await d.right(page, testInfo);
+    await d.next(page, testInfo);
+    await es.skip(page, testInfo);
+    await expect(nextBtn(page, d)).toBeVisible();
+    expect(await isCounting(page, d)).toBe(false);
+    const base = await es.settledCount(page, 600); // the skip's own reading is done
+    await page.waitForTimeout(WAIT);
+    expect(await itemNo(page)).toBe(2);
+    await expect(nextBtn(page, d)).toBeVisible();
+    expect(await speakCount(page)).toBe(base);
+  });
+
+  test('48/7: Suomi -> Espanja moves on by itself with no reading; Kuuntele then reads the four options', async ({ page }, testInfo) => {
+    await begin(page, testInfo, fi2es);
+    await fi2es.right(page, testInfo);
+    const base = await es.settledCount(page, 600); // the answer's reading
+    await expect.poll(() => itemNo(page), { timeout: 6000 }).toBe(2);
+    expect(await es.settledCount(page, 800)).toBe(base); // the new question is not read
+    await press(listen(page, fi2es), testInfo);
+    await expect.poll(() => speakCount(page), { timeout: 5000 }).toBe(base + 4);
+    const calls = await speakCalls(page);
+    expect(calls[base].inDispatch).toBe(true);
+    expect(calls.slice(base).map((c) => c.text)).toEqual((await es.optionTexts(page)).map((t) => t.replace(/[¡!¿?]/g, '').trim()));
+  });
+
+  test('48/9: Vaihda during the wait, then a new round: question 1 stays', async ({ page }, testInfo) => {
+    await begin(page, testInfo, d);
+    await d.right(page, testInfo);
+    await expect(nextBtn(page, d)).toHaveClass(/aa-counting/);
+    await press(d.view(page).locator(d.changeSel), testInfo);
+    await settle(page);
+    await press(es.button(page, 'Aloita uusi kierros'), testInfo);
+    await expect(d.view(page).locator('.es-play')).toBeVisible();
+    await settle(page);
+    expect(await itemNo(page)).toBe(1);
+    await page.waitForTimeout(WAIT);
+    expect(await itemNo(page)).toBe(1);
+    expect(await isCounting(page, d)).toBe(false);
+  });
+
+  // The same round twice: moving on by timer, and moving on with Seuraava. The result must not differ.
+  async function playPattern(page, testInfo, byTimer) {
+    await installFakeSpeech(page);
+    await seedRandom(page, 41);
+    await es.openEspanja(page, testInfo);
+    await trackTimes(page, d);
+    await es.startRound(page, testInfo, { direction: 'fi2es' });
+    const badges = [];
+    const pattern = 'rwsrrrrrrr';
+    for (let i = 1; i <= 10; i++) {
+      const kind = pattern[i - 1];
+      await (kind === 'r' ? es.answerRight : kind === 'w' ? es.answerWrong : es.skip)(page, testInfo);
+      if (i === 10 || kind !== 'r' || !byTimer) await es.next(page, testInfo);
+      else await expect.poll(() => itemNo(page), { timeout: 8000 }).toBe(i + 1);
+      if (i === 3 || i === 6) {
+        await expect.poll(() => itemNo(page)).toBe(i + 1);
+        await home(page, testInfo);
+        badges.push(await page.locator('.badge:visible .badge-text').textContent());
+        await press(page.locator(d.cardSel), testInfo);
+        await expect(es.view(page).locator('.es-play')).toBeVisible();
+        await settle(page);
+      }
+    }
+    return {
+      badges,
+      end: await es.view(page).locator('.es-result').innerText(),
+      heading: await es.view(page).locator('.es-q-end').innerText(),
+      stars: await es.view(page).locator('.status-slot').getAttribute('aria-label'),
+    };
+  }
+
+  test('48/11: the result, the stars and the badge do not depend on how the child moved on', async ({ page, context }, testInfo) => {
+    test.skip(!isDesktop(testInfo), 'about a minute of real time, desktop only');
+    test.setTimeout(180000);
+    const byTimer = await playPattern(page, testInfo, true);
+    await page.evaluate(() => window.localStorage.removeItem('espanja.stars')); // the second player starts from 0 stars
+    const page2 = await context.newPage();
+    const byTap = await playPattern(page2, testInfo, false);
+    expect(byTimer.badges).toEqual(['Kesken 3/10', 'Kesken 6/10']);
+    expect(byTap).toEqual(byTimer);
+    expect(byTimer.end).toContain('8 / 10');
+    expect(byTimer.end).toContain('1 väärin');
+    expect(byTimer.end).toContain('1 ohitettu');
+    expect(byTimer.stars).toBe('Tähtiä: 1');
   });
 });
