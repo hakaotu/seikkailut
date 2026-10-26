@@ -345,8 +345,9 @@ seuraava sana "buenas noches" luettiin 4006 ms kohdalla.
 A4: 6 oikein + 4 ohitettu → "6 / 10 oikein", rivit "6 oikein / 4 ohitettu",
 "Tähti tulee, kun saat 8 oikein.", tähtiä 0.
 A5: vaihtoehdoissa "ole kiltti" (por favor) ja "hyvää iltapäivää" (buenas tardes).
-Odottaa: B (omistajan katsominen ja kuuntelu, Q43) ja C (tähti tallessa
-myöhempänä päivänä, kysytään myöhemmin).
+B (omistaja, Mac, 2026-10-26, Q43): "toimii" — sana kuului, nappi täyttyi,
+seuraava sana tuli ja luettiin. SEI-48 done. SEI-4/9/10 odottavat C:tä (tähti
+tallessa myöhempänä päivänä, kysytään aikaisintaan 2026-10-27).
 Perustelu: omistaja vaati kaikki use caset; tämä on Espanjavalmentajan
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -657,7 +658,7 @@ Riskit:
   (sama riski kuin SEI-46:ssa).
 
 ### SEI-48 — Espanja: oikean vastauksen jälkeen siirtyy itsestään seuraavaan kysymykseen
-Tila: verifying
+Tila: done
 Havainto: ei omaa havaintoa Espanjasta; omistaja hyväksyi 2026-10-26 (Q31:
 "ok") Espanjan ulkoasuluonnoksen `docs/design/sei-4.md`, jossa Espanja siirtyy
 oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat

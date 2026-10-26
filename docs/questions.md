@@ -2,13 +2,12 @@
 
 ## Avoimet
 
-- **Q43 (katso):** Espanja Macilla: valitse Espanja → Suomi, Aloita, vastaa
-  ensimmäiseen oikein äläkä napauta mitään. Kuuluuko espanjan sana, täyttyykö
-  nappi ja tuleeko seuraava sana itsestään ja luetaanko se: kyllä / ei?
-  (SEI-4, 48) — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q43 (katso):** Espanja Macilla, Espanja → Suomi, automaattinen
+  siirtyminen ja ääni — "toimii". (SEI-4, 48) (2026-10-26)
 - **Q42 (katso):** Sanojen loppuruudun Kuuntele uudella sanamuodolla —
   "ok". (SEI-49) (2026-10-26)
 - **Q41 (päätös):** Sanojen loppuruudun keskimmäinen rivi "Vain 1 sana
