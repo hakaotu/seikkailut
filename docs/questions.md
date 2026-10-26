@@ -2,10 +2,6 @@
 
 ## Avoimet
 
-- **Q42 (katso):** Sanojen loppuruutu Macilla: pelaa kierros, jossa yksi
-  sana menee ensin väärin, ja paina lopussa Kuuntele. Kuulostaako nyt
-  hyvältä: kyllä / ei? (SEI-49) — avattu 2026-10-26
-
 - **Q43 (katso):** Espanja Macilla: valitse Espanja → Suomi, Aloita, vastaa
   ensimmäiseen oikein äläkä napauta mitään. Kuuluuko espanjan sana, täyttyykö
   nappi ja tuleeko seuraava sana itsestään ja luetaanko se: kyllä / ei?
@@ -13,6 +9,8 @@
 
 ## Vastatut
 
+- **Q42 (katso):** Sanojen loppuruudun Kuuntele uudella sanamuodolla —
+  "ok". (SEI-49) (2026-10-26)
 - **Q41 (päätös):** Sanojen loppuruudun keskimmäinen rivi "Vain 1 sana
   meni ensin väärin." / "3 sanaa meni ensin väärin.", ruudulla ja ääneen —
   "ok". (SEI-49) (2026-10-26)
