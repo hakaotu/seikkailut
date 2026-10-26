@@ -338,3 +338,9 @@ test('SEI-4 / 9, 11: loadStars and saveStars use espanja.stars, never es_stars, 
 test('D7: the praise list equals Matikka\'s', () => {
   assert.deepEqual(PRAISE, MATIKKA_PRAISE);
 });
+
+test('importing the logic and the game touches no document', async () => {
+  assert.equal(typeof document, 'undefined');
+  const game = await import('../../app/src/games/espanja.js');
+  assert.equal(typeof game.default.create, 'function');
+});

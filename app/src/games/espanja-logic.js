@@ -155,6 +155,8 @@ export function endTexts(a, b, c) {
   return {
     tier,
     title: p.title,
+    scoreNumber: `${a} / ${MAX_QUESTIONS}`, // shown big, with scoreWord small after it
+    scoreWord: 'oikein',
     score: `${a} / ${MAX_QUESTIONS} oikein`,
     rows,
     starLine: earnsStar(a) ? 'Sait tähden!' : 'Tähti tulee, kun saat 8 oikein.',

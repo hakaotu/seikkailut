@@ -7,7 +7,7 @@
 // --------------------
 // A game is an object `{ create(ctx) }`. Each real game lives in app/src/games/<id>.js and
 // default-exports that object; this file imports it statically and puts it in the entry's
-// `module` field. The placeholder keeps its factory form until it is removed.
+// `module` field.
 // create is called once, synchronously, the first time the game is opened in a page session.
 // It returns an instance:
 //
@@ -53,9 +53,9 @@
 //   5. Static assets go under app/assets/ (no Drive fetch).
 //   6. localStorage keys are prefixed with the game id.
 
-import { placeholder } from './placeholder.js';
 import matikka from './matikka.js';
 import sanat from './sanat.js';
+import espanja from './espanja.js';
 
 export const GAMES = [
   {
@@ -77,11 +77,6 @@ export const GAMES = [
     name: 'Espanja',
     lang: 'es-ES',
     listenLabel: 'Kuuntele',
-    module: placeholder({
-      question: 'Kysymyssana',
-      area: 'Espanjan oma alue',
-      hint: 'neljä vastausvaihtoehtoa – suunnitellaan myöhemmin',
-      sample: [{ text: 'hola', rate: 0.9 }],
-    }),
+    module: espanja,
   },
 ];

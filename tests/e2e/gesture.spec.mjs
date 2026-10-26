@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { installFakeSpeech, seedRandom, press, speakCalls, settle, recordAudio, audioCalls } from './helpers.mjs';
 import * as sn from './sanat-helpers.mjs';
+import * as es from './espanja-helpers.mjs';
 import { openMatikka, startRound, answerRight, answerWrong, next, view, button } from './matikka-helpers.mjs';
 
 test.beforeEach(async ({ page }) => {
@@ -11,17 +12,7 @@ test.beforeEach(async ({ page }) => {
 // wrapped to count click listeners on the stack). Speech started after an await, from a timer,
 // a hashchange or an awaited import() would record false.
 
-// Matikka and Sanat have their own tests below: their choose screens read nothing.
-for (const id of ['espanja']) {
-  test(`tapping the ${id} card speaks inside the tap`, async ({ page }, testInfo) => {
-    await page.goto('/');
-    await press(page.locator(`button.game-card[data-game="${id}"]`), testInfo);
-    await expect.poll(async () => (await speakCalls(page)).length).toBeGreaterThan(0);
-    const calls = await speakCalls(page);
-    expect(calls[0].inDispatch).toBe(true);
-    expect(calls.every((c) => c.inDispatch)).toBe(true);
-  });
-}
+// Matikka, Sanat and Espanja have their own tests below: their choose screens read nothing.
 
 test('Kuuntele as the very first tap after a reload on a game address speaks inside the tap', async ({ page }, testInfo) => {
   await page.goto('/#/espanja');
@@ -154,6 +145,71 @@ test('Sanat: nothing done yet, Etusivu, the card tap reads the current word insi
   const calls = await speakCalls(page);
   expect(calls[before].inDispatch).toBe(true);
   expect(calls[before].text).toBe(word.toLowerCase());
+});
+
+// ---- Espanja (SEI-4): the card tap reads nothing; every reading starts inside its tap ----
+
+test('Espanja: the card tap reads nothing, the choose screen is silent', async ({ page }, testInfo) => {
+  await seedRandom(page, 21);
+  await es.openEspanja(page, testInfo);
+  await page.waitForTimeout(300);
+  expect(await speakCalls(page)).toEqual([]);
+});
+
+test('Espanja: every spoken event starts inside its tap; only the later options of Kuuntele start from a timer', async ({ page }, testInfo) => {
+  test.setTimeout(90000);
+  await seedRandom(page, 22);
+  await es.openEspanja(page, testInfo);
+  const listen = () => press(es.view(page).locator('.listen'), testInfo);
+  // Runs `act` and checks that the first speak it causes started inside the tap. The later options of a
+  // Kuuntele start from timers (a 500 ms pause after the one before): wait until no speak has started for 800 ms.
+  async function event(name, act) {
+    const before = await es.settledCount(page, 800);
+    await act();
+    await expect.poll(async () => (await speakCalls(page)).length, { message: `${name} speaks` }).toBeGreaterThan(before);
+    expect((await speakCalls(page))[before].inDispatch, `${name}: the first speak is inside the tap`).toBe(true);
+  }
+  await event('Kuuntele on the choose screen', listen);
+  await press(es.view(page).locator('.es-dir[data-dir="es2fi"]'), testInfo);
+  await event('Aloita (Espanja → Suomi)', () => press(es.button(page, 'Aloita'), testInfo));
+  await settle(page);
+  await event('Kuuntele on a question (Espanja → Suomi)', listen);
+  await event('a wrong answer', () => es.answerWrong(page, testInfo));
+  await event('Seuraava', () => es.next(page, testInfo));
+  await event('a right answer', () => es.answerRight(page, testInfo));
+  await event('Seuraava after a right answer', () => es.next(page, testInfo));
+  await event('Ohita', () => es.skip(page, testInfo));
+  await es.next(page, testInfo);
+  for (let i = 4; i <= 10; i++) {
+    await es.skip(page, testInfo);
+    if (i < 10) await es.next(page, testInfo);
+  }
+  await event('Katso tulos', () => es.next(page, testInfo));
+  await event('Kuuntele on the end screen', listen);
+  await event('Pelaa uudelleen', () => press(es.button(page, 'Pelaa uudelleen'), testInfo));
+  await settle(page);
+  await press(es.view(page).locator('.es-change'), testInfo);
+  await settle(page);
+  await event('Aloita uusi kierros', () => press(es.button(page, 'Aloita uusi kierros'), testInfo));
+  await settle(page);
+  // Suomi → Espanja: a new question is not read; Kuuntele reads the four options
+  await press(es.view(page).locator('.es-change'), testInfo);
+  await settle(page);
+  await press(es.view(page).locator('.es-dir[data-dir="fi2es"]'), testInfo);
+  const silent = await es.settledCount(page, 800);
+  await press(es.button(page, 'Aloita uusi kierros'), testInfo);
+  await settle(page);
+  expect(await es.settledCount(page, 800), 'Aloita uusi kierros in Suomi → Espanja reads nothing').toBe(silent);
+  await event('Kuuntele on a question (Suomi → Espanja)', listen);
+  await es.settledCount(page, 800);
+  const calls = await speakCalls(page);
+  calls.forEach((c, i) => {
+    if (c.inDispatch) return;
+    // from a timer: it must be a later option of Kuuntele, which starts after the one before ended, plus its pause
+    expect(calls[i - 1], `call ${i} (${c.text}) has a call before it`).toBeTruthy();
+    expect(calls[i - 1].endedAt, `call ${i} (${c.text}): the one before it ended`).not.toBeNull();
+    expect(c.at - calls[i - 1].endedAt, `call ${i} (${c.text}) waited for a pause`).toBeGreaterThanOrEqual(450);
+  });
 });
 
 // ---- Matikka (SEI-2): every reading starts inside the tap or key press that causes it ----

@@ -71,7 +71,11 @@ button {
 .sn-tile,
 .sn-key,
 .sn-image,
-.sn-slot-fill {
+.sn-slot-fill,
+.es-primary,
+.es-secondary,
+.es-dir,
+.es-option {
   --shadow: 0 4px 0 var(--brand-dark);
   box-shadow: var(--shadow);
 }
@@ -95,7 +99,11 @@ button {
 .sn-tile:active,
 .sn-key:active,
 .sn-image:active,
-.sn-slot-fill:active {
+.sn-slot-fill:active,
+.es-primary:active,
+.es-secondary:active,
+.es-dir:active,
+.es-option:active {
   transform: translateY(4px);
   box-shadow: none;
 }
@@ -119,7 +127,11 @@ button {
 .sn-tile:focus,
 .sn-key:focus,
 .sn-image:focus,
-.sn-slot-fill:focus { outline: none; }
+.sn-slot-fill:focus,
+.es-primary:focus,
+.es-secondary:focus,
+.es-dir:focus,
+.es-option:focus { outline: none; }
 
 .game-card:focus-visible,
 .back-btn:focus-visible,
@@ -140,7 +152,11 @@ button {
 .sn-tile:focus-visible,
 .sn-key:focus-visible,
 .sn-image:focus-visible,
-.sn-slot-fill:focus-visible {
+.sn-slot-fill:focus-visible,
+.es-primary:focus-visible,
+.es-secondary:focus-visible,
+.es-dir:focus-visible,
+.es-option:focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 2px;
   box-shadow: var(--shadow), 0 0 0 9px var(--focus-yellow);
@@ -527,34 +543,6 @@ html[data-booted] .boot-error { display: none; }
   font-size: 22px;
   font-weight: bold;
 }
-
-/* Placeholder game (SEI-1 only; removed as SEI-2 – SEI-4 land) */
-.placeholder-question {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 72px;
-  padding: 8px 12px;
-  border: 3px dashed #c9cbd6;
-  border-radius: 16px;
-  color: var(--grey);
-  font-size: 20px;
-  text-align: center;
-}
-.placeholder-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-  border: 3px dashed #c9cbd6;
-  border-radius: 20px;
-  color: var(--grey);
-  font-size: 22px;
-  text-align: center;
-}
-.placeholder-area small { margin-top: 6px; font-size: 17px; }
 
 @media (min-width: 420px) {
   .game-bar { gap: 18px; padding: 0 20px; }
@@ -1337,6 +1325,312 @@ html[data-booted] .boot-error { display: none; }
   .game-view[data-game='sanat'] .sn-slots.is-popping,
   .game-view[data-game='sanat'] .sn-slots.is-shaking,
   .game-view[data-game='sanat'] .sn-fb[data-kind='right'] .sn-fb-praise { animation: none; }
+}
+
+/* ---------- Espanja (docs/design/sei-4.md) ---------- */
+
+.game-view[data-game='espanja'] .game-area { position: relative; }
+.game-view[data-game='espanja'] .es-screen { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* The collected stars in the top bar (design 3.0): n stars side by side from 600 px wide (1-10 of them),
+   otherwise one star and × n. Both forms are in the DOM; this picks one. */
+.game-view[data-game='espanja'] .status-slot { display: flex; align-items: center; justify-content: flex-end; }
+.game-view[data-game='espanja'] .status-slot svg {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  fill: var(--focus-yellow);
+  stroke: var(--focus-yellow);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.game-view[data-game='espanja'] .es-stars-many { display: none; align-items: center; gap: 3px; }
+.game-view[data-game='espanja'] .es-stars-few { display: flex; align-items: center; gap: 6px; }
+.game-view[data-game='espanja'] .es-n { font-size: 26px; font-weight: bold; line-height: 1; color: #fff; white-space: nowrap; }
+.game-view[data-game='espanja'] .es-stars-few.is-empty svg { fill: none; stroke: #fff; stroke-width: 2.5; }
+.game-view[data-game='espanja'] .status-slot svg.is-popping { animation: es-star-pop 0.5s ease; }
+@keyframes es-star-pop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+
+/* Question row */
+.game-view[data-game='espanja'] .es-heading { margin: 0; font-size: 32px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='espanja'] .es-heading:focus { outline: none; }
+.game-view[data-game='espanja'] .es-q-end { font-size: 40px; }
+.game-view[data-game='espanja'] .es-q-play { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.game-view[data-game='espanja'] .es-q-play.is-appearing { animation: es-appear 0.3s ease; }
+@keyframes es-appear { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.game-view[data-game='espanja'] .es-word { font-size: 48px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='espanja'] .es-word:focus { outline: none; }
+.game-view[data-game='espanja'] .es-hint { font-size: 22px; line-height: 1.25; color: var(--grey); }
+
+/* Buttons */
+.game-view[data-game='espanja'] .es-primary,
+.game-view[data-game='espanja'] .es-secondary {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 120px;
+  height: 56px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-size: 22px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.game-view[data-game='espanja'] .es-primary { border: 0; background: var(--brand); color: #fff; }
+.game-view[data-game='espanja'] .es-secondary { --shadow: 0 4px 0 var(--ink); border: 3px solid var(--ink); background: #fff; color: var(--ink); }
+.game-view[data-game='espanja'] .es-primary svg,
+.game-view[data-game='espanja'] .es-secondary svg { width: 28px; height: 28px; flex: none; }
+.game-view[data-game='espanja'] .es-big { height: 64px; min-width: 240px; padding: 0 32px; font-size: 26px; }
+.game-view[data-game='espanja'] .es-actions { display: flex; justify-content: center; gap: 16px; }
+
+/* Choose screen (design 3.1) */
+.game-view[data-game='espanja'] .es-choose { gap: 8px; }
+.game-view[data-game='espanja'] .es-group-label { font-size: 22px; font-weight: bold; }
+.game-view[data-game='espanja'] .es-dirs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 4px; }
+.game-view[data-game='espanja'] .es-dir {
+  --shadow: 0 4px 0 #c9cbd6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  height: 128px;
+  padding: 10px 16px;
+  border: 3px solid #c9cbd6;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+}
+.game-view[data-game='espanja'] .es-dir-name { font-size: 28px; font-weight: bold; line-height: 1.15; }
+.game-view[data-game='espanja'] .es-dir-example { font-size: 30px; font-weight: bold; line-height: 1.15; white-space: nowrap; }
+.game-view[data-game='espanja'] .es-dir-example i { margin: 0 6px; color: #8a8fa3; font-style: normal; }
+.game-view[data-game='espanja'] .es-ex-es { color: #c62828; }
+.game-view[data-game='espanja'] .es-dir-how { font-size: 20px; color: var(--grey); }
+.game-view[data-game='espanja'] .es-dir.is-selected { --shadow: 0 4px 0 var(--brand-dark); border: 4px solid var(--brand); background: var(--brand-light); }
+.game-view[data-game='espanja'] .es-tick {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+}
+.game-view[data-game='espanja'] .es-tick svg { width: 20px; height: 20px; }
+.game-view[data-game='espanja'] .es-dir.is-selected .es-tick { display: flex; }
+.game-view[data-game='espanja'] .es-words { display: flex; align-items: center; min-height: 28px; font-size: 20px; color: var(--grey); }
+.game-view[data-game='espanja'] .es-choose-hint { display: flex; align-items: center; justify-content: center; height: 30px; font-size: 20px; text-align: center; }
+
+/* Question screen (design 3.2 - 3.4, 3.9): one column */
+.game-view[data-game='espanja'] .es-play { gap: 12px; }
+.game-view[data-game='espanja'] .es-info { display: flex; align-items: center; gap: 18px; height: 28px; }
+.game-view[data-game='espanja'] .es-score { font-size: 22px; font-weight: bold; white-space: nowrap; }
+.game-view[data-game='espanja'] .es-bar { display: flex; flex: 1; gap: 4px; }
+.game-view[data-game='espanja'] .es-bar i { flex: 1; height: 14px; border-radius: 7px; background: #dfe3ea; }
+.game-view[data-game='espanja'] .es-bar i.is-full { background: var(--brand); }
+.game-view[data-game='espanja'] .es-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.game-view[data-game='espanja'] .es-option {
+  --shadow: 0 5px 0 #c9cbd6;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: 88px;
+  padding: 0 14px;
+  border: 3px solid #c9cbd6;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 1.15;
+  text-align: center;
+}
+.game-view[data-game='espanja'] .es-option:active { transform: translateY(5px); }
+.game-view[data-game='espanja'] .es-option:disabled { transform: none; box-shadow: var(--shadow); cursor: default; }
+.game-view[data-game='espanja'] .es-option.is-right { --shadow: 0 5px 0 #0f5c2b; border-color: #17803d; background: #17803d; color: #fff; }
+.game-view[data-game='espanja'] .es-option.is-wrong {
+  --shadow: 0 5px 0 #f3c4c4;
+  border: 4px solid #c62828;
+  color: #c62828;
+  text-decoration: line-through;
+  text-decoration-thickness: 4px;
+}
+.game-view[data-game='espanja'] .es-option.is-dim { opacity: 0.45; }
+.game-view[data-game='espanja'] .es-mark {
+  position: absolute;
+  top: -13px;
+  right: -13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #c62828;
+  color: #fff;
+}
+.game-view[data-game='espanja'] .es-mark svg { width: 20px; height: 20px; }
+.game-view[data-game='espanja'] .es-option.is-right .es-mark { background: #fff; color: #17803d; }
+.game-view[data-game='espanja'] .es-option.is-popping { animation: es-pop 0.5s ease; }
+.game-view[data-game='espanja'] .es-option.is-shaking { animation: es-shake 0.5s ease; }
+@keyframes es-pop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@keyframes es-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+.game-view[data-game='espanja'] .es-feedback { display: flex; align-items: center; gap: 16px; min-height: 84px; }
+.game-view[data-game='espanja'] .es-fb { display: flex; flex: 1; align-items: center; gap: 12px; min-width: 0; text-align: left; }
+.game-view[data-game='espanja'] .es-fb-icon { display: flex; flex: none; width: 32px; height: 32px; }
+.game-view[data-game='espanja'] .es-fb-icon svg { width: 32px; height: 32px; }
+.game-view[data-game='espanja'] .es-fb[data-kind='right'] .es-fb-icon { color: #17803d; }
+.game-view[data-game='espanja'] .es-fb[data-kind='wrong'] .es-fb-icon { color: #c62828; }
+.game-view[data-game='espanja'] .es-fb[data-kind='skipped'] .es-fb-icon { color: var(--grey); }
+.game-view[data-game='espanja'] .es-fb-title { display: block; font-size: 28px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='espanja'] .es-fb[data-kind='right'] .es-fb-title { color: #17803d; font-size: 30px; animation: es-pop 0.5s ease; }
+.game-view[data-game='espanja'] .es-fb[data-kind='wrong'] .es-fb-title { color: #c62828; }
+.game-view[data-game='espanja'] .es-fb-line { display: block; font-size: 22px; line-height: 1.3; }
+.game-view[data-game='espanja'] .es-next.is-waiting { visibility: hidden; }
+.game-view[data-game='espanja'] .es-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; }
+.game-view[data-game='espanja'] .es-skip.is-gone { visibility: hidden; }
+
+/* End screen (design 3.7) */
+.game-view[data-game='espanja'] .es-end { align-items: center; gap: 14px; text-align: center; }
+.game-view[data-game='espanja'] .es-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 18px 12px;
+  border-radius: 24px;
+  background: #fff;
+}
+.game-view[data-game='espanja'] .es-result[data-tier='perfect'] { background: #fff4d6; }
+.game-view[data-game='espanja'] .es-result[data-tier='good'] { background: var(--brand-light); }
+.game-view[data-game='espanja'] .es-medal { display: flex; flex: none; align-items: center; justify-content: center; width: 120px; height: 120px; border-radius: 50%; }
+.game-view[data-game='espanja'] .es-medal svg { width: 64px; height: 64px; }
+.game-view[data-game='espanja'] .es-result[data-tier='perfect'] .es-medal { background: #ffd23f; }
+.game-view[data-game='espanja'] .es-result[data-tier='perfect'] .es-medal svg { width: 84px; height: 84px; fill: #fff; stroke: var(--ink); stroke-width: 1.4; }
+.game-view[data-game='espanja'] .es-result[data-tier='good'] .es-medal { background: var(--brand); color: #fff; }
+.game-view[data-game='espanja'] .es-result[data-tier='good'] .es-medal svg { width: 72px; height: 72px; }
+.game-view[data-game='espanja'] .es-result[data-tier='done'] .es-medal { border: 3px solid #c9d8f0; background: #e8f1ff; color: var(--ink); }
+.game-view[data-game='espanja'] .es-result-score { font-size: 64px; font-weight: bold; line-height: 1.05; white-space: nowrap; }
+.game-view[data-game='espanja'] .es-result-score small { font-size: 30px; }
+.game-view[data-game='espanja'] .es-rows { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; font-size: 24px; text-align: left; }
+.game-view[data-game='espanja'] .es-rows > div { display: flex; align-items: center; gap: 10px; }
+.game-view[data-game='espanja'] .es-bi { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; color: #fff; }
+.game-view[data-game='espanja'] .es-bi svg { width: 22px; height: 22px; }
+.game-view[data-game='espanja'] .es-row-a .es-bi { background: #17803d; }
+.game-view[data-game='espanja'] .es-row-b .es-bi { background: #c62828; }
+.game-view[data-game='espanja'] .es-row-c .es-bi { background: var(--grey); }
+.game-view[data-game='espanja'] .es-reward { display: flex; align-items: center; gap: 10px; max-width: 260px; font-size: 22px; font-weight: bold; line-height: 1.25; text-align: left; }
+.game-view[data-game='espanja'] .es-reward svg { width: 48px; height: 48px; flex: none; fill: var(--focus-yellow); stroke: #b7791f; stroke-width: 1.4; }
+.game-view[data-game='espanja'] .es-reward.is-none { font-weight: normal; }
+.game-view[data-game='espanja'] .es-reward.is-none svg { fill: #fff; }
+.game-view[data-game='espanja'] .es-phrase { display: flex; flex-direction: column; line-height: 1.25; }
+.game-view[data-game='espanja'] .es-phrase-es { font-size: 26px; }
+.game-view[data-game='espanja'] .es-phrase-fi { font-size: 20px; color: var(--grey); }
+.game-view[data-game='espanja'] .es-dir-end { font-size: 20px; color: var(--grey); }
+
+/* Confetti (design 3.7): over the game area, never in the way of a tap */
+.game-view[data-game='espanja'] .es-confetti { position: absolute; inset: 0; z-index: 4; overflow: hidden; pointer-events: none; }
+.game-view[data-game='espanja'] .es-piece { position: absolute; top: -14px; width: 11px; height: 11px; animation: es-fall 2s linear both; }
+@keyframes es-fall { to { transform: translateY(var(--fall)) rotate(720deg); } }
+
+/* Wide (>= 600 px): the stars side by side, when there are 1-10 */
+@media (min-width: 600px) {
+  .game-view[data-game='espanja'] .es-stars-many:not(:empty) { display: flex; }
+  .game-view[data-game='espanja'] .es-stars-many:not(:empty) ~ .es-stars-few { display: none; }
+}
+
+/* Wide (>= 900 px): the end screen in two columns (design 3.7) */
+@media (min-width: 900px) {
+  .game-view[data-game='espanja'] .es-result {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'medal score' 'medal rows' 'reward phrase';
+    justify-content: center;
+    align-items: center;
+    column-gap: 40px;
+    padding: 20px 24px;
+  }
+  .game-view[data-game='espanja'] .es-medal { grid-area: medal; justify-self: center; }
+  .game-view[data-game='espanja'] .es-result-score { grid-area: score; text-align: left; }
+  .game-view[data-game='espanja'] .es-rows { grid-area: rows; }
+  .game-view[data-game='espanja'] .es-reward { grid-area: reward; justify-self: center; }
+  .game-view[data-game='espanja'] .es-phrase { grid-area: phrase; text-align: left; }
+}
+
+/* iPad portrait: roomier options and gaps (design 3.3, 3.10) */
+@media (min-width: 600px) and (min-height: 900px) {
+  .game-view[data-game='espanja'] .es-play { gap: 16px; }
+  .game-view[data-game='espanja'] .es-option { height: 104px; }
+}
+
+@media (max-width: 599.98px) {
+  .game-view[data-game='espanja'] .es-word { font-size: 34px; }
+  .game-view[data-game='espanja'] .es-dirs { grid-template-columns: 1fr; gap: 12px; }
+  .game-view[data-game='espanja'] .es-dir {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'name example' 'how example';
+    align-items: center;
+    gap: 0 12px;
+    height: 88px;
+    padding: 10px 54px 10px 14px;
+  }
+  .game-view[data-game='espanja'] .es-dir-name { grid-area: name; font-size: 24px; }
+  .game-view[data-game='espanja'] .es-dir-how { grid-area: how; font-size: 18px; }
+  .game-view[data-game='espanja'] .es-dir-example { grid-area: example; font-size: 26px; }
+  .game-view[data-game='espanja'] .es-actions { flex-direction: column; }
+  .game-view[data-game='espanja'] .es-actions .es-big { width: 100%; min-width: 0; }
+  .game-view[data-game='espanja'] .es-score { font-size: 20px; }
+  .game-view[data-game='espanja'] .es-options { gap: 12px; }
+  .game-view[data-game='espanja'] .es-option { font-size: 24px; }
+  .game-view[data-game='espanja'] .es-feedback { flex-direction: column; align-items: stretch; gap: 12px; min-height: 0; }
+  .game-view[data-game='espanja'] .es-next { width: 100%; min-width: 0; }
+  .game-view[data-game='espanja'] .es-foot { flex-direction: column; align-items: stretch; }
+  .game-view[data-game='espanja'] .es-foot .es-secondary { width: 100%; }
+  .game-view[data-game='espanja'] .es-result-score { font-size: 48px; }
+  .game-view[data-game='espanja'] .es-result-score small { font-size: 24px; }
+}
+
+/* Under 520 px the example does not fit beside the name (design 3.1 puts it on the right): it goes under the name. */
+@media (max-width: 519.98px) {
+  .game-view[data-game='espanja'] .es-dir {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'name' 'example' 'how';
+    height: auto;
+    min-height: 88px;
+    padding: 10px 46px 10px 14px;
+  }
+  .game-view[data-game='espanja'] .es-dir-example { font-size: 24px; }
+}
+
+@media (max-width: 419.98px) {
+  .game-view[data-game='espanja'] .es-heading { font-size: 28px; }
+  .game-view[data-game='espanja'] .es-q-end { font-size: 32px; }
+  .game-view[data-game='espanja'] .es-options { grid-template-columns: 1fr; gap: 10px; }
+  .game-view[data-game='espanja'] .es-option { height: 64px; }
+  .game-view[data-game='espanja'] .es-n { font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-view[data-game='espanja'] .es-q-play.is-appearing,
+  .game-view[data-game='espanja'] .es-option.is-popping,
+  .game-view[data-game='espanja'] .es-option.is-shaking,
+  .game-view[data-game='espanja'] .status-slot svg.is-popping,
+  .game-view[data-game='espanja'] .es-fb[data-kind='right'] .es-fb-title { animation: none; }
 }
 
 /* ---------- Auto-advance (docs/design/sei-46.md) ----------
