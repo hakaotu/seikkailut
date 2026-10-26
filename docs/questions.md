@@ -2,7 +2,13 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q35 (päätös):** Saanko julkaista Matikan automaattisen siirtymisen
+  verkkosivulle (https://hakaotu.github.io/seikkailut/)? Julkaisu vie
+  samalla kaikki tähän asti tehdyt muutokset sivulle. Oletus: kyllä.
+  (SEI-46) — avattu 2026-10-26
+- **Q36 (päätös):** Aloitetaanko Sanat jo, vaikka Matikan siirtyminen
+  odottaa vielä katsomistasi? Oletus: kyllä, katsot Matikan kun ehdit.
+  (SEI-3, 7, 8, 47) — avattu 2026-10-26
 
 ## Vastatut
 
