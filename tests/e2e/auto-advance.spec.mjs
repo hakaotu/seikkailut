@@ -574,7 +574,7 @@ test.describe('Sanat', () => {
     expect(byTimer.badges).toEqual(['Kesken 3/10', 'Kesken 6/10']);
     expect(byTap).toEqual(byTimer);
     expect(byTimer.end).toContain('8 / 10');
-    expect(byTimer.end).toContain('1 sana oikein uudella yrityksellä');
+    expect(byTimer.end).toContain('Vain 1 sana meni ensin väärin');
     expect(byTimer.end).toContain('1 sana ohitettu');
   });
 });
