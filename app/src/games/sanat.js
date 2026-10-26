@@ -9,6 +9,10 @@
 // synchronously: the speech then starts inside the tap (registry.js rule 3). The victory clip
 // starts after the say, in the same tap. Click listeners use addEventListener
 // (tests/e2e/gesture.spec.mjs only sees those).
+//
+// After a word that is right, and is not the tenth, the next word comes by itself after 4 s (SEI-47,
+// auto-advance.js). That reading starts from a timer, so it is the one speech here that is not
+// inside a tap; it passes { auto: true } to say. Seuraava and every other control end the wait.
 
 import {
   MAX_WORDS, THEMES, LEVELS, pickPraise, newDeck, newWordState, startWord, place, removeAt, removeLast,
@@ -16,6 +20,7 @@ import {
   skipSpeech, chooseSpeech, selectionLine, selectionLabel, changeLabel, chooseHint, backToWord as planBackToWord,
   ALPHABET,
 } from './sanat-logic.js';
+import { fillMarkup, createAutoAdvance } from './auto-advance.js';
 
 const GUARD_MS = 500; // design 3.9: a new screen's buttons ignore taps for this long
 const VICTORY_MS = 3000; // old r. 725-728: the clip is stopped after 3 s
@@ -142,8 +147,8 @@ export default {
       `${'<i></i>'.repeat(MAX_WORDS)}</span></div>` +
       '<div class="sn-slots" role="group"></div>' +
       '<div class="sn-feedback"><div class="sn-fb"></div>' +
-      '<button type="button" class="sn-primary sn-big sn-next"><span class="sn-next-label"></span>' +
-      `${ARROW}</button></div>` +
+      '<button type="button" class="sn-primary sn-big sn-next aa-btn"><span class="sn-next-label"></span>' +
+      `${ARROW}${fillMarkup('Seuraava', ARROW)}</button></div>` +
       '<div class="sn-letters"></div>' +
       '<div class="sn-foot"><div class="sn-foot-left">' +
       `<button type="button" class="sn-secondary sn-clear" aria-label="Aloita sana alusta">${REPEAT}Aloita alusta</button>` +
@@ -223,6 +228,7 @@ export default {
       if (blocked()) return;
       fn(...args);
     };
+    const auto = createAutoAdvance({ button: nextBtn, onAdvance: () => next({ auto: true }) });
 
     // Adds a class that plays a one-off animation and removes it when it ends, so un-hiding the
     // screen later does not replay it.
@@ -597,7 +603,10 @@ export default {
         if (ws.level !== 'easy') playOnce(imageBtn, 'is-appearing');
         focusEl(nextBtn);
         const t = tally();
-        announce(`Oikein! ${ws.word}. Pisteet ${t.a} / ${t.done}.`);
+        // Words 1-9: the next one comes by itself; the same sentence is announced (design sei-46 8).
+        const waits = round.index < MAX_WORDS - 1;
+        if (waits) auto.start();
+        announce(`Oikein! ${ws.word}. Pisteet ${t.a} / ${t.done}.${waits ? ' Seuraava sana tulee itsestään.' : ''}`);
         say(letterSpeech(letter));
         playVictory();
       } else {
@@ -667,7 +676,9 @@ export default {
       say(wordSpeech(ws.word, settings.tavutus));
     }
 
-    function next() {
+    // `auto` is true only when the wait's timer calls this: the new word is then read from a timer.
+    function next({ auto: byTimer = false } = {}) {
+      auto.cancel();
       if (cur().result === 'open') return;
       if (round.index === MAX_WORDS - 1) {
         showEnd();
@@ -678,7 +689,7 @@ export default {
       showWord();
       focusQuestion();
       announceWord(cur());
-      say(wordSpeech(cur().word, settings.tavutus));
+      say(wordSpeech(cur().word, settings.tavutus), { auto: byTimer });
     }
 
     function showEnd() {
@@ -699,6 +710,7 @@ export default {
     }
 
     function openChoose() {
+      auto.cancel();
       draft = copySettings(settings);
       renderChoose();
       goTo('choose');
@@ -758,7 +770,10 @@ export default {
     nextBtn.addEventListener('click', guarded(() => next()));
     clearBtn.addEventListener('click', guarded(clearWord));
     skipBtn.addEventListener('click', guarded(skipWord));
-    imageBtn.addEventListener('click', guarded(readWord));
+    imageBtn.addEventListener('click', guarded(() => {
+      auto.cancel();
+      readWord();
+    }));
     againBtn.addEventListener('click', guarded(beginRound));
     newSettingsBtn.addEventListener('click', guarded(openChoose));
 
@@ -773,10 +788,12 @@ export default {
         if (autoRead && screen === 'word' && cur().result === 'open') readWord();
       },
       hide() {
+        auto.cancel();
         stopVictory();
         clearConfetti();
       },
       listen() {
+        auto.cancel();
         if (screen === 'choose') say(chooseSpeech(roundOpen()));
         else if (screen === 'word') readWord();
         else {

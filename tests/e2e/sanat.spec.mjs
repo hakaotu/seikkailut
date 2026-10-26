@@ -371,7 +371,7 @@ test('names, groups and the focus after right, skip and wrong', async ({ page },
   // right: focus on Seuraava
   await spellRight(page, testInfo);
   await expect(button(page, 'Seuraava sana')).toBeFocused();
-  await expect(view(page).locator('.sn-live')).toHaveText(new RegExp(`^Oikein! ${word}\\. Pisteet 0 / 1\\.$`));
+  await expect(view(page).locator('.sn-live')).toHaveText(new RegExp(`^Oikein! ${word}\\. Pisteet 0 / 1\\. Seuraava sana tulee itsestään\\.$`));
   await expect(button(page, `Kirjain 1: ${word[0]}, oikein`)).toHaveCount(0); // not a button
   await expect(view(page).getByRole('img', { name: `Kirjain 1: ${word[0]}, oikein` })).toBeVisible();
   await next(page, testInfo);
