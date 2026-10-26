@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q39 (katso):** Sanojen loppuruutu Macilla: pelaa kierros loppuun ja
+  paina Kuuntele. Kuulostaako tulos nyt suomelta: kyllä / ei? (SEI-49)
+  — avattu 2026-10-26
 
 ## Vastatut
 
