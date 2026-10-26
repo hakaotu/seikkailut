@@ -1,6 +1,6 @@
 # Backlog: Seikkailut
 
-Päivitetty 2026-10-23 (pm; SEI-46 lisätty). Syöte: `docs/brief.md` ja kolme kopiota
+Päivitetty 2026-10-26 (pm; SEI-47 lisätty, Q26–Q28 kirjattu). Syöte: `docs/brief.md` ja kolme kopiota
 hakemistossa `originals/`. Tämä tiedosto on pm:n tuotos; tilan (todo,
 in-progress, review, verifying, done) siirtää vain pääsessio.
 
@@ -287,6 +287,10 @@ Tila: todo
 Perustelu: omistaja vaati kaikki use caset; tämä on Sanaseikkailun koko
 nykyinen käyttö.
 Riippuvuus: SEI-1.
+Huomio (2026-10-26): Sanojen ulkoasuluonnos `docs/design/sei-3.md` (+ `.html`)
+hyväksytty omistajalla (Q26: "ok ja jatka"); kattaa SEI-3, SEI-7 ja SEI-8.
+Luonnos ei sisällä automaattista siirtymistä oikean sanan jälkeen; se on
+SEI-47 ja suunnitellaan yhdessä SEI-46:n kanssa (ks. SEI-47).
 Kriteerit (lähde: `originals/sanaseikkailu.html`):
 1. Annettu teema "Normaali". Kun pelaan useita kierroksia. Niin sanat
    tulevat 24 sanan listasta ja jokainen sana näytetään kuvansa kanssa
@@ -420,6 +424,12 @@ Perustelu: omistaja haluaa, ettei lapsen tarvitse painaa Seuraava jokaisen
 oikean vastauksen jälkeen.
 Riippuvuus: SEI-2 (done). Koskee ulkoasua ja viestejä: designer ennen
 arkkitehtia.
+Päivitys (2026-10-26): Q25:n säännöt ovat voimassa (vain oikean jälkeen,
+4 s edistymispalkilla, Seuraava ohittaa odotuksen, 10. laskun jälkeen
+`Katso tulos` säilyy). Samat säännöt on omistaja vahvistanut Sanoille
+(Q28, SEI-47). Matikan ja Sanojen automaattisen siirtymisen ulkoasu
+(palkki, äänet, liike, ruudunlukija) suunnitellaan yhdessä, jotta pelit
+toimivat täsmälleen samoin.
 Kriteerit (oletuksilla, ks. avoimet kysymykset; lapsen näkemä ja kuulema):
 1. Annettu lapsi vastaa laskuun oikein (mikä tahansa kolmesta tasosta,
    laskuista 1–9). Kun kehu ja oikea vastaus ovat näkyvissä. Niin kehun
@@ -487,12 +497,122 @@ Riskit:
   päällekkäin (kriteeri 2); puheen kesto vaihtelee laitteen äänen mukaan,
   ei mitattu.
 
+### SEI-47 — Sanat: oikean sanan jälkeen siirtyy itsestään seuraavaan sanaan
+Tila: todo
+Havainto: ei omaa havaintoa Sanoista; omistaja vahvisti 2026-10-26 (Q28),
+että Sanat toimii kuten Matikka (SEI-46). Kysymys oli sanatarkasti:
+"Siirtyykö myös Sanat oikean sanan jälkeen itsestään seuraavaan (kuten
+Matikka, SEI-46)? Oletus: kyllä, samoin säännöin." Omistajan vastaus: "joo".
+SEI-46:n lähtöhavainto (omistaja 2026-10-23, Mac, Matikka) on sen perustelu.
+Säännöt (Q25, Matikalle; Q28 ulottaa ne Sanoille): vain oikean vastauksen
+jälkeen; 4 s edistymispalkilla; Seuraava ohittaa odotuksen; 10. kohteen
+jälkeen `Katso tulos` säilyy (ei hyppyä loppuruutuun itsestään).
+Perustelu: omistaja haluaa, että kaksi peliä toimii samoin eikä lapsen tarvitse
+painaa Seuraava jokaisen oikean sanan jälkeen.
+Riippuvuus: SEI-3, SEI-7, SEI-8 (Sanat uudessa sovelluksessa, ulkoasu
+`docs/design/sei-3.md` hyväksytty Q26) ja SEI-46:n ulkoasu. Koskee ulkoasua ja
+viestejä: designer ennen arkkitehtia, ja Matikan ja Sanojen automaattisen
+siirtymisen ulkoasu suunnitellaan yhdessä, jotta pelit käyttäytyvät
+täsmälleen samoin. Tämä tehtävä voidaan julkaista vasta, kun Sanat on
+sovelluksessa (SEI-3).
+Kriteerit (lapsen näkemä ja kuulema; "oikein" = sana oikein heti tai oikein
+uudella yrityksellä, kumpikin lasketaan oikeaksi; sanalista, taso ja tavutus
+mitkä tahansa):
+1. Annettu lapsi kokoaa sanan oikein (heti ensimmäisellä tarkistuksella).
+   Kun kehu ja kuva ovat näkyvissä. Niin kehun alle ilmestyy edistymispalkki,
+   joka täyttyy tasaisesti 4 sekunnin ajan, ja täytyttyään seuraava sana
+   tulee ilman yhtään napautusta.
+2. Annettu sana, jossa ensimmäinen tarkistus oli väärä (esim. KISTA) ja lapsi
+   korjasi sen oikeaksi. Kun sana on oikein. Niin sama palkki ja
+   siirtyminen kuin kohdassa 1; palkkia ei ole, kun vastaus on väärä, ja
+   väärän tarkistuksen jälkeen seuraava sana ei tule itsestään (lapsi voi
+   korjata tai painaa Ohita).
+3. Annettu lapsi ohittaa sanan (Ohita, SEI-7). Kun `Ohitettu. Sana on …`
+   näkyy ja sana on luettu. Niin palkkia ei ole eikä seuraava sana tule
+   itsestään; Seuraava odottaa painallusta (Q27, design E5), ja lapsi ehtii
+   katsoa ohitettua sanaa niin kauan kuin haluaa.
+4. Annettu oikein menneen sanan palkki on täyttymässä. Kun viimeisen kirjaimen
+   luku ja voittoääni (`vauhti.mp3`, enintään 3 s) soivat. Niin ne ehtivät
+   loppuun ennen kuin seuraava sana tulee (ääni ei katkea uuden sanan
+   tullessa).
+5. Annettu seuraava sana tuli itsestään. Kun se tulee näkyviin. Niin se
+   luetaan ääneen kuten Seuraava-napautuksen jälkeen nykyisin (sana kahdesti
+   tauon kanssa, tavutuksella päällä sana ja tavut), ja palkki ja
+   Seuraava-painike ovat piilossa, kunnes sana on taas valmis.
+6. Annettu palkki on täyttymässä. Kun lapsi painaa Seuraavaa (painike on
+   näkyvissä ja toimii). Niin seuraava sana tulee heti, palkki katoaa, eikä
+   ajastin siirrä vielä yhtä sanaa eteenpäin (ei ohiteta kahta sanaa).
+7. Annettu palkki on täyttymässä. Kun lapsi vaihtaa tasoa tai tavutusta
+   (`Vaihda` → `Takaisin sanaan`), vaihtaa sanalistaa, aloittaa uuden
+   kierroksen (`Aloita uusi kierros`, `Pelaa uudelleen`) tai poistuu pelistä
+   etusivulle. Niin ajastin ei tee mitään uudessa näkymässä (ei sanaa
+   ilmesty etusivulle, valintaruudun tai uuden kierroksen päälle).
+8. Annettu sana valmis, ajastin perutettu kohdan 7 tavalla (esim. paluu
+   etusivulta). Kun palaan sanaan. Niin sana on valmis ja Seuraava odottaa
+   painallusta; sana ei siirry itsestään (oletus, ks. avoin kysymys 2).
+9. Annettu 10. sana tehdään oikein. Kun kehu näkyy. Niin näkyvissä on
+   `Katso tulos` eikä palkkia; loppuruutu tulee vasta napautuksesta (Q25/Q28).
+10. Annettu automaattinen siirtyminen. Kun kierros pelataan loppuun. Niin
+    tulos (heti oikein / uudella yrityksellä / ohitettu) ja Kesken-merkin
+    luku ovat samat kuin jos jokainen sana olisi siirretty Seuraavalla:
+    siirtymistapa ei muuta pisteitä (SEI-8; Kesken kasvaa sanan valmistuessa,
+    ei siirtyessä).
+11. Annettu käyttöjärjestelmän asetus "vähennä liikettä" päällä. Kun oikea
+    sana on annettu. Niin odotus näkyy silti (palkki ilman liikuttavaa
+    animaatiota tai vastaava), ja siirtyminen tapahtuu samassa ajassa.
+    Designer päättää tavan, sama kuin Matikassa (SEI-46 kriteeri 8).
+12. Annettu ruudunlukija. Kun sana on oikein. Niin ruudunlukija kertoo, että
+    seuraava sana tulee itsestään (ennen siirtymistä), ja uusi sana
+    ilmoitetaan kuten nykyisin.
+13. Annettu Macilla Chromella pelattu täysi kierros, kaikki sanat heti oikein.
+    Kun lapsi ei napauta mitään kirjainten jälkeen. Niin sanat 2–10 tulevat
+    itsestään, ja 10. sanan jälkeen odottaa `Katso tulos`. Mittaus kirjataan:
+    selain, taso, tavutus päällä/pois, sanalista, ja kesto kellolla
+    sanan valmistumisesta seuraavan sanan ilmestymiseen (tavoite 4 s).
+14. Annettu SEI-46 (Matikka) ja SEI-47 (Sanat) valmiina. Kun vertaan
+    kummankin pelin automaattista siirtymistä (kesto, palkin ulkoasu,
+    Seuraava-painikkeen ja ruudunlukijan käytös, peruutustilanteet). Niin
+    ne ovat samat (yhteinen suunnittelu); poikkeama kirjataan perusteineen.
+
+Avoimet kysymykset (ei omistajalle; designerille ja arkkitehdille):
+1. Sanojen oikean sanan jälkeen soi voittoääni enintään 3 s, ja Matikan 4 s
+   on valittu Matikan puheen mukaan (Q25). Riittääkö 4 s kehulle, voittoäänelle
+   ja lapsen katsoa paljastunutta kuvaa Keskitasolla ja Vaikealla? Ei
+   mitattu. Säännöt ovat omistajan (Q28: "samoin säännöin"), joten oletus on
+   4 s; jos mittaus (kriteeri 13) osoittaa ristiriidan kriteerin 4 kanssa,
+   se palautetaan omistajalle havaintona.
+2. Kun lapsi poistuu etusivulle palkin aikana ja palaa: jatkuuko palkki,
+   alkaako alusta vai odottaako Seuraava? Oletus (kriteeri 8): Seuraava
+   odottaa. Designer ja arkkitehti vahvistavat, ja Matikalle sama (SEI-46
+   kriteeri 6 sanoo vain, ettei ajastin tee mitään uudessa näkymässä).
+Riskit:
+- iPad: seuraava sana luetaan ääneen ajastimesta, ei napautuksesta. Sama
+  tarkistamaton kysymys kuin SEI-46:ssa ja SEI-45:n tauossa: iPad-Safari voi
+  estää puheen, jota ei ole käynnistetty napautuksesta. Jos estää, sana
+  tulee näkyviin mutta jää lukematta; Helpolla kuva ja vihje kertovat sanan,
+  mutta Keskitasolla ja Vaikealla sana on vain äänessä, joten lapsi ei voi
+  tietää sanaa ennen kuin painaa Kuuntele (vakavampi kuin Matikassa, jossa
+  lasku näkyy tekstinä). Peli ei saa jäädä jumiin (SEI-1 kriteeri 5).
+  Tarkistetaan iPadilla SEI-2:n iPad-tarkistuksen yhteydessä; ei tarkistettu.
+- Voittoääni (3 s) ja viimeisen kirjaimen puhe soivat yhtä aikaa; iPadilla
+  äänitiedosto voi vaimentaa puheen (design §5, ei tarkistettu). Palkin 4 s
+  jättää vain noin 1 s marginaalin voittoäänen jälkeen.
+- Kiinteä aika voi tuntua liian nopealta tai hitaalta eri lukutaitoisille
+  (sama riski kuin SEI-46:ssa).
+
 ### SEI-7 — Sana: virheen jälkeen koko sanaa ei tyhjennetä, askelpalautin kaikilla tasoilla, ohitus
 Tila: todo
 Perustelu: lähtötaso: väärä yritys tyhjentää koko sanan, "Aloita alusta"
 on ainoa korjaus ja Vaikealla tasolla ei ole askelpalautinta; sanaa ei voi
 ohittaa.
 Riippuvuus: SEI-3. Designer päättää tarkan tavan.
+Huomio (2026-10-26): ulkoasu `docs/design/sei-3.md` hyväksytty (Q26: "ok ja
+jatka"). Ohitetun sanan tapa (Q27, omistaja: "joo", tulkittu oletukseksi,
+design E5): Ohita-napautuksen jälkeen ohitettu sana näytetään ja luetaan
+ääneen ensin (`Ohitettu.` / `Sana on KISSA.`, ääneen `Sana on kissa.`), ja
+seuraava sana tulee vasta Seuraava-napautuksesta. Kriteerin 3 sanamuoto
+"seuraava sana tulee" tarkoittaa siis Ohita ja sen jälkeen Seuraava.
+Ohitettu sana ei siirry itsestään eteenpäin (ks. SEI-47).
 Kriteerit:
 1. Annettu sana KISSA ja olen valinnut kirjaimet KISTA. Kun tarkistus
    kertoo virheestä. Niin oikein olevat kirjaimet (K, I, S, A) eivät
@@ -510,6 +630,8 @@ Tila: todo
 Perustelu: lähtötaso: pisteet lasketaan vain oikeista, joten tulos on
 aina 10/10 eikä edistymisestä saa tietoa.
 Riippuvuus: SEI-3, SEI-7.
+Huomio (2026-10-26): ulkoasu `docs/design/sei-3.md` (loppuruutu, kohta 3.7)
+hyväksytty omistajalla (Q26: "ok ja jatka").
 Kriteerit:
 1. Annettu sana johon vastaan väärin ensin kaksi kertaa ja sitten oikein.
    Kun kierros päättyy. Niin sana ei ole laskettu "ensimmäisellä
@@ -940,3 +1062,4 @@ Kriteerit:
 - 2026-10-23: SEI-2, SEI-5, SEI-6 → done (Q24). Seuraavaksi SEI-3, SEI-7, SEI-8 (Sana) designerille.
 - 2026-10-23: lisätty SEI-46 (Matikka: automaattinen siirtyminen oikean vastauksen jälkeen), omistajan havainto Macilla julkaistusta Matikasta. Neljä avointa kysymystä oletuksineen (väärä vastaus, kesto 4 s, ohitus Seuraavalla, 10. vastaus). Tila todo.
 - 2026-10-23: SEI-46 avoimet kysymykset 1–4 ratkaistu oletusten mukaan (Q25: "ok"). Odottaa designeria Sanat-luonnoksen katselmoinnin jälkeen.
+- 2026-10-26: Q26: Sanojen ulkoasu `docs/design/sei-3.md` hyväksytty omistajalla ("ok ja jatka"); koskee SEI-3, SEI-7, SEI-8. Q27: ohitettu sana näytetään ja luetaan ensin, sitten Seuraava ("joo", tulkittu oletukseksi; SEI-7, design E5). Q28: omistaja vastasi "joo" kysymykseen, siirtyykö Sanat oikean sanan jälkeen itsestään kuten Matikka, samoin säännöin kuin Q25 → lisätty SEI-47 (tila todo). SEI-46:een kirjattu, että Matikan ja Sanojen automaattisen siirtymisen ulkoasu suunnitellaan yhdessä. Tilarivejä ei muutettu.
