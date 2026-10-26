@@ -2,7 +2,17 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q31 (katso):** Espanjan ulkoasuluonnos
+  (https://claude.ai/artifact/TDSLxnVvbFzjajmLPwnCRi): hyväksytkö, mukaan
+  lukien että Espanja siirtyy oikean vastauksen jälkeen itsestään kuten
+  Matikka ja Sanat? Oletus: hyväksytty, siirtyy. (SEI-4, SEI-10) — avattu
+  2026-10-26
+- **Q32 (päätös):** Kolme korjattua suomennosta: adiós = näkemiin,
+  buenas tardes = hyvää iltapäivää, por favor = ole kiltti. Käyvätkö?
+  Oletus: kyllä. (SEI-9) — avattu 2026-10-26
+- **Q33 (päätös):** Vanhassa Espanja-pelissä kerätyt tähdet eivät siirry
+  uuteen; tähdet alkavat nollasta. Käykö? Oletus: kyllä. (SEI-4) — avattu
+  2026-10-26
 
 ## Vastatut
 
