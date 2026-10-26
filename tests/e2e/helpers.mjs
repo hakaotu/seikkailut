@@ -16,11 +16,15 @@ export async function press(locator, testInfo) {
 // opts.mode: 'normal' (onstart, then onend) | 'nostart' (speak accepted, nothing fires)
 //            | 'noend' (onstart fires, onend never) | 'absent' (no speechSynthesis at all)
 // opts.voices: language tags, e.g. ['fi-FI', 'es-ES'].
+// opts.untrusted: what the browser does with a speak() that no tap or key press started (iPad Safari
+//            is believed to refuse it): 'error' (onerror not-allowed, from a timer) | 'silent' (nothing fires).
+//            Such a call is recorded with refused: true, and is not spoken. Without the option the fake
+//            never refuses a speak().
 // Records every speak() call in window.__speak, with whether it ran inside a click listener,
 // when it was called (at) and when its onend fired (endedAt, null until then).
 export async function installFakeSpeech(page, opts = {}) {
   await page.addInitScript(
-    ({ mode, voices }) => {
+    ({ mode, voices, untrusted }) => {
       const realTimeout = window.setTimeout.bind(window); // page.clock may replace it later
       window.__speak = [];
       // Every trusted click or keydown listener runs between __inListener++ and __inListener--, so speak()
@@ -103,6 +107,11 @@ export async function installFakeSpeech(page, opts = {}) {
           };
           u.__record = record;
           window.__speak.push(record);
+          if (untrusted && !record.inDispatch) {
+            record.refused = true;
+            if (untrusted === 'error') realTimeout(() => u.onerror && u.onerror({ error: 'not-allowed' }), 0);
+            return;
+          }
           if (mode === 'nostart') return;
           queue.push(u);
           if (!running) next();
@@ -125,7 +134,7 @@ export async function installFakeSpeech(page, opts = {}) {
       };
       Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
     },
-    { mode: opts.mode || 'normal', voices: opts.voices || ['fi-FI', 'es-ES'] },
+    { mode: opts.mode || 'normal', voices: opts.voices || ['fi-FI', 'es-ES'], untrusted: opts.untrusted || null },
   );
 }
 

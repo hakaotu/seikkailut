@@ -63,12 +63,19 @@ export function createShell({ games, document, window, speech }) {
 
   // ---------- speech state of one game's button ----------
 
-  function onSpeechState(view, state, reason, fromTap) {
+  // `auto`: the game started this reading by itself (an auto-advance), not from a tap. Its failure
+  // says nothing about whether the device has a voice (a browser may refuse speech that no tap
+  // started), so it never changes Kuuntele to Ei ääntä and never shows the notice (docs/design/sei-46.md 5.2).
+  function onSpeechState(view, state, reason, fromTap, auto) {
     if (state === 'playing') {
       view.button.setState('playing');
     } else if (state === 'idle') {
       if (view.button.element.dataset.state === 'playing') view.button.setState('ready');
     } else if (state === 'failed') {
+      if (auto) {
+        if (view.button.element.dataset.state === 'playing') view.button.setState('ready');
+        return;
+      }
       view.button.setState('novoice');
       view.noVoiceReason = reason;
       if (fromTap || !noticedLangs.has(view.game.lang)) showNotice(view, reason);
@@ -175,9 +182,10 @@ export function createShell({ games, document, window, speech }) {
         question: el.querySelector('.q-slot'),
         status: el.querySelector('.status-slot'),
         speech: {
-          say(parts) {
+          say(parts, opts) {
             const fromTap = view.originTap;
-            speech.say(game.lang, parts, (state, reason) => onSpeechState(view, state, reason, fromTap));
+            const auto = !!opts && opts.auto === true;
+            speech.say(game.lang, parts, (state, reason) => onSpeechState(view, state, reason, fromTap, auto));
           },
           stop() {
             speech.stop();

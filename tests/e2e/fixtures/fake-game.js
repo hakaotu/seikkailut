@@ -16,6 +16,9 @@ export function fakeGame(id) {
         fake.done += 1;
         report();
       };
+      // A reading the game starts by itself. Called from page.evaluate, which runs outside any
+      // listener, so the fake speech records it as not from a tap (docs/plans/sei-3.md D2).
+      fake.sayAuto = () => ctx.speech.say([{ text: id }], { auto: true });
       fake.finish = () => {
         fake.finished = true;
         report();

@@ -146,3 +146,53 @@ for (const mode of ['nostart', 'noend']) {
     await expect(page.locator('.badge:visible')).toHaveCount(0);
   });
 }
+
+// ---- a reading the game starts by itself (auto) never touches Kuuntele or the notice ----
+// The fake game's sayAuto runs from page.evaluate, outside any listener, so with `untrusted` the
+// fake refuses it, as iPad Safari is believed to refuse a speak() that no tap started.
+
+async function openFakeMatikka(page, testInfo, opts) {
+  await installFakeSpeech(page, opts);
+  await useFakeRegistry(page);
+  await page.goto('/');
+  await press(page.locator('button.game-card[data-game="matikka"]'), testInfo);
+  await expect(listen(page, 'matikka')).toHaveAttribute('data-state', 'ready');
+  await expect.poll(async () => (await speakCalls(page)).length).toBe(1); // the card tap's own reading
+  await expect(listen(page, 'matikka')).toContainText('Kuuntele lasku');
+}
+
+test('D2: an auto reading refused with an error leaves Kuuntele ready and shows no notice', async ({ page }, testInfo) => {
+  await openFakeMatikka(page, testInfo, { untrusted: 'error' });
+  await page.evaluate(() => window.__fake.matikka.sayAuto());
+  await page.waitForTimeout(300);
+  const calls = await speakCalls(page);
+  expect(calls.length).toBe(2);
+  expect(calls[1].refused).toBe(true);
+  expect(calls[1].inDispatch).toBe(false);
+  await expect(listen(page, 'matikka')).toHaveAttribute('data-state', 'ready');
+  await expect(listen(page, 'matikka')).toContainText('Kuuntele lasku');
+  await expect(view(page, 'matikka').locator('.notice')).toBeHidden();
+});
+
+test('D2: an auto reading refused in silence leaves Kuuntele ready after the 2 s start timer', async ({ page }, testInfo) => {
+  await openFakeMatikka(page, testInfo, { untrusted: 'silent' });
+  await page.evaluate(() => window.__fake.matikka.sayAuto());
+  await page.waitForTimeout(2300);
+  expect((await speakCalls(page))[1].refused).toBe(true);
+  await expect(listen(page, 'matikka')).toHaveAttribute('data-state', 'ready');
+  await expect(listen(page, 'matikka')).toContainText('Kuuntele lasku');
+  await expect(view(page, 'matikka').locator('.notice')).toBeHidden();
+});
+
+// The contrast: the same refusal, but the reading comes from Kuuntele (a script click is not a
+// user gesture, so the fake refuses it). Without `auto` the failure still gives Ei ääntä and the notice.
+for (const untrusted of ['error', 'silent']) {
+  test(`D2 contrast: the same refusal (${untrusted}) from a Kuuntele click, not auto, shows Ei ääntä and the notice`, async ({ page }, testInfo) => {
+    await openFakeMatikka(page, testInfo, { untrusted });
+    await page.evaluate(() => document.querySelector('.game-view[data-game="matikka"] .listen').click());
+    await expect(listen(page, 'matikka')).toHaveAttribute('data-state', 'novoice', { timeout: 3000 });
+    await expect(listen(page, 'matikka')).toContainText('Ei ääntä');
+    await expect(view(page, 'matikka').locator('.notice')).toBeVisible();
+    expect((await speakCalls(page))[1].refused).toBe(true);
+  });
+}
