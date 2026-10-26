@@ -750,7 +750,7 @@ Riskit:
   (kriteeri 14).
 
 ### SEI-49 — Sanat: loppuruudun Kuuntele puhuu sujuvaa suomea
-Tila: review
+Tila: in-progress
 Perustelu: havainto: loppuruudun puhe "Heti oikein 9. Uudella yrityksellä 1."
 ei ole suomea, vaikka ruudun rivit ("9 sanaa heti oikein") ovat; puhe pitää
 sanoa samoin kuin rivit on kirjoitettu.
