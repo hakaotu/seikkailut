@@ -80,7 +80,7 @@ export async function spellWrong(page, testInfo) {
   return { word, wrong };
 }
 
-// A wrong spelling, then Aloita alusta and the right one: counted as "oikein uudella yrityksellä".
+// A wrong spelling, then Aloita alusta and the right one: counted as "meni ensin väärin".
 export async function spellRetry(page, testInfo) {
   await spellWrong(page, testInfo);
   await press(button(page, 'Aloita sana alusta'), testInfo);

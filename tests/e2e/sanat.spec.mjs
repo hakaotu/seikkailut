@@ -198,7 +198,7 @@ test('SEI-3 / 10, SEI-7 / 1: a wrong word keeps its letters; tapping the wrong b
   await expect(feedback(page)).toHaveAttribute('data-kind', 'right');
   await next(page, testInfo);
   await playRound(page, testInfo, 'FFFFFFFFF');
-  await expect(view(page).locator('.sn-rows')).toContainText('1 sana oikein uudella yrityksellä');
+  await expect(view(page).locator('.sn-rows')).toContainText('Vain 1 sana meni ensin väärin');
 });
 
 test('SEI-3 / 10: Aloita alusta empties every box, gives the tiles back and removes the message', async ({ page }, testInfo) => {
@@ -277,7 +277,7 @@ test('SEI-8 / 1: nine right first time and one after two wrong tries is 9 / 10, 
   await playRound(page, testInfo, 'FFFFFFFFF');
   await expect(view(page).locator('.sn-result-score')).toHaveText('9 / 10');
   await expect(view(page).locator('.sn-rows')).toContainText('9 sanaa heti oikein');
-  await expect(view(page).locator('.sn-rows')).toContainText('1 sana oikein uudella yrityksellä');
+  await expect(view(page).locator('.sn-rows')).toContainText('Vain 1 sana meni ensin väärin');
   await expect(view(page).locator('.sn-rows')).not.toContainText('ohitettu');
   await expect(view(page).locator('.sn-q-end')).toHaveText('Hienoa!');
   await expect(view(page).locator('.sn-result')).toHaveAttribute('data-tier', 'good');
@@ -494,7 +494,7 @@ test('SEI-3 / 6: the attempt count survives a level change, so the word cannot b
   await next(page, testInfo);
   await playRound(page, testInfo, 'FFFFFFFFF');
   await expect(view(page).locator('.sn-result-score')).toHaveText('9 / 10');
-  await expect(view(page).locator('.sn-rows')).toContainText('1 sana oikein uudella yrityksellä');
+  await expect(view(page).locator('.sn-rows')).toContainText('Vain 1 sana meni ensin väärin');
 });
 
 test('SEI-3 / 6: a level change on a finished word shows the same finished word, reads nothing, and applies from the next word', async ({ page }, testInfo) => {

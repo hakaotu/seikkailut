@@ -246,14 +246,14 @@ test('SEI-8 / 1: nine right first time and one after a retry is not 10 / 10', ()
   const t = endTexts(9, 1, 0);
   assert.equal(t.tier, 'good');
   assert.equal(t.title, 'Hienoa!');
-  assert.deepEqual(t.rows.map((r) => r.text), ['9 sanaa heti oikein', '1 sana oikein uudella yrityksellä']);
-  assert.equal(t.speech, 'Hienoa! 9 sanaa heti oikein. 1 sana oikein uudella yrityksellä. Hyvää työtä!');
+  assert.deepEqual(t.rows.map((r) => r.text), ['9 sanaa heti oikein', 'Vain 1 sana meni ensin väärin']);
+  assert.equal(t.speech, 'Hienoa! 9 sanaa heti oikein. Vain 1 sana meni ensin väärin. Hyvää työtä!');
 });
 
 test('SEI-8 / 2: skipped words have a row of their own', () => {
   const t = endTexts(7, 0, 3);
   assert.deepEqual(t.rows.map((r) => r.text), ['7 sanaa heti oikein', '3 sanaa ohitettu']);
-  assert.equal(endTexts(8, 1, 1).speech, 'Hienoa! 8 sanaa heti oikein. 1 sana oikein uudella yrityksellä. 1 sana ohitettu. Hyvää työtä!');
+  assert.equal(endTexts(8, 1, 1).speech, 'Hienoa! 8 sanaa heti oikein. Vain 1 sana meni ensin väärin. 1 sana ohitettu. Hyvää työtä!');
   assert.equal(endTexts(8, 1, 1).rows[2].text, '1 sana ohitettu');
   assert.equal(endTexts(7, 0, 3).speech, 'Hienoa! 7 sanaa heti oikein. 3 sanaa ohitettu. Hyvää työtä!');
   assert.equal(endTexts(4, 0, 3).speech, 'Kierros valmis. 4 sanaa heti oikein. 3 sanaa ohitettu. Harjoittelemalla oppii!');
@@ -278,12 +278,15 @@ test('the edges: all skipped, all corrected, singular and plural', () => {
   const skipped = endTexts(0, 0, 10);
   assert.equal(skipped.speech, 'Kierros valmis. 10 sanaa ohitettu. Harjoittelemalla oppii!');
   assert.deepEqual(skipped.rows.map((r) => r.text), ['0 sanaa heti oikein', '10 sanaa ohitettu']);
-  assert.deepEqual(endTexts(0, 10, 0).rows.map((r) => r.text), ['0 sanaa heti oikein', '10 sanaa oikein uudella yrityksellä']);
-  assert.equal(endTexts(0, 10, 0).speech, 'Kierros valmis. 10 sanaa oikein uudella yrityksellä. Harjoittelemalla oppii!');
+  assert.deepEqual(endTexts(0, 10, 0).rows.map((r) => r.text), ['0 sanaa heti oikein', '10 sanaa meni ensin väärin']);
+  assert.equal(endTexts(0, 10, 0).speech, 'Kierros valmis. 10 sanaa meni ensin väärin. Harjoittelemalla oppii!');
   assert.equal(endTexts(1, 9, 0).rows[0].text, '1 sana heti oikein');
-  assert.equal(endTexts(7, 1, 2).speech, 'Hienoa! 7 sanaa heti oikein. 1 sana oikein uudella yrityksellä. 2 sanaa ohitettu. Hyvää työtä!');
+  assert.equal(endTexts(7, 1, 2).speech, 'Hienoa! 7 sanaa heti oikein. Vain 1 sana meni ensin väärin. 2 sanaa ohitettu. Hyvää työtä!');
+  assert.deepEqual(endTexts(8, 2, 0).rows.map((r) => r.text), ['8 sanaa heti oikein', '2 sanaa meni ensin väärin']);
+  assert.equal(endTexts(8, 2, 0).speech, 'Hienoa! 8 sanaa heti oikein. 2 sanaa meni ensin väärin. Hyvää työtä!');
+  assert.equal(endTexts(10, 0, 0).rows.some((r) => r.kind === 'b'), false);
   assert.equal(endTexts(1, 0, 9).speech, 'Kierros valmis. 1 sana heti oikein. 9 sanaa ohitettu. Harjoittelemalla oppii!');
-  assert.equal(endTexts(4, 3, 3).speech, 'Kierros valmis. 4 sanaa heti oikein. 3 sanaa oikein uudella yrityksellä. 3 sanaa ohitettu. Harjoittelemalla oppii!');
+  assert.equal(endTexts(4, 3, 3).speech, 'Kierros valmis. 4 sanaa heti oikein. 3 sanaa meni ensin väärin. 3 sanaa ohitettu. Harjoittelemalla oppii!');
 });
 
 test('stars: none before any word is done, then round(a * 5 / done); at the end round(a / 2)', () => {

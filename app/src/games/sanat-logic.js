@@ -254,7 +254,7 @@ const sanaa = (n) => (n === 1 ? 'sana' : 'sanaa');
 export function endTexts(a, b, c) {
   const tier = endTier(a);
   const rows = [{ kind: 'a', text: `${a} ${sanaa(a)} heti oikein` }];
-  if (b >= 1) rows.push({ kind: 'b', text: `${b} ${sanaa(b)} oikein uudella yrityksellä` });
+  if (b >= 1) rows.push({ kind: 'b', text: b === 1 ? 'Vain 1 sana meni ensin väärin' : `${b} sanaa meni ensin väärin` });
   if (c >= 1) rows.push({ kind: 'c', text: `${c} ${sanaa(c)} ohitettu` });
   if (tier === 'perfect') {
     return {

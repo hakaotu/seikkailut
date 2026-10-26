@@ -703,7 +703,7 @@ export default {
       const t = tally();
       announce(
         `${texts.title} ${t.a} / ${MAX_WORDS} heti oikein.` +
-          (t.b >= 1 ? ` ${t.b} uudella yrityksellä.` : '') +
+          (t.b >= 1 ? ` ${texts.rows.find((r) => r.kind === 'b').text}.` : '') +
           (t.c >= 1 ? ` ${t.c} ohitettu.` : '') +
           ` ${texts.line}`,
       );
