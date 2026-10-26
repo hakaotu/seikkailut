@@ -284,6 +284,8 @@ Kriteerit (lähde: `originals/matikkaseikkailu.html`):
 
 ### SEI-3 — Sana: kaikki nykyiset toiminnot uudessa sovelluksessa
 Tila: done
+iPad (omistaja, 2026-10-26): "testasin ipadilla ja hyvin toimii kaikki" — yleishavainto,
+malli, iOS-versio ja yksittäiset §10 C -kohdat kirjaamatta.
 Perustelu: omistaja vaati kaikki use caset; tämä on Sanaseikkailun koko
 nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -327,6 +329,8 @@ Kriteerit (lähde: `originals/sanaseikkailu.html`):
 
 ### SEI-4 — Espanja: kaikki nykyiset toiminnot uudessa sovelluksessa
 Tila: verifying
+iPad (omistaja, 2026-10-26): "testasin ipadilla ja hyvin toimii kaikki" — yleishavainto,
+malli, iOS-versio ja yksittäiset §10 C -kohdat kirjaamatta.
 APPROVED 2026-10-26 (commitit 3329b59, bb817ed, b5aea2f, 0311e50; placeholderin
 poisto osui commitiin 331a67b). Kriteeri 7 mitataan hyväksyttyä ulkoasua vasten
 ("x / 10 oikein", "Pelaa uudelleen"), ei kriteerin vanhoja tekstejä. Avoimet
@@ -436,6 +440,8 @@ Kriteerit:
 
 ### SEI-46 — Matikka: oikean vastauksen jälkeen siirtyy itsestään seuraavaan laskuun
 Tila: done
+iPad (omistaja, 2026-10-26): "testasin ipadilla ja hyvin toimii kaikki" — yleishavainto,
+malli, iOS-versio ja yksittäiset §10 C -kohdat kirjaamatta.
 Havainto A1 (pääistunto, 2026-10-26 ~11.15): https://hakaotu.github.io/seikkailut/,
 commit 03da941, Chrome 155.0.8059.85 (Playwright channel chrome, headed,
 1280×720), ääni Satu (Enhanced). Helppo, 10 oikein ilman napautuksia: 9 väliä
@@ -541,6 +547,8 @@ Riskit:
 
 ### SEI-47 — Sanat: oikean sanan jälkeen siirtyy itsestään seuraavaan sanaan
 Tila: done
+iPad (omistaja, 2026-10-26): "testasin ipadilla ja hyvin toimii kaikki" — yleishavainto,
+malli, iOS-versio ja yksittäiset §10 C -kohdat kirjaamatta.
 Havainto B1 (pääistunto, 2026-10-26 ~14.40): https://hakaotu.github.io/seikkailut/,
 commit 22b9835, Chrome 155.0.8059.85 (Playwright channel chrome, headed,
 1280×720), ääni Satu (Enhanced). Koskee myös SEI-3, SEI-7, SEI-8.
@@ -659,6 +667,8 @@ Riskit:
 
 ### SEI-48 — Espanja: oikean vastauksen jälkeen siirtyy itsestään seuraavaan kysymykseen
 Tila: done
+iPad (omistaja, 2026-10-26): "testasin ipadilla ja hyvin toimii kaikki" — yleishavainto,
+malli, iOS-versio ja yksittäiset §10 C -kohdat kirjaamatta.
 Havainto: ei omaa havaintoa Espanjasta; omistaja hyväksyi 2026-10-26 (Q31:
 "ok") Espanjan ulkoasuluonnoksen `docs/design/sei-4.md`, jossa Espanja siirtyy
 oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat
