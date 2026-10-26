@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q34 (päätös):** Espanjan toteutussuunnitelma: tehdään Sanojen jälkeen,
+  julkaistaan kerralla (peli ja automaattinen siirtyminen). Hyväksytkö?
+  Oletus: hyväksytty. (SEI-4, 9, 10, 48) — avattu 2026-10-26
 
 ## Vastatut
 
