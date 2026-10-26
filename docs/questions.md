@@ -2,7 +2,10 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q29 (katso):** Matikka ja Sanat siirtyvät oikean vastauksen jälkeen
+  itsestään — ulkoasuluonnos
+  (https://claude.ai/artifact/NRuuLynznPbTNAaaPKd9J1): hyväksytkö, vai mitä
+  muutetaan? (SEI-46, SEI-47) — avattu 2026-10-26
 
 ## Vastatut
 

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Automaattinen siirtyminen – ulkoasuluonnos SEI-46, SEI-47</title>
+<style>
+  /* ---------- Esityssivun oma tyyli (sama kuin sei-2.html ja sei-3.html) ---------- */
+  body { margin:0; background:#eceef3; color:#222; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .page { max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px; }
+  .page > h1 { font-size: 30px; margin: 0 0 6px; }
+  .lead { font-size: 17px; max-width: 860px; color:#333; }
+  .page h2 { font-size: 23px; margin: 56px 0 6px; padding-top: 18px; border-top: 2px solid #d5d8e0; }
+  .page h3 { font-size: 18px; margin: 28px 0 6px; }
+  .note { color:#444; max-width: 860px; margin: 4px 0 14px; }
+  .row { display:flex; flex-wrap:wrap; gap: 28px; align-items:flex-start; margin-bottom: 26px; }
+  figure { margin:0; }
+  figcaption { font-size: 14.5px; color:#333; margin-top: 10px; max-width: 520px; }
+  figcaption b { color:#000; }
+  .toc { background:#fff; border-radius:12px; padding:14px 20px; max-width: 860px; }
+  .toc ol { margin: 6px 0; padding-left: 22px; }
+  .q { background:#fff7db; border:2px solid #e2b93b; border-radius:12px; padding:14px 20px; max-width: 860px; }
+  .d { display:inline-block; background:#ffe1ef; color:#8a0045; border:1.5px solid #d6337a; border-radius:999px; padding:0 8px; font-size:13px; font-weight:700; line-height:20px; margin: 0 2px; white-space:nowrap; }
+  .legend { background:#fff; border-left: 6px solid #d6337a; border-radius:8px; padding:10px 16px; max-width: 860px; }
+  table.diff { border-collapse: collapse; background:#fff; border-radius:12px; overflow:hidden; max-width: 1180px; font-size:15px; }
+  table.diff th, table.diff td { text-align:left; vertical-align:top; padding: 9px 12px; border-bottom:1px solid #e3e5ea; }
+  table.diff th { background:#f4f5f8; font-size:14px; }
+  table.diff td:first-child { white-space:nowrap; }
+  .gamelabel { font-size:15px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:#555; margin: 0 0 6px; }
+  .nomath { width:524px; height:300px; box-sizing:border-box; border:2px dashed #c9cbd6; border-radius:12px; background:#fff;
+            display:flex; align-items:center; justify-content:center; text-align:center; padding:24px; color:#444; font-size:17px; }
+
+  /* Laitekehys */
+  .dev { --ch: 50; width: calc(var(--w) * var(--s) * 1px); height: calc(var(--h) * var(--s) * 1px);
+         border: 8px solid #26272b; border-radius: 22px; overflow: hidden; background:#fff;
+         box-shadow: 0 10px 30px rgba(0,0,0,.18); position: relative; }
+  .dev.pc { border-radius: 10px; border-width: 6px; --ch: 80; }
+  .screen { width: calc(var(--w) * 1px); height: calc(var(--h) * 1px);
+            transform: scale(var(--s)); transform-origin: 0 0; position:absolute; top:0; left:0; }
+  .chrome { height: calc(var(--ch) * 1px); background:#f3f3f5; border-bottom:1px solid #d7d7dc;
+            display:flex; align-items:center; justify-content:center; font: 16px system-ui, sans-serif; color:#555; }
+  .chrome .addr { background:#e4e4e9; border-radius: 10px; padding: 6px 60px; }
+  .pc .chrome { flex-direction: column; justify-content: flex-end; padding-bottom: 8px; gap: 8px; }
+  .pc .chrome .tabs { align-self: flex-start; margin-left: 90px; background:#fff; border-radius: 8px 8px 0 0; padding: 4px 18px; font-size: 14px; }
+  .viewport { height: calc(100% - var(--ch) * 1px); position: relative; overflow: hidden; }
+  /* napautuksen merkki: keltainen ympyrä sen päällä, mitä napautetaan */
+  .tapw { position:relative; display:inline-flex; flex:none; }
+  .tapw::after { content:''; position:absolute; left:50%; top:50%; width:70px; height:70px; margin:-35px 0 0 -35px; border-radius:50%;
+                 background: rgba(255,210,63,.55); border: 4px solid #e2a800; pointer-events:none; z-index:5; }
+
+  /* ---------- SOVELLUS: kehys (SEI-1, ei muutu) ---------- */
+  .app { height:100%; box-sizing:border-box; color:#1f2340;
+         font-family: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', system-ui, sans-serif; }
+  .app * { box-sizing: border-box; }
+  .m { --a:#17803d; --ad:#0f5c2b; --al:#e3f7ea; }
+  .s { --a:#764ba2; --ad:#553578; --al:#efe8fb; }
+  .game { display:flex; flex-direction:column; background: var(--al); position:relative; }
+  .gh { height:76px; flex:none; background: var(--a); color:#fff; display:flex; align-items:center; gap:18px; padding: 0 20px; }
+  .gh h1 { font-size:30px; margin:0; font-weight:bold; white-space:nowrap; }
+  .back { height:56px; display:inline-flex; align-items:center; gap:6px; padding: 0 22px 0 12px; border-radius:999px;
+          background:#fff; color: var(--a); font-size:22px; font-weight:bold; box-shadow: 0 4px 0 var(--ad); flex:none; }
+  .back svg { width:28px; height:28px; }
+  .gbody { flex:1; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; min-height:0; }
+  .gcard { background:#fff; border-radius:30px; width:100%; max-width:760px; flex:1; padding:24px; display:flex; flex-direction:column; gap:20px;
+           box-shadow: 0 10px 30px rgba(31,35,64,.10); min-height:0; position:relative; }
+  .qrow { display:flex; align-items:center; gap:16px; min-height:56px; }
+  .listen { height:56px; min-width:150px; display:inline-flex; align-items:center; justify-content:center; gap:10px; padding: 0 24px 0 18px;
+            border-radius:999px; border:3px solid var(--a); background:#fff; color: var(--a); font-size:22px; font-weight:bold;
+            box-shadow: 0 4px 0 var(--ad); flex:none; white-space:nowrap; }
+  .listen svg { width:28px; height:28px; flex:none; }
+  .listen.playing { background: var(--a); color:#fff; }
+  .listen.pressed { transform: translateY(4px); box-shadow:none; }
+  .waves { display:inline-flex; gap:3px; align-items:center; height:22px; }
+  .waves i { display:block; width:4px; background: currentColor; border-radius:2px; }
+  .waves i:nth-child(1){ height:10px; } .waves i:nth-child(2){ height:20px; } .waves i:nth-child(3){ height:14px; }
+  .btn { height:56px; min-width:120px; padding: 0 24px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+         font-size:22px; font-weight:bold; flex:none; white-space:nowrap; }
+  .btn.ok { background:#fff; color:#1f2340; border:3px solid #1f2340; box-shadow: 0 4px 0 #1f2340; }
+  .btn.acc { background: var(--a); color:#fff; box-shadow: 0 4px 0 var(--ad); }
+  .btn.big { height:64px; min-width:240px; font-size:26px; padding: 0 32px; }
+  .btn svg { width:28px; height:28px; flex:none; }
+  .btn.pressed { transform: translateY(4px); box-shadow:none; }
+  .f { outline: 3px solid #1f2340 !important; outline-offset: 2px; }
+  .btn.acc.f { box-shadow: 0 4px 0 var(--ad), 0 0 0 9px #ffd23f; }
+  .stars { margin-left:auto; display:flex; gap:4px; flex:none; }
+  .stars svg { width:28px; height:28px; fill:none; stroke:#fff; stroke-width:2.2; }
+  .stars svg.on { fill:#ffd23f; stroke:#ffd23f; }
+  .info { display:flex; align-items:center; gap:18px; }
+  .score { font-size:22px; font-weight:bold; white-space:nowrap; }
+  .bar { flex:1; display:flex; gap:4px; }
+  .bar i { flex:1; height:14px; border-radius:7px; background:#dfe3ea; }
+  .bar i.f { background: var(--a); outline:none !important; }
+  .sel { font-size:20px; color:#5b5f73; }
+  .mk { position:absolute; top:-13px; right:-13px; width:30px; height:30px; border-radius:50%; background:#17803d; color:#fff;
+        display:flex; align-items:center; justify-content:center; }
+  .mk svg { width:20px; height:20px; }
+  .mk.x { background:#c62828; }
+
+  /* ---------- UUTTA TÄSSÄ: odottava Seuraava (A1, A5) ---------- */
+  .btn.acc.auto { position:relative; overflow:hidden; background: var(--al); color: var(--a); border:3px solid var(--a); box-shadow:0 4px 0 var(--ad); }
+  .btn.auto .lbl, .btn.auto .fill { display:flex; align-items:center; justify-content:center; gap:10px; }
+  .btn.auto .fill { position:absolute; inset:0; background: var(--a); color:#fff; clip-path: inset(0 calc(100% - var(--p)) 0 0); }
+  .btn.auto .tk { position:absolute; top:0; bottom:0; width:3px; margin-left:-1.5px; background: var(--a); opacity:.35; }
+  .btn.acc.auto.pressed { transform: translateY(4px); box-shadow:none; }
+  .btn.acc.auto.f { box-shadow: 0 4px 0 var(--ad), 0 0 0 9px #ffd23f; }
+
+  /* ---------- Matikka (sei-2.html) ---------- */
+  .eq { flex:1; min-width:0; font-size:56px; font-weight:bold; line-height:72px; white-space:nowrap; display:flex; align-items:center; gap:14px; }
+  .eq .op { color: var(--a); }
+  .eq .eqs { color:#5b5f73; }
+  .box { position:relative; display:inline-flex; align-items:center; justify-content:center; min-width:1.6em; height:66px; padding:0 14px;
+         border:4px solid #8a8fa3; border-radius:14px; line-height:1; }
+  .box.empty { color:#5b5f73; }
+  .box.ok { border-color:#17803d; color:#17803d; }
+  .yours { position:relative; display:inline-flex; align-items:center; font-size:34px; line-height:1; color:#c62828; background:#fdeceb;
+           border:3px solid #c62828; border-radius:12px; padding:8px 14px; text-decoration: line-through; text-decoration-thickness:3px; }
+  .ga { flex:1; display:flex; flex-direction:column; gap:16px; min-height:0; }
+  .streak { height:34px; font-size:22px; font-weight:bold; color:#a14b00; display:flex; align-items:center; }
+  .ans { display:flex; justify-content:center; }
+  .opts { display:grid; grid-template-columns: repeat(2, 150px); gap:16px; }
+  .opt { position:relative; height:110px; border-radius:22px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 5px 0 #c9cbd6;
+         font-size:52px; font-weight:bold; display:flex; align-items:center; justify-content:center; }
+  .opt.ok { background:#17803d; border-color:#17803d; color:#fff; box-shadow:0 5px 0 #0f5c2b; }
+  .opt.ok .mk { background:#fff; color:#17803d; }
+  .opt.bad { border:4px solid #c62828; color:#c62828; text-decoration: line-through; text-decoration-thickness:4px; box-shadow:0 5px 0 #f3c4c4; }
+  .opt.dim { opacity:.45; }
+  .pad { display:grid; grid-template-columns: repeat(3, 96px); gap:12px; }
+  .key { height:72px; border-radius:16px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6;
+         font-size:34px; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .key svg { width:34px; height:34px; }
+  .key.okk { background: var(--a); border-color: var(--a); color:#fff; box-shadow:0 4px 0 var(--ad); font-size:28px; }
+  .key.okk svg { width:24px; height:24px; }
+  .pad.lock .key { opacity:.45; }
+  .fb { min-height:92px; display:flex; align-items:center; justify-content:center; gap:14px; }
+  .fb .ic { width:40px; height:40px; flex:none; }
+  .fb.good { color:#17803d; font-size:30px; font-weight:bold; }
+  .fb.bad .ic { color:#c62828; }
+  .fb .t1 { display:block; color:#c62828; font-size:30px; font-weight:bold; line-height:1.2; }
+  .fb .t2 { display:block; font-size:26px; line-height:1.3; }
+  .nextw { height:64px; display:flex; justify-content:center; }
+  .foot { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:auto; }
+  .ga.two { display:grid; grid-template-columns: 1fr 336px; grid-template-rows: auto auto auto auto 1fr;
+            grid-template-areas: "info ans" "streak ans" "fb ans" "next ans" "foot ans"; column-gap:28px; row-gap:12px; }
+  .two .info { grid-area:info; flex-direction:column; align-items:stretch; gap:8px; }
+  .two .bar { flex:none; }
+  .two .streak { grid-area:streak; }
+  .two .ans { grid-area:ans; align-items:flex-start; }
+  .two .fb { grid-area:fb; justify-content:flex-start; }
+  .two .nextw { grid-area:next; justify-content:flex-start; }
+  .two .foot { grid-area:foot; align-self:end; }
+  .two .opts { grid-template-columns: repeat(2, 160px); }
+  .two .opt { height:120px; }
+
+  /* ---------- Sanat (sei-3.html) ---------- */
+  .gcard.sp { gap:16px; }
+  .qs { flex:1; min-width:0; display:flex; align-items:center; gap:16px; }
+  .pic { width:80px; height:80px; flex:none; border-radius:20px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6;
+         display:flex; align-items:center; justify-content:center; font-size:56px; line-height:1; }
+  .pic.hid { border-radius:50%; border:3px dashed #8a8fa3; box-shadow:none; font-size:44px; font-weight:bold; color:#5b5f73; }
+  .pic.pressed { transform: translateY(4px); box-shadow:none; }
+  .qtext { font-size:24px; font-weight:bold; line-height:1.25; }
+  .qtext.ins { font-weight:normal; }
+  .sga { flex:1; display:flex; flex-direction:column; gap:12px; min-height:0; }
+  .sga .info { height:28px; }
+  .slots { display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; }
+  .sl { position:relative; width:56px; height:64px; border-radius:12px; border:3px dashed #8a8fa3; background:#fff; display:flex; align-items:center;
+        justify-content:center; font-size:36px; font-weight:bold; flex:none; }
+  .sl.cur { border:4px dashed var(--a); background:#faf7ff; }
+  .sl.fill { border:3px solid var(--a); background: var(--al); color: var(--a); box-shadow:0 4px 0 var(--ad); }
+  .sl.ok { border:3px solid #17803d; background:#e3f7ea; color:#17803d; }
+  .sl.shown { border:3px solid #c9cbd6; background:#f1f2f5; color:#5b5f73; }
+  .sep { width:14px; text-align:center; font-size:32px; font-weight:bold; color:#8a8fa3; flex:none; }
+  .fr { min-height:64px; display:flex; align-items:center; gap:16px; }
+  .fbt { flex:1; min-width:0; display:flex; align-items:center; gap:12px; }
+  .fbt .ic { width:32px; height:32px; flex:none; }
+  .fbt.good { color:#17803d; font-size:30px; font-weight:bold; }
+  .fbt.bad .ic { color:#c62828; }
+  .fbt.skip .ic { color:#5b5f73; }
+  .fbt .r1 { display:block; font-size:28px; font-weight:bold; line-height:1.2; }
+  .fbt.bad .r1 { color:#c62828; }
+  .fbt .r2 { display:block; font-size:22px; line-height:1.3; }
+  .tiles { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
+  .lt { width:64px; height:64px; border-radius:14px; background:#fff; border:3px solid var(--a); color: var(--a); font-size:36px; font-weight:bold;
+        display:flex; align-items:center; justify-content:center; box-shadow:0 4px 0 var(--ad); flex:none; }
+  .lt.used { border:3px dashed #c9cbd6; box-shadow:none; background:transparent; color:transparent; }
+  .lt.bk { border-color:#c9cbd6; box-shadow:0 4px 0 #c9cbd6; color:#1f2340; margin-left:8px; }
+  .lt.bk svg { width:34px; height:34px; }
+  .abc { display:grid; grid-template-columns: repeat(10, 1fr); gap:8px; }
+  .ak { height:56px; border-radius:12px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6; font-size:28px; font-weight:bold;
+        display:flex; align-items:center; justify-content:center; }
+  .ak svg { width:30px; height:30px; }
+  .lock .lt:not(.used), .lock .ak { opacity:.45; }
+  .sfoot { display:flex; align-items:center; gap:16px; margin-top:auto; }
+  .sfoot .sp1 { margin-left:auto; }
+  .hide { visibility:hidden; }
+  .pt .pic { width:96px; height:96px; font-size:68px; }
+  .pt .pic.hid { font-size:52px; }
+  .pt .sl { width:60px; height:72px; font-size:40px; }
+  .pt .lt { width:72px; height:72px; font-size:40px; }
+  .pt .sga { gap:16px; }
+
+  /* komponentit todellisessa koossa */
+  .spec { background:#fff; border-radius:16px; padding: 24px; display:flex; flex-wrap:wrap; gap: 28px 30px; align-items:flex-end; }
+  .spec figure { display:flex; flex-direction:column; align-items:center; }
+  .spec figcaption { text-align:center; max-width:240px; font-size:14px; }
+  .spec .slabel { flex-basis:100%; font: 700 15px system-ui, sans-serif; color:#555; text-transform:uppercase; letter-spacing:.5px; margin-bottom:-14px; }
+</style>
+</head>
+<body>
+<!-- Kuvakkeet -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.85 5.95 6.55.8-4.8 4.5 1.25 6.5L12 17.2l-5.850 3.15 1.25-6.5-4.8-4.5 6.55-.8z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-spk" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-spk0" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/></symbol>
+  <symbol id="i-bksp" viewBox="0 0 24 24"><path d="M9 5h11a1.5 1.5 0 0 1 1.5 1.5v11A1.5 1.5 0 0 1 20 19H9l-6.5-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M11.5 9.5l5 5M16.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M4.5 3.5v5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-skip" viewBox="0 0 24 24"><path d="M5 6l6 6-6 6M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="page">
+
+<h1>Matikka ja Sanat – seuraava tulee itsestään (SEI-46, SEI-47)</h1>
+<p class="lead">Kun lapsi vastaa oikein, <b>Seuraava-painike täyttyy neljässä sekunnissa</b>, ja kun se on täynnä, seuraava lasku tai sana tulee
+ilman napautusta. Painiketta voi painaa milloin tahansa, niin seuraava tulee heti. Väärän vastauksen ja ohitetun sanan jälkeen, ja kymmenennen
+jälkeen, peli odottaa napautusta kuten ennen. Matikka ja Sanat toimivat täsmälleen samoin. Jokaisessa kohdassa on vasemmalla Matikka ja oikealla
+Sanat, ylempänä tietokone ja alempana iPad pystyssä. Kaikki muu on sama kuin hyväksymissäsi Matikan ja Sanojen luonnoksissa.</p>
+
+<div class="legend"><b>Vaaleanpunainen merkki, esim. <span class="d">A1</span>, tarkoittaa: tämä on muutos hyväksyttyyn luonnokseen.</b>
+Muutokset on lueteltu kohdassa 10. Keltainen ympyrä näyttää, mihin lapsi napauttaa.</div>
+
+<div class="toc" style="margin-top:14px">
+  <b>Sivulla:</b>
+  <ol>
+    <li>Oikea vastaus: painike täyttyy</li>
+    <li>Seuraava tuli itsestään</li>
+    <li>Seuraava painettu kesken odotuksen</li>
+    <li>Väärä vastaus: ei odotusta</li>
+    <li>Ohitettu sana: ei odotusta</li>
+    <li>Kuuntele kesken odotuksen, ja paluu etusivulta</li>
+    <li>Kymmenes oikein: Katso tulos</li>
+    <li>Kun laitteessa on "vähennä liikettä"</li>
+    <li>Ruudunlukija</li>
+    <li>Muutokset hyväksyttyihin luonnoksiin</li>
+    <li>Kysymykset sinulle</li>
+  </ol>
+</div>
+
+<!-- ===================================================== 1 -->
+<h2>1. Oikea vastaus: painike täyttyy</h2>
+<p class="note">Kehu, vihreä vastaus ja ääni ovat kuten ennen. Uutta on Seuraava-painike: se ilmestyy <b>vaaleana</b>, ja tummempi väri täyttää sen
+vasemmalta oikealle tasaisesti neljässä sekunnissa <span class="d">A1</span>. Kun painike on täynnä, se näyttää tavalliselta Seuraavalta, ja seuraava
+lasku tai sana tulee. Palkki on painikkeen sisällä eikä erillisenä rivinä, koska Sanoissa ei tietokoneen ruudulla ole tilaa uudelle riville
+ilman vieritystä, ja koska näin lapsi näkee, että juuri tämä nappi tapahtuu itsestään. Sanojen voittoääni (3 s) ja Matikan vastauksen luku
+(noin 1 s) ehtivät loppuun ennen neljää sekuntia.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone · 1 s</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak">🔥 4 peräkkäin oikein!</div>
+            <div class="ans"><div class="opts"><span class="opt ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt dim">9</span><span class="opt dim">14</span><span class="opt dim">7</span></div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Mestari! 🧙</div>
+            <div class="nextw"><span class="btn acc big auto" style="--p:25%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Helppo, oikein, 1 sekunti vastauksen jälkeen.</b> "Kaksitoista" kuuluu vielä. Painike on neljänneksen täynnä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone · 1 s</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🦉</span><span class="qtext">Tuo kirjeet perille</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl ok">P</span><span class="sl ok">Ö</span><span class="sl ok">L</span><span class="sep">-</span><span class="sl ok">L</span><span class="sl ok">Ö</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Loistavaa! 🌈</div><span class="btn acc big auto" style="--p:25%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+            <div class="tiles lock"><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt used">P</span><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Keskitaso, PÖL-LÖ oikein, 1 sekunti.</b> Pöllö paljastui, voittoääni soi. Painike täyttyy samaa tahtia kuin Matikassa.</figcaption>
+  </figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · iPad · 2,5 s</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box ok">19<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 4 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Hienoa! 🌟</div>
+            <div class="nextw"><span class="btn acc big auto" style="--p:62%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Keskitaso, oikein, 2,5 sekuntia.</b> Painike on yli puolillaan; teksti vaihtuu valkoiseksi sitä mukaa kuin väri etenee.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · iPad · 2,5 s</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🐱</span><span class="qtext">Sanoo miau!</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 1 / 1</span><span class="bar"><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl ok">K</span><span class="sl ok">I</span><span class="sl ok">S</span><span class="sl ok">S</span><span class="sl ok">A</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Mahtavaa! 🎉</div><span class="btn acc big auto" style="--p:62%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+            <div class="tiles lock"><span class="lt used">S</span><span class="lt used">A</span><span class="lt used">K</span><span class="lt used">S</span><span class="lt used">I</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Helppo, KISSA oikein, 2,5 sekuntia.</b> Ensimmäinen sana; sama painike samassa paikassa kuin Seuraava ennenkin.</figcaption>
+  </figure>
+</div>
+
+<h3>Painike oikeassa koossa, neljä hetkeä</h3>
+<div class="spec app m" style="height:auto">
+  <div class="slabel">Matikka</div>
+  <figure><span class="btn acc big auto" style="--p:0%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>0 s</b> – juuri vastattu</figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:25%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>1 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:62%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>2,5 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:100%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>4 s</b> – täynnä, seuraava lasku tulee</figcaption></figure>
+  <figure><span class="btn acc big auto f" style="--p:40%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>Näppäimistöllä</b>: fokusrengas, Enter = heti</figcaption></figure>
+  <figure><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span><figcaption><b>Odottaa napautusta</b> (väärä vastaus, pysäytetty)</figcaption></figure>
+</div>
+<div class="spec app s" style="height:auto; margin-top:16px">
+  <div class="slabel">Sanat</div>
+  <figure><span class="btn acc big auto" style="--p:0%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>0 s</b> – sana juuri oikein</figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:25%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>1 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:62%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>2,5 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:100%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>4 s</b> – täynnä, seuraava sana tulee</figcaption></figure>
+  <figure><span class="btn acc big auto f" style="--p:40%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>Näppäimistöllä</b></figcaption></figure>
+  <figure><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span><figcaption><b>Odottaa napautusta</b> (ohitettu, pysäytetty)</figcaption></figure>
+</div>
+
+<!-- ===================================================== 2 -->
+<h2>2. Seuraava tuli itsestään</h2>
+<p class="note">Neljän sekunnin kohdalla tapahtuu täsmälleen sama kuin Seuraavaa painettaessa: uusi lasku tai sana tulee, se luetaan ääneen, ja
+Seuraava-painike katoaa, kunnes taas on vastattu. Pisteet ja palkki eivät muutu tässä; ne muuttuivat jo vastattaessa.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">8 <span class="op">+</span> 5 <span class="eqs">=</span> <span class="box empty">?</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak">🔥 4 peräkkäin oikein!</div>
+            <div class="ans"><div class="opts"><span class="opt">13</span><span class="opt">11</span><span class="opt">14</span><span class="opt">12</span></div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Lasku 7 tuli itsestään</b> ja luetaan: "kahdeksan plus viisi". Seuraava on piilossa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic hid">?</span><span class="qtext ins">Kuuntele sana ja rakenna se kirjaimista!</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl cur"></span><span class="sl"></span><span class="sl"></span><span class="sep">-</span><span class="sl"></span><span class="sl"></span><span class="sep">-</span><span class="sl"></span></div>
+            <div class="fr"><div class="fbt"></div></div>
+            <div class="tiles"><span class="lt">M</span><span class="lt">I</span><span class="lt">O</span><span class="lt">K</span><span class="lt">A</span><span class="lt">M</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Sana 5 tuli itsestään</b> ja luetaan tavuittain: "kammio … kam – mi – o". Seuraava on piilossa, Aloita alusta ja Ohita palasivat.</figcaption>
+  </figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · iPad</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">15 <span class="op">−</span> 6 <span class="eqs">=</span> <span class="box empty">?</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 4 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb"></div>
+            <div class="nextw"></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Lasku 6 tuli itsestään.</b> Numerot ovat taas painettavissa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · iPad</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🚗</span><span class="qtext">Vroom vroom!</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 1 / 1</span><span class="bar"><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl cur"></span><span class="sl"></span><span class="sl"></span><span class="sl"></span></div>
+            <div class="fr"><div class="fbt"></div></div>
+            <div class="tiles"><span class="lt">T</span><span class="lt">O</span><span class="lt">A</span><span class="lt">U</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Sana 2 tuli itsestään</b> ja luetaan kahdesti: "auto … auto".</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 3 -->
+<h2>3. Seuraava painettu kesken odotuksen</h2>
+<p class="note">Lapsen ei tarvitse odottaa: napautus täyttyvään painikkeeseen tuo seuraavan heti, ja odotus loppuu siihen. Seuraava tulee vain kerran,
+vaikka napautus osuisi juuri neljän sekunnin kohdalle. Tulos näyttää samalta kuin kohdassa 2. Tietokoneella Enter tekee saman.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone · 2 s</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak">🔥 4 peräkkäin oikein!</div>
+            <div class="ans"><div class="opts"><span class="opt ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt dim">9</span><span class="opt dim">14</span><span class="opt dim">7</span></div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Mestari! 🧙</div>
+            <div class="nextw"><span class="tapw"><span class="btn acc big auto pressed" style="--p:50%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></span></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Puolivälissä lapsi napauttaa Seuraava.</b> Painike painuu alas kuten aina; heti perään tulee lasku 7 (kohta 2).</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone · 2 s</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🦉</span><span class="qtext">Tuo kirjeet perille</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl ok">P</span><span class="sl ok">Ö</span><span class="sl ok">L</span><span class="sep">-</span><span class="sl ok">L</span><span class="sl ok">Ö</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Loistavaa! 🌈</div><span class="tapw"><span class="btn acc big auto pressed" style="--p:50%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></span></div>
+            <div class="tiles lock"><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt used">P</span><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Sama Sanoissa.</b> Seuraava on eri kohdassa kuin Ohita, joten nopea kaksoisnapautus ei osu Ohitaan.</figcaption>
+  </figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · iPad · 1,5 s</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box ok">19<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 4 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Hienoa! 🌟</div>
+            <div class="nextw"><span class="tapw"><span class="btn acc big auto pressed" style="--p:38%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></span></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad, napautus kesken.</b> Sen jälkeen lasku 6 (kohta 2).</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · iPad · 1,5 s</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🐱</span><span class="qtext">Sanoo miau!</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 1 / 1</span><span class="bar"><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl ok">K</span><span class="sl ok">I</span><span class="sl ok">S</span><span class="sl ok">S</span><span class="sl ok">A</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Mahtavaa! 🎉</div><span class="tapw"><span class="btn acc big auto pressed" style="--p:38%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></span></div>
+            <div class="tiles lock"><span class="lt used">S</span><span class="lt used">A</span><span class="lt used">K</span><span class="lt used">S</span><span class="lt used">I</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad, napautus kesken.</b> Sen jälkeen AUTO (kohta 2). Voittoääni käyttäytyy kuten Seuraavaa painettaessa nytkin.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 4 -->
+<h2>4. Väärä vastaus: ei odotusta</h2>
+<p class="note">Väärän vastauksen jälkeen ei ole täyttyvää painiketta. Matikassa Seuraava on heti täysi ja odottaa, joten lapsi ehtii katsoa oikeaa
+vastausta niin kauan kuin haluaa. Sanoissa Seuraavaa ei ole ollenkaan, koska lapsi korjaa sanan; kun hän saa sen oikein, painike täyttyy kuten kohdassa 1.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 4 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="opts"><span class="opt ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt bad">9<span class="mk x"><svg><use href="#i-cross"/></svg></span></span><span class="opt dim">14</span><span class="opt dim">7</span></div></div>
+            <div class="fb bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="t1">Ei ihan.</span><span class="t2">Oikea vastaus on 12.</span></div></div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Väärin: Seuraava on täysi heti</b> ja odottaa. Ei muutosta hyväksyttyyn Matikkaan.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic hid">?</span><span class="qtext ins">Kuuntele sana ja kirjoita se itse!</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl fill">K</span><span class="sl fill">I</span><span class="sl fill">S</span><span class="sl fill">T</span><span class="sl fill">A</span></div>
+            <div class="fr"><div class="fbt bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="r1">Ei ihan.</span><span class="r2">Napauta kirjainta, jonka haluat vaihtaa.</span></div></div></div>
+            <div class="abc"><span class="ak">A</span><span class="ak">B</span><span class="ak">C</span><span class="ak">D</span><span class="ak">E</span><span class="ak">F</span><span class="ak">G</span><span class="ak">H</span><span class="ak">I</span><span class="ak">J</span><span class="ak">K</span><span class="ak">L</span><span class="ak">M</span><span class="ak">N</span><span class="ak">O</span><span class="ak">P</span><span class="ak">Q</span><span class="ak">R</span><span class="ak">S</span><span class="ak">T</span><span class="ak">U</span><span class="ak">V</span><span class="ak">W</span><span class="ak">X</span><span class="ak">Y</span><span class="ak">Z</span><span class="ak">Å</span><span class="ak">Ä</span><span class="ak">Ö</span><span class="ak"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Vaikea, KISTA kun sana on KISSA: ei Seuraavaa, ei odotusta.</b> Lapsi korjaa (tai painaa Ohita). Kun KISSA on oikein, painike
+    täyttyy kuten kohdassa 1.</figcaption>
+  </figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · iPad</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box ok">19<span class="mk"><svg><use href="#i-check"/></svg></span></span> <span class="yours">16<span class="mk x"><svg><use href="#i-cross"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 3 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="t1">Ei ihan.</span><span class="t2">Oikea vastaus on 19.</span></div></div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Keskitaso, väärin.</b> Täysi Seuraava, odottaa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · iPad</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic hid">?</span><span class="qtext ins">Kuuntele sana ja rakenna se kirjaimista!</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 2 / 3</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl fill">L</span><span class="sl fill">U</span><span class="sl fill">T</span><span class="sl fill">U</span><span class="sl fill">A</span></div>
+            <div class="fr"><div class="fbt bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="r1">Ei ihan.</span><span class="r2">Napauta kirjainta, jonka haluat vaihtaa.</span></div></div></div>
+            <div class="tiles"><span class="lt used">U</span><span class="lt used">T</span><span class="lt used">A</span><span class="lt used">L</span><span class="lt used">U</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Keskitaso, LUTUA kun sana on LUUTA.</b> Ei Seuraavaa; kirjaimet jäävät korjattaviksi.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 5 -->
+<h2>5. Ohitettu sana: ei odotusta</h2>
+<p class="note">Kuten päätit (Q27): ohitettu sana näytetään ja luetaan ("Sana on kukka."), ja Seuraava on heti täysi ja odottaa napautusta. Lapsi
+ehtii katsoa sanaa niin kauan kuin haluaa. Matikassa ei ole ohitusta.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone</div>
+    <div class="nomath">Matikassa ei ole Ohita-painiketta.<br>Tämä tila koskee vain Sanoja.</div>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🐉</span><span class="qtext">Tulta syytävä otus</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 4 / 7</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl shown">L</span><span class="sl shown">O</span><span class="sep">-</span><span class="sl shown">H</span><span class="sl shown">I</span><span class="sep">-</span><span class="sl shown">K</span><span class="sl shown">Ä</span><span class="sl shown">Ä</span><span class="sl shown">R</span><span class="sep">-</span><span class="sl shown">M</span><span class="sl shown">E</span></div>
+            <div class="fr"><div class="fbt skip"><svg class="ic"><use href="#i-skip"/></svg><div><span class="r1">Ohitettu.</span><span class="r2">Sana on LOHIKÄÄRME.</span></div></div><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="abc lock"><span class="ak">A</span><span class="ak">B</span><span class="ak">C</span><span class="ak">D</span><span class="ak">E</span><span class="ak">F</span><span class="ak">G</span><span class="ak">H</span><span class="ak">I</span><span class="ak">J</span><span class="ak">K</span><span class="ak">L</span><span class="ak">M</span><span class="ak">N</span><span class="ak">O</span><span class="ak">P</span><span class="ak">Q</span><span class="ak">R</span><span class="ak">S</span><span class="ak">T</span><span class="ak">U</span><span class="ak">V</span><span class="ak">W</span><span class="ak">X</span><span class="ak">Y</span><span class="ak">Z</span><span class="ak">Å</span><span class="ak">Ä</span><span class="ak">Ö</span><span class="ak"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Vaikea, ohitettu LOHIKÄÄRME.</b> Seuraava on täysi heti: ei täyttymistä.</figcaption>
+  </figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Sanat · iPad</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🌸</span><span class="qtext">Kaunis kasvi</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 2 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl shown">K</span><span class="sl shown">U</span><span class="sl shown">K</span><span class="sl shown">K</span><span class="sl shown">A</span></div>
+            <div class="fr"><div class="fbt skip"><svg class="ic"><use href="#i-skip"/></svg><div><span class="r1">Ohitettu.</span><span class="r2">Sana on KUKKA.</span></div></div><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="tiles lock"><span class="lt">K</span><span class="lt">K</span><span class="lt">A</span><span class="lt">U</span><span class="lt">K</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad, ohitettu KUKKA.</b> "Sana on kukka." Täysi Seuraava odottaa.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 6 -->
+<h2>6. Kuuntele kesken odotuksen, ja paluu etusivulta</h2>
+<p class="note">Jos lapsi haluaa kuulla laskun tai sanan uudelleen kesken odotuksen (Kuuntele, tai Sanoissa kuvan napautus), <b>odotus loppuu</b>:
+painike muuttuu täydeksi tavalliseksi Seuraavaksi ja jää odottamaan napautusta <span class="d">A2</span>. Muuten seuraavan luku katkaisisi kesken sen,
+mitä lapsi juuri pyysi kuulla. Samoin, jos lapsi käy etusivulla tai valinnoissa, tai iPad menee lukkoon kesken odotuksen: palatessa sama lasku tai
+sana on edessä ja Seuraava odottaa. Mitään ei vaihdu lapsen selän takana.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone · Kuuntele</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="tapw"><span class="listen playing pressed"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele lasku</span></span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak">🔥 4 peräkkäin oikein!</div>
+            <div class="ans"><div class="opts"><span class="opt ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt dim">9</span><span class="opt dim">14</span><span class="opt dim">7</span></div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Mestari! 🧙</div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Kuuntele napautettu 2 s kohdalla.</b> "Kolme kertaa neljä" luetaan loppuun. Seuraava on nyt täysi ja odottaa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone · kuvan napautus</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="tapw"><span class="pic pressed">🦉</span></span><span class="qtext">Tuo kirjeet perille</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl ok">P</span><span class="sl ok">Ö</span><span class="sl ok">L</span><span class="sep">-</span><span class="sl ok">L</span><span class="sl ok">Ö</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Loistavaa! 🌈</div><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="tiles lock"><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt used">P</span><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Lapsi napauttaa paljastunutta pöllöä.</b> Sana luetaan tavuittain loppuun; Seuraava odottaa. Kuuntele tekee saman.</figcaption>
+  </figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · iPad · paluu etusivulta</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">12 <span class="op">+</span> 7 <span class="eqs">=</span> <span class="box ok">19<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 4 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak"></div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Hienoa! 🌟</div>
+            <div class="nextw"><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Lapsi kävi etusivulla kesken odotuksen</b> (Kesken 5/10) <b>ja palasi.</b> Sama lasku, sama kehu, täysi Seuraava. Ei ääntä palatessa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · iPad · paluu etusivulta</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🐱</span><span class="qtext">Sanoo miau!</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 1 / 1</span><span class="bar"><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl ok">K</span><span class="sl ok">I</span><span class="sl ok">S</span><span class="sl ok">S</span><span class="sl ok">A</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Mahtavaa! 🎉</div><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+            <div class="tiles lock"><span class="lt used">S</span><span class="lt used">A</span><span class="lt used">K</span><span class="lt used">S</span><span class="lt used">I</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Sama Sanoissa</b> (iPad oli välillä lukossa). KISSA on valmis, Seuraava odottaa.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 7 -->
+<h2>7. Kymmenes oikein: Katso tulos</h2>
+<p class="note">Kuten päätit: kymmenennen jälkeen painikkeessa lukee <b>Katso tulos</b>, se on heti täysi, eikä se täyty. Loppuruutu tulee vasta
+napautuksesta, jotta lapsi näkee viimeisen palautteen ja iPad voi lukea tuloksen ääneen.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">9 <span class="op">+</span> 6 <span class="eqs">=</span> <span class="box ok">15<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 8 / 10</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+            <div class="streak">🔥 3 peräkkäin oikein!</div>
+            <div class="ans"><div class="pad lock">
+              <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span><span class="key">5</span><span class="key">6</span>
+              <span class="key">7</span><span class="key">8</span><span class="key">9</span><span class="key"><svg><use href="#i-bksp"/></svg></span><span class="key">0</span><span class="key okk">OK<svg><use href="#i-check"/></svg></span>
+            </div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Upea! 💪</div>
+            <div class="nextw"><span class="btn acc big">Katso tulos<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Keskitaso · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Lasku 10 oikein.</b> Katso tulos on täysi heti; ei täyttymistä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🐟</span><span class="qtext">Ui vedessä</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 8 / 10</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+            <div class="slots"><span class="sl ok">K</span><span class="sl ok">A</span><span class="sl ok">L</span><span class="sl ok">A</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Bravo! 🎊</div><span class="btn acc big">Katso tulos<svg><use href="#i-next"/></svg></span></div>
+            <div class="abc lock"><span class="ak">A</span><span class="ak">B</span><span class="ak">C</span><span class="ak">D</span><span class="ak">E</span><span class="ak">F</span><span class="ak">G</span><span class="ak">H</span><span class="ak">I</span><span class="ak">J</span><span class="ak">K</span><span class="ak">L</span><span class="ak">M</span><span class="ak">N</span><span class="ak">O</span><span class="ak">P</span><span class="ak">Q</span><span class="ak">R</span><span class="ak">S</span><span class="ak">T</span><span class="ak">U</span><span class="ak">V</span><span class="ak">W</span><span class="ak">X</span><span class="ak">Y</span><span class="ak">Z</span><span class="ak">Å</span><span class="ak">Ä</span><span class="ak">Ö</span><span class="ak"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Vaikea, sana 10 KALA oikein.</b> Katso tulos täysi heti.</figcaption>
+  </figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · iPad</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">6 <span class="op">+</span> 3 <span class="eqs">=</span> <span class="box ok">9<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga">
+            <div class="info"><span class="score">Pisteet: 10 / 10</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+            <div class="streak">🔥 10 peräkkäin oikein!</div>
+            <div class="ans"><div class="opts"><span class="opt dim">8</span><span class="opt ok">9<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt dim">10</span><span class="opt dim">7</span></div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Oikein! ⭐</div>
+            <div class="nextw"><span class="btn acc big">Katso tulos<svg><use href="#i-next"/></svg></span></div>
+            <div class="foot"><span class="sel">Helppo · + −</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Kaikki kymmenen oikein ilman yhtään Seuraava-napautusta.</b> Laskut 2–10 tulivat itsestään; nyt peli odottaa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · iPad</div>
+    <div class="dev" style="--w:820; --h:1180; --s:.40"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🌳</span><span class="qtext">Kasvaa metsässä</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 8 / 10</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+            <div class="slots"><span class="sl ok">P</span><span class="sl ok">U</span><span class="sl ok">U</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Bravo! 🎊</div><span class="btn acc big">Katso tulos<svg><use href="#i-next"/></svg></span></div>
+            <div class="tiles lock"><span class="lt used">U</span><span class="lt used">P</span><span class="lt used">U</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Sana 10 PUU oikein.</b> Sama kuin hyväksytyssä Sanat-luonnoksessa.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 8 -->
+<h2>8. Kun laitteessa on "vähennä liikettä"</h2>
+<p class="note">Jos iPadissa tai tietokoneessa on asetus "vähennä liikettä" (esimerkiksi liikkeelle herkälle lapselle), väri ei liu'u vaan täyttää
+painikkeen <b>neljänä askeleena</b>: neljännes heti, puolet sekunnin päästä, kolme neljännestä kahden sekunnin päästä ja täysi kolmen sekunnin
+päästä. Ohuet viivat näyttävät askeleet. Seuraava tulee silti neljän sekunnin kohdalla <span class="d">A5</span>.</p>
+
+<div class="row">
+  <figure>
+    <div class="gamelabel">Matikka · tietokone · 1–2 s</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Matikka – Seikkailut</span><span class="addr">seikkailut/#/matikka</span></div>
+      <div class="viewport"><div class="app game m">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Matikka</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><div class="eq">3 <span class="op">×</span> 4 <span class="eqs">=</span> <span class="box ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele lasku</span></div>
+          <div class="ga two">
+            <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="streak">🔥 4 peräkkäin oikein!</div>
+            <div class="ans"><div class="opts"><span class="opt ok">12<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="opt dim">9</span><span class="opt dim">14</span><span class="opt dim">7</span></div></div>
+            <div class="fb good"><svg class="ic"><use href="#i-check"/></svg>Mestari! 🧙</div>
+            <div class="nextw"><span class="btn acc big auto" style="--p:50%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+            <div class="foot"><span class="sel">Helppo · + − ×</span><span class="btn ok">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Puolet täynnä, askel 2/4.</b> Kehu ei pomppaa (kuten jo nyt tällä asetuksella).</figcaption>
+  </figure>
+
+  <figure>
+    <div class="gamelabel">Sanat · tietokone · 1–2 s</div>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Sanat – Seikkailut</span><span class="addr">seikkailut/#/sanat</span></div>
+      <div class="viewport"><div class="app game s">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Sanat</h1>
+          <span class="stars"><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg class="on"><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="qs"><span class="pic">🦉</span><span class="qtext">Tuo kirjeet perille</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+          <div class="sga">
+            <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+            <div class="slots"><span class="sl ok">P</span><span class="sl ok">Ö</span><span class="sl ok">L</span><span class="sep">-</span><span class="sl ok">L</span><span class="sl ok">Ö</span></div>
+            <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg>Loistavaa! 🌈</div><span class="btn acc big auto" style="--p:50%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+            <div class="tiles lock"><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt used">P</span><span class="lt used">L</span><span class="lt used">Ö</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+            <div class="sfoot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Sama Sanoissa.</b> Pöllö ilmestyy ilman liukumista, kuten jo nyt tällä asetuksella.</figcaption>
+  </figure>
+</div>
+
+<h3>Askeleet oikeassa koossa</h3>
+<div class="spec app m" style="height:auto">
+  <div class="slabel">Matikka</div>
+  <figure><span class="btn acc big auto" style="--p:25%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>0–1 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:50%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>1–2 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:75%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>2–3 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:100%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>3–4 s</b>, sitten seuraava lasku</figcaption></figure>
+</div>
+<div class="spec app s" style="height:auto; margin-top:16px">
+  <div class="slabel">Sanat</div>
+  <figure><span class="btn acc big auto" style="--p:25%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>0–1 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:50%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>1–2 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:75%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>2–3 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:100%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>3–4 s</b>, sitten seuraava sana</figcaption></figure>
+</div>
+
+<!-- ===================================================== 9 -->
+<h2>9. Ruudunlukija</h2>
+<p class="note">Lapselle, joka käyttää ruudunlukijaa, oikean vastauksen ilmoituksen loppuun lisätään yksi lause, joka kertoo, että seuraava tulee
+itsestään <span class="d">A3</span>. Painikkeen nimi ei muutu odotuksen aikana. Jos hän siirtyy näppäimistöllä toiseen kohtaan, odotus loppuu, jotta
+ruutu ei vaihdu kesken lukemisen.</p>
+<table class="diff">
+  <tr><th>Tilanne</th><th>Ruudunlukija lukee</th></tr>
+  <tr><td>Matikka, oikein, laskut 1–9</td><td>Oikein! 7 plus 5 on 12. Pisteet 4 / 5. <b>Seuraava lasku tulee itsestään.</b></td></tr>
+  <tr><td>Sanat, oikein, sanat 1–9</td><td>Oikein! KISSA. Pisteet 4 / 5. <b>Seuraava sana tulee itsestään.</b></td></tr>
+  <tr><td>Kymmenes oikein</td><td>ennallaan, ei lisäystä</td></tr>
+  <tr><td>Uusi lasku / sana tuli</td><td>ennallaan: Lasku 6 / 10: 8 plus 5. / Sana 4 / 10. 5 kirjainta.</td></tr>
+</table>
+
+<!-- ===================================================== 10 -->
+<h2>10. Muutokset hyväksyttyihin luonnoksiin</h2>
+<table class="diff">
+  <tr><th>#</th><th>Muutos</th><th>Miksi</th></tr>
+  <tr><td><span class="d">A1</span></td><td>Oikean vastauksen jälkeen (1.–9.) Seuraava on vaalea ja täyttyy neljässä sekunnissa; täytenä seuraava tulee itsestään. Painikkeen voi painaa milloin tahansa.</td><td>Omistajan pyyntö (Q25, Q28). Palkki painikkeen sisällä, koska Sanoissa ei ole tilaa uudelle riville, ja koska lapsi näkee, mikä nappi tapahtuu itsestään.</td></tr>
+  <tr><td><span class="d">A2</span></td><td>Kuuntele, kuvan napautus, etusivulla käynti, valinnat ja iPadin lukitus lopettavat odotuksen; sen jälkeen Seuraava odottaa napautusta.</td><td>Seuraavan luku ei katkaise sitä, mitä lapsi pyysi kuulla, eikä mitään vaihdu, kun lapsi ei katso.</td></tr>
+  <tr><td><span class="d">A3</span></td><td>Ruudunlukija kertoo: "Seuraava lasku/sana tulee itsestään."</td><td>Ruudunlukijan käyttäjä ei näe täyttyvää painiketta.</td></tr>
+  <tr><td><span class="d">A4</span></td><td>Jos iPad ei suostu lukemaan itsestään tullutta laskua tai sanaa, "Ei ääntä" -ilmoitusta ei näytetä; Kuuntele toimii napautuksesta.</td><td>Ääni on kunnossa; ilmoitus olisi väärä. Ei näy kuvissa (tarkistetaan iPadilla).</td></tr>
+  <tr><td><span class="d">A5</span></td><td>"Vähennä liikettä": täyttö neljänä askeleena.</td><td>Liukuva liike pois, mutta odotus näkyy.</td></tr>
+</table>
+
+<!-- ===================================================== 11 -->
+<h2>11. Kysymykset sinulle</h2>
+<div class="q">
+  <p><b>Ei kysymyksiä.</b> Säännöt tulevat päätöksistäsi (vain oikean jälkeen, 4 sekuntia, Seuraava ohittaa odotuksen, kymmenennen jälkeen Katso tulos).
+  Katso kuvat ja kerro, näyttääkö täyttyvä painike lapselle oikealta.</p>
+</div>
+
+</div>
+</body>
+</html>
