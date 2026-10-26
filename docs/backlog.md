@@ -326,7 +326,7 @@ Kriteerit (lähde: `originals/sanaseikkailu.html`):
     ja "Pelaa uudelleen".
 
 ### SEI-4 — Espanja: kaikki nykyiset toiminnot uudessa sovelluksessa
-Tila: in-progress
+Tila: review
 Perustelu: omistaja vaati kaikki use caset; tämä on Espanjavalmentajan
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -637,7 +637,7 @@ Riskit:
   (sama riski kuin SEI-46:ssa).
 
 ### SEI-48 — Espanja: oikean vastauksen jälkeen siirtyy itsestään seuraavaan kysymykseen
-Tila: in-progress
+Tila: review
 Havainto: ei omaa havaintoa Espanjasta; omistaja hyväksyi 2026-10-26 (Q31:
 "ok") Espanjan ulkoasuluonnoksen `docs/design/sei-4.md`, jossa Espanja siirtyy
 oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat
@@ -890,7 +890,7 @@ Kriteerit:
    Kun kierros päättyy. Niin tulos on 10/10 ja eroaa kohdan 1 tuloksesta.
 
 ### SEI-9 — Espanja: sanalistan käännökset oikein
-Tila: in-progress
+Tila: review
 Perustelu: lähtötaso: käännösvirheitä (por favor / "ole hyvä", buenas
 tardes / "hyvää iltaa"); lapset oppisivat väärän sanan.
 Riippuvuus: SEI-4. Tarvitsee espanjaa osaavan tarkistajan (ks. K3).
@@ -920,7 +920,7 @@ Kriteerit:
    vastine on yllä oleva.
 
 ### SEI-10 — Espanja: palaute väärästä ja "Seuraava" ilman vastausta
-Tila: in-progress
+Tila: review
 Perustelu: lähtötaso: väärästä vastauksesta kerrotaan vain värillä (punainen
 / vihreä) ilman tekstiä tai ääntä, ja "Seuraava" siirtää eteenpäin
 vastaamatta. Huom: brief sanoo "ei palautetta väärästä"; koodin
