@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q38 (katso):** Sanat Macilla: Aloita, kirjoita sana oikein. Kuuluuko
-  voittoääni, ja tuleeko seuraava sana itsestään, kun nappi on täyttynyt:
-  kyllä / ei? (SEI-3, 7, 8, 47) — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q38 (katso):** Sanat Macilla, voittoääni ja automaattinen siirtyminen —
+  "toimii". (SEI-3, 7, 8, 47) (2026-10-26)
 - **Q37 (katso):** Matikka Macilla, oikea vastaus ilman napautusta —
   "kyllä": nappi täyttyi, seuraava lasku tuli itsestään ja luettiin.
   (SEI-46) (2026-10-26)
