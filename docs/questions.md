@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q38 (katso):** Sanat Macilla: Aloita, kirjoita sana oikein. Kuuluuko
+  voittoääni, ja tuleeko seuraava sana itsestään, kun nappi on täyttynyt:
+  kyllä / ei? (SEI-3, 7, 8, 47) — avattu 2026-10-26
 
 ## Vastatut
 

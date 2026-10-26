@@ -520,6 +520,20 @@ Riskit:
 
 ### SEI-47 — Sanat: oikean sanan jälkeen siirtyy itsestään seuraavaan sanaan
 Tila: verifying
+Havainto B1 (pääistunto, 2026-10-26 ~14.40): https://hakaotu.github.io/seikkailut/,
+commit 22b9835, Chrome 155.0.8059.85 (Playwright channel chrome, headed,
+1280×720), ääni Satu (Enhanced). Koskee myös SEI-3, SEI-7, SEI-8.
+1) Normaali, Helppo, tavutus pois, 10 oikein ilman napautuksia: 9 väliä
+   viimeisestä kirjainnapautuksesta "Sana n / 10" -ilmoitukseen 4009, 4004,
+   4005, 4004, 4004, 4004, 4005, 4004, 4004 ms; 10. jälkeen "Katso tulos" odotti.
+2) Voittoääni: pause 3000–3002 ms playn jälkeen (10/10), seuraavan sanan
+   lukeminen 1001–1002 ms pausen jälkeen (9/9).
+3) Kierros: 1 väärin+korjattu, 3 ohitettu, 6 heti oikein → loppuruutu "6 / 10",
+   rivit "6 sanaa heti oikein / 1 sana oikein uudella yrityksellä / 3 sanaa
+   ohitettu".
+4) Harry Potter, Vaikea, tavutus päällä: JÄSTI kirjoitettu oikein; Kuuntele
+   luki "jästi" (0.78), "jäs", "ti" (0.62) erillisinä.
+Odottaa B2:ta (omistajan katsominen ja kuunteleminen, Q38).
 Havainto: ei omaa havaintoa Sanoista; omistaja vahvisti 2026-10-26 (Q28),
 että Sanat toimii kuten Matikka (SEI-46). Kysymys oli sanatarkasti:
 "Siirtyykö myös Sanat oikean sanan jälkeen itsestään seuraavaan (kuten
