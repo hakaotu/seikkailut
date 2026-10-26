@@ -326,7 +326,13 @@ Kriteerit (lähde: `originals/sanaseikkailu.html`):
     ja "Pelaa uudelleen".
 
 ### SEI-4 — Espanja: kaikki nykyiset toiminnot uudessa sovelluksessa
-Tila: review
+Tila: verifying
+APPROVED 2026-10-26 (commitit 3329b59, bb817ed, b5aea2f, 0311e50; placeholderin
+poisto osui commitiin 331a67b). Kriteeri 7 mitataan hyväksyttyä ulkoasua vasten
+("x / 10 oikein", "Pelaa uudelleen"), ei kriteerin vanhoja tekstejä. Avoimet
+jäljet (eivät estä): alle 600/520/420 px leveydellä kortit ja fonttikoot
+poikkeavat ulkoasusta — designer hyväksyy tai hylkää; kapean näytön "vaihtoehdot
+yhdessä sarakkeessa" -testi puuttuu.
 Perustelu: omistaja vaati kaikki use caset; tämä on Espanjavalmentajan
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -637,7 +643,7 @@ Riskit:
   (sama riski kuin SEI-46:ssa).
 
 ### SEI-48 — Espanja: oikean vastauksen jälkeen siirtyy itsestään seuraavaan kysymykseen
-Tila: review
+Tila: verifying
 Havainto: ei omaa havaintoa Espanjasta; omistaja hyväksyi 2026-10-26 (Q31:
 "ok") Espanjan ulkoasuluonnoksen `docs/design/sei-4.md`, jossa Espanja siirtyy
 oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat
@@ -890,7 +896,7 @@ Kriteerit:
    Kun kierros päättyy. Niin tulos on 10/10 ja eroaa kohdan 1 tuloksesta.
 
 ### SEI-9 — Espanja: sanalistan käännökset oikein
-Tila: review
+Tila: verifying
 Perustelu: lähtötaso: käännösvirheitä (por favor / "ole hyvä", buenas
 tardes / "hyvää iltaa"); lapset oppisivat väärän sanan.
 Riippuvuus: SEI-4. Tarvitsee espanjaa osaavan tarkistajan (ks. K3).
@@ -920,7 +926,7 @@ Kriteerit:
    vastine on yllä oleva.
 
 ### SEI-10 — Espanja: palaute väärästä ja "Seuraava" ilman vastausta
-Tila: review
+Tila: verifying
 Perustelu: lähtötaso: väärästä vastauksesta kerrotaan vain värillä (punainen
 / vihreä) ilman tekstiä tai ääntä, ja "Seuraava" siirtää eteenpäin
 vastaamatta. Huom: brief sanoo "ei palautetta väärästä"; koodin
