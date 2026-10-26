@@ -2,13 +2,13 @@
 
 ## Avoimet
 
-- **Q41 (päätös):** Sanojen loppuruudun keskimmäinen rivi ruudulla ja
-  ääneen muotoon "Vain 1 sana meni ensin väärin." (monta: "3 sanaa meni
-  ensin väärin."). Käykö? Oletus: kyllä, ruudulla ja ääneen. (SEI-49)
-  — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q41 (päätös):** Sanojen loppuruudun keskimmäinen rivi "Vain 1 sana
+  meni ensin väärin." / "3 sanaa meni ensin väärin.", ruudulla ja ääneen —
+  "ok". (SEI-49) (2026-10-26)
 - **Q40 (päätös):** Rivin "1 sana oikein uudella yrityksellä" sanamuoto —
   "ehkä tuossa sanoisin vaan, että 'vain yksi väärin, hienoa' tai jotain
   sinne päin" → tarkennettu Q41:ksi. (SEI-49) (2026-10-26)

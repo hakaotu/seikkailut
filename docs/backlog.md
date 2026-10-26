@@ -750,13 +750,16 @@ Riskit:
   (kriteeri 14).
 
 ### SEI-49 — Sanat: loppuruudun Kuuntele puhuu sujuvaa suomea
-Tila: verifying
+Tila: in-progress
 APPROVED 2026-10-26 (kierros 2), julkaistu commit 375b0a1. Havainto
 (pääistunto, 2026-10-26 ~15.00): julkaistu sanat-logic.js antaa endTexts(9,1,0)
 "Hienoa! 9 sanaa heti oikein. 1 sana oikein uudella yrityksellä. Hyvää työtä!",
 (0,0,10) "Kierros valmis. 10 sanaa ohitettu. Harjoittelemalla oppii!", (10,0,0)
 ennallaan. Q39 (omistaja, Mac, 2026-10-26): "1 sana oikein uudella yrityksellä --> tää ei
 oo suomea vielä". Rivin sanamuoto kysytty (Q40); koskee myös ruudun riviä.
+Päätös Q41 (omistaja, 2026-10-26): b-rivi ruudulla ja ääneen: b = 1 →
+"Vain 1 sana meni ensin väärin", b ≥ 2 → "{b} sanaa meni ensin väärin".
+Muut rivit ja täydellisen tuloksen puhe ennallaan.
 Perustelu: havainto: loppuruudun puhe "Heti oikein 9. Uudella yrityksellä 1."
 ei ole suomea, vaikka ruudun rivit ("9 sanaa heti oikein") ovat; puhe pitää
 sanoa samoin kuin rivit on kirjoitettu.
