@@ -1,6 +1,6 @@
 # Backlog: Seikkailut
 
-Päivitetty 2026-10-26 (pm; SEI-48 lisätty, Q31–Q33 kirjattu). Syöte: `docs/brief.md` ja kolme kopiota
+Päivitetty 2026-10-26 (pm; SEI-49 lisätty; aiemmin SEI-48 ja Q31–Q33). Syöte: `docs/brief.md` ja kolme kopiota
 hakemistossa `originals/`. Tämä tiedosto on pm:n tuotos; tilan (todo,
 in-progress, review, verifying, done) siirtää vain pääsessio.
 
@@ -749,6 +749,87 @@ Riskit:
   (design kohta 6); ei omistajan kysymys, mutta kirjataan mittauksessa
   (kriteeri 14).
 
+### SEI-49 — Sanat: loppuruudun Kuuntele puhuu sujuvaa suomea
+Tila: in-progress
+Perustelu: havainto: loppuruudun puhe "Heti oikein 9. Uudella yrityksellä 1."
+ei ole suomea, vaikka ruudun rivit ("9 sanaa heti oikein") ovat; puhe pitää
+sanoa samoin kuin rivit on kirjoitettu.
+Riippuvuus: SEI-3, SEI-8 (loppuruutu; molemmat done).
+Havainto (omistaja, 2026-10-26 noin klo 14.45, Mac, julkaistu Sanat, Harry
+Potter, Keskitaso): loppuruudussa 9 / 10, rivit "9 sanaa heti oikein" ja
+"1 sana oikein uudella yrityksellä", teksti "Hyvää työtä!". Kuuntele-painike
+sanoi: "Hienoa! Heti oikein 9. Uudella yrityksellä 1. Hyvää työtä!" Omistaja
+sanoin: "tässä tulee jotain hassua, kun se sanoo 'hienoa, heti oikein 9,
+uudella yrityksellä yksi, hyvää työtä' Ei oo suomea tuo".
+Lähtötaso (luettu koodista, ei havainto): `app/src/games/sanat-logic.js`
+`endTexts()` rakentaa puheen muotoon "Heti oikein ${a}. Uudella yrityksellä
+${b}. Ohitettu ${c}."; koodin kommentin mukaan numerot jätettiin
+taivuttamatta, jotta ääni ei sanoisi "yksi sanan". Ruudun rivit samassa
+funktiossa ovat oikeaa suomea.
+Ehdotettu suunta (pääsession ehdotus, ei päätös; toteutustavan päättää
+arkkitehti): puhe lukee samat rivit kuin ruutu, esim. "Hienoa! 9 sanaa heti
+oikein. 1 sana oikein uudella yrityksellä. Hyvää työtä!" Luku + perusmuotoinen
+sana/sanaa on oikeaa suomea eikä vaadi taivutusta.
+Kriteerit (ruudun rivit, otsikko ja lopputeksti eivät muutu; luvut a = heti
+oikein, b = oikein uudella yrityksellä, c = ohitettu, a + b + c = 10):
+1. Annettu loppuruutu, jossa a = 9, b = 1, c = 0 (taso "hyvä"). Kun painan
+   Kuuntele. Niin puhuttu teksti on täsmälleen "Hienoa! 9 sanaa heti oikein.
+   1 sana oikein uudella yrityksellä. Hyvää työtä!" Tekstissä ei esiinny
+   "Heti oikein 9" eikä "Uudella yrityksellä 1".
+2. Annettu loppuruutu, jossa a = 7, b = 1, c = 2 (taso "hyvä", ohitettuja).
+   Kun painan Kuuntele. Niin puhuttu teksti on täsmälleen "Hienoa! 7 sanaa
+   heti oikein. 1 sana oikein uudella yrityksellä. 2 sanaa ohitettu. Hyvää
+   työtä!"
+3. Annettu loppuruutu, jossa a = 4, b = 3, c = 3 (taso "valmis"). Kun painan
+   Kuuntele. Niin puhuttu teksti on täsmälleen "Kierros valmis. 4 sanaa heti
+   oikein. 3 sanaa oikein uudella yrityksellä. 3 sanaa ohitettu.
+   Harjoittelemalla oppii!"
+4. Annettu loppuruutu, jossa a = 1, b = 0, c = 9 (yksikkö ja useita).
+   Kun painan Kuuntele. Niin puhuttu teksti on täsmälleen "Kierros valmis.
+   1 sana heti oikein. 9 sanaa ohitettu. Harjoittelemalla oppii!" (yksikkö
+   "1 sana", monikko "9 sanaa"; rivi b puuttuu, koska b = 0).
+5. Annettu loppuruutu, jossa a = 0, b = 0, c = 10. Kun painan Kuuntele. Niin
+   puhuttu teksti on "Kierros valmis. 10 sanaa ohitettu. Harjoittelemalla
+   oppii!" (nykyinen käytös, ettei "0 sanaa heti oikein" -riviä puhuta,
+   säilyy; ks. avoin kysymys 1).
+6. Annettu loppuruutu, jossa a = 10 (taso "täydellinen"). Kun painan
+   Kuuntele. Niin puhuttu teksti on täsmälleen sama kuin ennen muutosta:
+   "Täydellinen tulos! Kaikki 10 sanaa heti oikein. Olet tosi hyvä lukija!"
+7. Annettu mikä tahansa kriteerien 1–5 loppuruutu. Kun vertaan ruudulla
+   näkyviä rivejä ja puhuttua tekstiä. Niin jokainen ruudun rivi (a aina
+   paitsi kriteerin 5 tapauksessa puheessa, b ja c vain kun >= 1) esiintyy
+   puheessa samoin sanoin kuin ruudulla, samassa järjestyksessä.
+8. Annettu sama loppuruutu, jonka puhe käynnistyy toisesta paikasta (Kuuntele
+   tai, jos loppuruutu lukee itsensä ääneen avautuessaan, se). Kun kuuntelen
+   molemmat. Niin puhe on sama; korjaus ei koske vain yhtä polkua.
+9. Annettu Matikan loppuruutu pistemäärillä 10, 9, 4 ja 0. Kun painan
+   Kuuntele jokaisella. Niin puhe on muuttumaton: 10 "Täydellinen tulos! Sait
+   10 oikein. Olet matikkamestari!"; 9 "Hienoa! Sait 9 oikein. Hyvin
+   laskettu!"; 4 "Kierros valmis. Sait 4 oikein. Harjoittelemalla oppii!";
+   0 "Kierros valmis. Harjoittelemalla oppii!"
+10. Annettu Sanojen loppuruutu kriteerien 1–6 luvuilla. Kun katson ruutua.
+    Niin otsikko, rivit, tulos "a / 10", tähdet ja lopputeksti ovat samat
+    kuin ennen muutosta (korjaus koskee vain puhetta).
+11. Annettu Macilla Chromella julkaistu Sanat, Harry Potter, Keskitaso,
+    kierros jossa 9 oikein heti ja 1 uudella yrityksellä (omistajan havainto).
+    Kun painan Kuuntele. Niin kuuluva puhe on kriteerin 1 mukainen; havainto
+    kirjataan tehtävään (selain, aika, mitä kuului).
+Avoimet kysymykset (ei omistajalle; arkkitehdille):
+1. Puhutaanko rivi "0 sanaa heti oikein", kun a = 0? Oletus: ei, kuten nyt
+   (kriteeri 5); ruudulla rivi näkyy aina.
+2. Luetaanko luku + sana/sanaa äänellä luontevasti kaikilla käytössä olevilla
+   fi-äänillä (Satu, Eloquence-sarja; SEI-45)? Oletus: kyllä; todennetaan
+   kriteerillä 11, ei muilla äänillä.
+Riskit:
+- Kommentin mukaan juuri taivutus ("yksi sanan") oli syynä nykyiseen muotoon;
+  perusmuotoinen "1 sana" ei taivu, mutta äänen lukutapa on kuultava
+  (kriteeri 11).
+- Sama tekstirakenne (numero + sana) on ruudun riveissä; jos ruutu muuttuu,
+  puhe voi taas erkaantua. Kriteeri 7 vahtii tätä.
+Ei tässä tehtävässä (ehdotus, ei pyydetty): muiden Sanojen puheiden
+(sanaäänet, tavut, virheen puhe) kielenhuollon läpikäynti; tehdään vain, jos
+joku kuulee niissä virheen.
+
 ### SEI-7 — Sana: virheen jälkeen koko sanaa ei tyhjennetä, askelpalautin kaikilla tasoilla, ohitus
 Tila: done
 Perustelu: lähtötaso: väärä yritys tyhjentää koko sanan, "Aloita alusta"
@@ -1232,3 +1313,4 @@ Kriteerit:
 - 2026-10-23: SEI-46 avoimet kysymykset 1–4 ratkaistu oletusten mukaan (Q25: "ok"). Odottaa designeria Sanat-luonnoksen katselmoinnin jälkeen.
 - 2026-10-26: Q26: Sanojen ulkoasu `docs/design/sei-3.md` hyväksytty omistajalla ("ok ja jatka"); koskee SEI-3, SEI-7, SEI-8. Q27: ohitettu sana näytetään ja luetaan ensin, sitten Seuraava ("joo", tulkittu oletukseksi; SEI-7, design E5). Q28: omistaja vastasi "joo" kysymykseen, siirtyykö Sanat oikean sanan jälkeen itsestään kuten Matikka, samoin säännöin kuin Q25 → lisätty SEI-47 (tila todo). SEI-46:een kirjattu, että Matikan ja Sanojen automaattisen siirtymisen ulkoasu suunnitellaan yhdessä. Tilarivejä ei muutettu.
 - 2026-10-26: Q31: Espanjan ulkoasu `docs/design/sei-4.md` (+ `.html`) hyväksytty omistajalla ("ok"); kattaa SEI-4, SEI-9, SEI-10, ja sen mukaan Espanja siirtyy oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat (Q25, Q28; `docs/design/sei-46.md`, Q29) → lisätty SEI-48 (tila todo). Q32: suomennokset adiós = näkemiin, buenas tardes = hyvää iltapäivää, por favor = ole kiltti hyväksytty omistajalla tarkistajana (SEI-9; kriteeri 4 lisätty). Q33: vanhan Espanjan tähtiä ei siirretä, alkavat nollasta (SEI-4; kriteeri 11 lisätty). Tilarivejä ei muutettu.
+- 2026-10-26: lisätty SEI-49 (Sanat: loppuruudun Kuuntele puhuu "Heti oikein 9. Uudella yrityksellä 1." eikä suomea), omistajan havainto klo 14.45 Macilla julkaistusta Sanat-pelistä (Harry Potter, Keskitaso, 9 / 10). Tila todo; muiden tehtävien tiloja ei muutettu.
