@@ -2,13 +2,13 @@
 
 ## Avoimet
 
-- **Q29 (katso):** Matikka ja Sanat siirtyvät oikean vastauksen jälkeen
-  itsestään — ulkoasuluonnos
-  (https://claude.ai/artifact/NRuuLynznPbTNAaaPKd9J1): hyväksytkö, vai mitä
-  muutetaan? (SEI-46, SEI-47) — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q29 (katso):** Matikan ja Sanojen automaattisen siirtymisen
+  ulkoasuluonnos (SEI-46, SEI-47) — "jatka luonnoksen mukaan", hyväksytty.
+  (2026-10-26)
 - **Q26 (katso):** Sanojen ulkoasuluonnos (SEI-3, SEI-7, SEI-8) — "ok ja
   jatka", hyväksytty. (2026-10-26)
 - **Q27 (päätös):** Ohitettu sana — "joo", tulkittu oletukseksi: sana
