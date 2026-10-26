@@ -414,7 +414,7 @@ Kriteerit:
    loppuruutu eroaa visuaalisesti ja tekstiltään tuloksesta 2/10.
 
 ### SEI-46 — Matikka: oikean vastauksen jälkeen siirtyy itsestään seuraavaan laskuun
-Tila: verifying
+Tila: done
 Havainto A1 (pääistunto, 2026-10-26 ~11.15): https://hakaotu.github.io/seikkailut/,
 commit 03da941, Chrome 155.0.8059.85 (Playwright channel chrome, headed,
 1280×720), ääni Satu (Enhanced). Helppo, 10 oikein ilman napautuksia: 9 väliä
@@ -423,7 +423,8 @@ vastausnapautuksesta seuraavan laskun nimen vaihtumiseen 4022, 4004, 4005,
 Vastauksen puhe päättyi (406–838 ms) ennen seuraavan laskun lukemista kaikilla
 9 kerralla. Väärä vastaus: lasku ei vaihtunut 10 s:ssa, ei täyttöä. Edellisen
 laskun lukeminen keskeytyi ("interrupted"), kun vastattiin heti — odotettua.
-Odottaa A2:ta (omistajan katsominen, Q37).
+A2 (omistaja, Mac, 2026-10-26, Q37): "kyllä" — nappi täyttyi, seuraava lasku
+tuli itsestään ja luettiin ääneen. iPad-tarkistus (suunnitelma §10 C) odottaa laitetta.
 Havainto (2026-10-23): omistaja kokeili julkaistua Matikkaa Macilla
 (https://hakaotu.github.io/seikkailut/) ja sanoi sanatarkasti:
 "matikkahommeliin voisi tehdä sellaisen automatiikan, että oikean vastauksen

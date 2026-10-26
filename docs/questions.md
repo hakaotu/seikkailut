@@ -2,12 +2,13 @@
 
 ## Avoimet
 
-- **Q37 (katso):** Matikka Macilla: aloita, vastaa ensimmäiseen oikein
-  äläkä napauta mitään. Täyttyykö Seuraava-nappi, tuleeko seuraava lasku
-  itsestään ja luetaanko se ääneen: kyllä / ei? (SEI-46) — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q37 (katso):** Matikka Macilla, oikea vastaus ilman napautusta —
+  "kyllä": nappi täyttyi, seuraava lasku tuli itsestään ja luettiin.
+  (SEI-46) (2026-10-26)
 - **Q35 (päätös):** Matikan automaattisen siirtymisen julkaisu
   verkkosivulle — "joo". (SEI-46) (2026-10-26)
 - **Q36 (päätös):** Sanat aloitetaan, vaikka Matikka odottaa katsomista —
