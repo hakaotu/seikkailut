@@ -55,6 +55,7 @@
 
 import { placeholder } from './placeholder.js';
 import matikka from './matikka.js';
+import sanat from './sanat.js';
 
 export const GAMES = [
   {
@@ -69,15 +70,7 @@ export const GAMES = [
     name: 'Sanat',
     lang: 'fi-FI',
     listenLabel: 'Kuuntele sana',
-    module: placeholder({
-      question: 'Kuva ja vihje',
-      area: 'Sanojen oma alue',
-      hint: 'kirjainruudut ja laatat – suunnitellaan myöhemmin',
-      sample: [
-        { text: 'kissa', rate: 0.78 },
-        { text: 'kissa', rate: 0.52, pauseMs: 700 },
-      ],
-    }),
+    module: sanat,
   },
   {
     id: 'espanja',

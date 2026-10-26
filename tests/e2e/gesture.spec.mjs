@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { installFakeSpeech, seedRandom, press, speakCalls, settle } from './helpers.mjs';
+import { openSanat, startRound as startSanat } from './sanat-helpers.mjs';
 import { openMatikka, startRound, answerRight, answerWrong, next, view, button } from './matikka-helpers.mjs';
 
 test.beforeEach(async ({ page }) => {
@@ -10,16 +11,15 @@ test.beforeEach(async ({ page }) => {
 // wrapped to count click listeners on the stack). Speech started after an await, from a timer,
 // a hashchange or an awaited import() would record false.
 
-// Matikka has its own tests below: its choose screen reads nothing.
-for (const id of ['sanat', 'espanja']) {
+// Matikka and Sanat have their own tests below: their choose screens read nothing.
+for (const id of ['espanja']) {
   test(`tapping the ${id} card speaks inside the tap`, async ({ page }, testInfo) => {
     await page.goto('/');
     await press(page.locator(`button.game-card[data-game="${id}"]`), testInfo);
     await expect.poll(async () => (await speakCalls(page)).length).toBeGreaterThan(0);
     const calls = await speakCalls(page);
     expect(calls[0].inDispatch).toBe(true);
-    // Only Sanat's second reading is spoken later, from a timer after the first one ends.
-    if (id !== 'sanat') expect(calls.every((c) => c.inDispatch)).toBe(true);
+    expect(calls.every((c) => c.inDispatch)).toBe(true);
   });
 }
 
@@ -44,12 +44,22 @@ test('reload on #/sanat makes no speak call before a tap', async ({ page }) => {
   expect(await speakCalls(page)).toEqual([]);
 });
 
-test('Sanat speaks kissa inside the tap, then slower after a pause that follows the first ending', async ({ page }, testInfo) => {
-  await page.goto('/');
-  await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
+// ---- Sanat (SEI-3): the card tap reads nothing; every reading starts inside its tap ----
+
+test('Sanat: the card tap reads nothing, the choose screen is silent', async ({ page }, testInfo) => {
+  await seedRandom(page, 11);
+  await openSanat(page, testInfo);
+  await page.waitForTimeout(300);
+  expect(await speakCalls(page)).toEqual([]);
+});
+
+test('Sanat: Aloita reads the word inside the tap, then slowly from a timer after a pause that follows the first ending', async ({ page }, testInfo) => {
+  await seedRandom(page, 12);
+  await openSanat(page, testInfo);
+  await startSanat(page, testInfo, { level: 'Helppo' });
   await expect.poll(async () => (await speakCalls(page)).length).toBe(2);
   const calls = await speakCalls(page);
-  expect(calls.map((c) => c.text)).toEqual(['kissa', 'kissa']);
+  expect(calls[0].text).toBe(calls[1].text);
   expect(calls.map((c) => c.rate)).toEqual([0.78, 0.52]);
   expect(calls.every((c) => c.lang === 'fi-FI' && c.voice === 'fi-FI')).toBe(true);
   expect(calls[0].inDispatch).toBe(true);

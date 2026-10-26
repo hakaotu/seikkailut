@@ -90,7 +90,7 @@ test('(c) speech that never starts: Ei ääntä at 2 s, never disabled', async (
   await pausedAt(page, '/#/sanat');
   await expect(view(page, 'sanat').locator('.notice')).toBeHidden();
   await press(listen(page, 'sanat'), testInfo);
-  // part 1 never starts, so it never ends and part 2 is never spoken
+  // the choose screen's Kuuntele says one part, and it never starts
   expect((await speakCalls(page)).length).toBe(1);
   await expect(listen(page, 'sanat')).toBeEnabled();
 

@@ -62,7 +62,16 @@ button {
 .mk-level,
 .mk-toggle,
 .mk-option,
-.mk-key {
+.mk-key,
+.sn-primary,
+.sn-secondary,
+.sn-level,
+.sn-toggle,
+.sn-theme,
+.sn-tile,
+.sn-key,
+.sn-image,
+.sn-slot-fill {
   --shadow: 0 4px 0 var(--brand-dark);
   box-shadow: var(--shadow);
 }
@@ -77,7 +86,16 @@ button {
 .mk-level:active,
 .mk-toggle:active,
 .mk-option:active,
-.mk-key:active {
+.mk-key:active,
+.sn-primary:active,
+.sn-secondary:active,
+.sn-level:active,
+.sn-toggle:active,
+.sn-theme:active,
+.sn-tile:active,
+.sn-key:active,
+.sn-image:active,
+.sn-slot-fill:active {
   transform: translateY(4px);
   box-shadow: none;
 }
@@ -92,7 +110,16 @@ button {
 .mk-level:focus,
 .mk-toggle:focus,
 .mk-option:focus,
-.mk-key:focus { outline: none; }
+.mk-key:focus,
+.sn-primary:focus,
+.sn-secondary:focus,
+.sn-level:focus,
+.sn-toggle:focus,
+.sn-theme:focus,
+.sn-tile:focus,
+.sn-key:focus,
+.sn-image:focus,
+.sn-slot-fill:focus { outline: none; }
 
 .game-card:focus-visible,
 .back-btn:focus-visible,
@@ -104,7 +131,16 @@ button {
 .mk-level:focus-visible,
 .mk-toggle:focus-visible,
 .mk-option:focus-visible,
-.mk-key:focus-visible {
+.mk-key:focus-visible,
+.sn-primary:focus-visible,
+.sn-secondary:focus-visible,
+.sn-level:focus-visible,
+.sn-toggle:focus-visible,
+.sn-theme:focus-visible,
+.sn-tile:focus-visible,
+.sn-key:focus-visible,
+.sn-image:focus-visible,
+.sn-slot-fill:focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 2px;
   box-shadow: var(--shadow), 0 0 0 9px var(--focus-yellow);
@@ -896,6 +932,181 @@ html[data-booted] .boot-error { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .game-view[data-game='matikka'] .mk-problem.is-appearing, .game-view[data-game='matikka'] .mk-option.is-popping, .game-view[data-game='matikka'] .mk-box.is-popping, .game-view[data-game='matikka'] .mk-option.is-shaking { animation: none; }
+}
+
+/* ---------- Sanat (docs/design/sei-3.md) ---------- */
+
+.game-view[data-game='sanat'] .game-area { position: relative; }
+.game-view[data-game='sanat'] .sn-screen { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* The five stars in the top bar (design 3.0) */
+.game-view[data-game='sanat'] .status-slot { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.game-view[data-game='sanat'] .status-slot svg { width: 28px; height: 28px; flex: none; fill: none; stroke: #fff; stroke-width: 2.2; }
+.game-view[data-game='sanat'] .status-slot svg.is-on { fill: var(--focus-yellow); stroke: var(--focus-yellow); }
+
+/* Question row */
+.game-view[data-game='sanat'] .sn-heading { margin: 0; font-size: 32px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='sanat'] .sn-heading:focus { outline: none; }
+.game-view[data-game='sanat'] .sn-q-end { font-size: 40px; }
+
+/* Buttons */
+.game-view[data-game='sanat'] .sn-primary,
+.game-view[data-game='sanat'] .sn-secondary {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 120px;
+  height: 56px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-size: 22px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.game-view[data-game='sanat'] .sn-primary { border: 0; background: var(--brand); color: #fff; }
+.game-view[data-game='sanat'] .sn-secondary { --shadow: 0 4px 0 var(--ink); border: 3px solid var(--ink); background: #fff; color: var(--ink); }
+.game-view[data-game='sanat'] .sn-primary svg,
+.game-view[data-game='sanat'] .sn-secondary svg { width: 28px; height: 28px; flex: none; }
+.game-view[data-game='sanat'] .sn-big { height: 64px; min-width: 240px; padding: 0 32px; font-size: 26px; }
+.game-view[data-game='sanat'] .sn-actions { display: flex; justify-content: center; gap: 16px; }
+
+/* Choose screen (design 3.1) */
+.game-view[data-game='sanat'] .sn-choose { gap: 8px; }
+.game-view[data-game='sanat'] .sn-group { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.game-view[data-game='sanat'] .sn-group-label { font-size: 22px; font-weight: bold; }
+.game-view[data-game='sanat'] .sn-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 6px; }
+.game-view[data-game='sanat'] .sn-themes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.game-view[data-game='sanat'] .sn-theme,
+.game-view[data-game='sanat'] .sn-toggle,
+.game-view[data-game='sanat'] .sn-level {
+  --shadow: 0 4px 0 #c9cbd6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 8px;
+  border: 3px solid #c9cbd6;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+}
+.game-view[data-game='sanat'] .sn-theme { height: 100px; gap: 6px; }
+.game-view[data-game='sanat'] .sn-theme-pictures { font-size: 30px; line-height: 1; letter-spacing: 4px; }
+.game-view[data-game='sanat'] .sn-theme-name { font-size: 26px; font-weight: bold; line-height: 1.1; }
+.game-view[data-game='sanat'] .sn-toggle { height: 100px; gap: 2px; font-size: 22px; font-weight: bold; }
+.game-view[data-game='sanat'] .sn-kis { font-size: 30px; font-weight: bold; line-height: 1.1; }
+.game-view[data-game='sanat'] .sn-kis i { color: #8a8fa3; font-style: normal; }
+.game-view[data-game='sanat'] .sn-toggle-state { font-size: 20px; font-weight: normal; }
+.game-view[data-game='sanat'] .sn-theme.is-selected,
+.game-view[data-game='sanat'] .sn-toggle.is-on,
+.game-view[data-game='sanat'] .sn-level.is-selected { --shadow: 0 4px 0 var(--brand-dark); border-color: var(--brand); background: var(--brand-light); }
+.game-view[data-game='sanat'] .sn-theme.is-selected,
+.game-view[data-game='sanat'] .sn-level.is-selected { border-width: 4px; }
+.game-view[data-game='sanat'] .sn-cb {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid #8a8fa3;
+  border-radius: 7px;
+  background: #fff;
+  color: #fff;
+}
+.game-view[data-game='sanat'] .sn-cb svg { width: 20px; height: 20px; visibility: hidden; }
+.game-view[data-game='sanat'] .sn-toggle.is-on .sn-cb { border-color: var(--brand); background: var(--brand); }
+.game-view[data-game='sanat'] .sn-toggle.is-on .sn-cb svg { visibility: visible; }
+.game-view[data-game='sanat'] .sn-tick {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+}
+.game-view[data-game='sanat'] .sn-tick svg { width: 20px; height: 20px; }
+.game-view[data-game='sanat'] .sn-theme.is-selected .sn-tick,
+.game-view[data-game='sanat'] .sn-level.is-selected .sn-tick { display: flex; }
+
+.game-view[data-game='sanat'] .sn-levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 6px; }
+.game-view[data-game='sanat'] .sn-level { height: 128px; align-items: flex-start; gap: 2px; padding: 10px 16px; text-align: left; }
+.game-view[data-game='sanat'] .sn-level-head { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: bold; line-height: 1.15; }
+.game-view[data-game='sanat'] .sn-pips { display: inline-flex; gap: 4px; }
+.game-view[data-game='sanat'] .sn-pips i { width: 14px; height: 14px; border: 2px solid var(--brand); border-radius: 50%; }
+.game-view[data-game='sanat'] .sn-pips i.is-full { background: var(--brand); }
+.game-view[data-game='sanat'] .sn-level-example { display: flex; align-items: center; gap: 6px; }
+.game-view[data-game='sanat'] .sn-level-how { font-size: 20px; color: var(--grey); }
+.game-view[data-game='sanat'] .sn-mp { width: 32px; font-size: 28px; line-height: 1; text-align: center; }
+.game-view[data-game='sanat'] .sn-mq {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 2.5px dashed #8a8fa3;
+  border-radius: 50%;
+  color: var(--grey);
+  font-size: 20px;
+  font-weight: bold;
+}
+.game-view[data-game='sanat'] .sn-mt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--brand);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--brand);
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 2px 0 var(--brand-dark);
+}
+.game-view[data-game='sanat'] .sn-ab { margin-left: 4px; font-size: 24px; font-weight: bold; letter-spacing: 3px; }
+.game-view[data-game='sanat'] .sn-hint { display: flex; align-items: center; justify-content: center; height: 30px; font-size: 20px; text-align: center; }
+
+@media (max-width: 599.98px) {
+  .game-view[data-game='sanat'] .sn-row,
+  .game-view[data-game='sanat'] .sn-themes,
+  .game-view[data-game='sanat'] .sn-levels { grid-template-columns: 1fr; gap: 12px; }
+  .game-view[data-game='sanat'] .sn-theme { height: 72px; flex-direction: row; justify-content: flex-start; gap: 14px; padding-left: 16px; }
+  .game-view[data-game='sanat'] .sn-toggle { height: 64px; flex-direction: row; justify-content: flex-start; gap: 12px; padding-left: 56px; }
+  .game-view[data-game='sanat'] .sn-cb { top: 15px; }
+  .game-view[data-game='sanat'] .sn-level {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'head example' 'how example';
+    align-items: center;
+    gap: 0 12px;
+    height: 88px;
+    padding: 10px 54px 10px 14px;
+  }
+  .game-view[data-game='sanat'] .sn-level-head { grid-area: head; font-size: 24px; }
+  .game-view[data-game='sanat'] .sn-level-how { grid-area: how; font-size: 18px; }
+  .game-view[data-game='sanat'] .sn-level-example { grid-area: example; }
+  .game-view[data-game='sanat'] .sn-actions { flex-direction: column; }
+  .game-view[data-game='sanat'] .sn-actions .sn-big { width: 100%; min-width: 0; }
+}
+
+@media (max-width: 419.98px) {
+  .game-view[data-game='sanat'] .status-slot { gap: 3px; }
+  .game-view[data-game='sanat'] .status-slot svg { width: 20px; height: 20px; }
+  .game-view[data-game='sanat'] .sn-heading { font-size: 28px; }
+  .game-view[data-game='sanat'] .sn-q-end { font-size: 32px; }
 }
 
 /* ---------- Auto-advance (docs/design/sei-46.md) ----------
