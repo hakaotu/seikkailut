@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Espanja – ulkoasuluonnos SEI-4, SEI-9, SEI-10</title>
+<style>
+  /* ---------- Esityssivun oma tyyli (sama kuin sei-2.html ja sei-3.html) ---------- */
+  body { margin:0; background:#eceef3; color:#222; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .page { max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px; }
+  .page > h1 { font-size: 30px; margin: 0 0 6px; }
+  .lead { font-size: 17px; max-width: 860px; color:#333; }
+  .page h2 { font-size: 23px; margin: 56px 0 6px; padding-top: 18px; border-top: 2px solid #d5d8e0; }
+  .page h3 { font-size: 18px; margin: 28px 0 6px; }
+  .note { color:#444; max-width: 860px; margin: 4px 0 14px; }
+  .row { display:flex; flex-wrap:wrap; gap: 28px; align-items:flex-start; }
+  figure { margin:0; }
+  figcaption { font-size: 14.5px; color:#333; margin-top: 10px; max-width: 520px; }
+  figcaption b { color:#000; }
+  .toc { background:#fff; border-radius:12px; padding:14px 20px; max-width: 860px; }
+  .toc ol { margin: 6px 0; padding-left: 22px; }
+  .q { background:#fff7db; border:2px solid #e2b93b; border-radius:12px; padding:14px 20px; max-width: 860px; }
+  .d { display:inline-block; background:#ffe1ef; color:#8a0045; border:1.5px solid #d6337a; border-radius:999px; padding:0 8px; font-size:13px; font-weight:700; line-height:20px; margin: 0 2px; white-space:nowrap; }
+  .oq { display:inline-block; background:#fff1c2; color:#6b4a00; border:1.5px solid #e2b93b; border-radius:999px; padding:0 8px; font-size:13px; font-weight:700; line-height:20px; white-space:nowrap; }
+  .legend { background:#fff; border-left: 6px solid #d6337a; border-radius:8px; padding:10px 16px; max-width: 860px; }
+  table.diff { border-collapse: collapse; background:#fff; border-radius:12px; overflow:hidden; max-width: 1180px; font-size:15px; }
+  table.diff th, table.diff td { text-align:left; vertical-align:top; padding: 9px 12px; border-bottom:1px solid #e3e5ea; }
+  table.diff th { background:#f4f5f8; font-size:14px; }
+  table.diff td:first-child { white-space:nowrap; }
+  .keep { color:#17803d; font-weight:700; }
+  .chg { color:#b00020; font-weight:700; }
+
+  /* Laitekehys */
+  .dev { --ch: 50; width: calc(var(--w) * var(--s) * 1px); height: calc(var(--h) * var(--s) * 1px);
+         border: 8px solid #26272b; border-radius: 22px; overflow: hidden; background:#fff;
+         box-shadow: 0 10px 30px rgba(0,0,0,.18); position: relative; }
+  .dev.pc { border-radius: 10px; border-width: 6px; --ch: 80; }
+  .screen { width: calc(var(--w) * 1px); height: calc(var(--h) * 1px);
+            transform: scale(var(--s)); transform-origin: 0 0; position:absolute; top:0; left:0; }
+  .chrome { height: calc(var(--ch) * 1px); background:#f3f3f5; border-bottom:1px solid #d7d7dc;
+            display:flex; align-items:center; justify-content:center; font: 16px system-ui, sans-serif; color:#555; }
+  .chrome .addr { background:#e4e4e9; border-radius: 10px; padding: 6px 60px; }
+  .pc .chrome { flex-direction: column; justify-content: flex-end; padding-bottom: 8px; gap: 8px; }
+  .pc .chrome .tabs { align-self: flex-start; margin-left: 90px; background:#fff; border-radius: 8px 8px 0 0; padding: 4px 18px; font-size: 14px; }
+  .viewport { height: calc(100% - var(--ch) * 1px); position: relative; overflow: hidden; }
+  .tap { position:absolute; width:70px; height:70px; border-radius:50%; background: rgba(255,210,63,.55); border: 4px solid #e2a800; pointer-events:none; z-index:5; }
+  .story { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  .arrow { font-size: 28px; color:#888; }
+
+  /* ---------- SOVELLUS: kehys (SEI-1, ei muutu) ---------- */
+  .app { height:100%; box-sizing:border-box; color:#1f2340;
+         font-family: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', system-ui, sans-serif; }
+  .app * { box-sizing: border-box; }
+  .m { --a:#17803d; --ad:#0f5c2b; --al:#e3f7ea; }
+  .s { --a:#764ba2; --ad:#553578; --al:#efe8fb; }
+  .e { --a:#c62828; --ad:#8e0000; --al:#fdeceb; }
+  .home { background: linear-gradient(180deg, #e8f1ff 0%, #fffaf0 65%); display:flex; flex-direction:column;
+          align-items:center; justify-content:center; padding: 40px 48px; text-align:center; }
+  .home h1 { font-size:56px; margin:0; line-height:1.15; }
+  .home .sub { font-size:28px; margin: 6px 0 32px; }
+  .cards { display:grid; grid-template-columns: repeat(3, 1fr); gap:28px; width:100%; max-width:1100px; text-align:left; }
+  .card { position:relative; background:#fff; border-radius:28px; overflow:hidden; display:flex; flex-direction:column;
+          box-shadow: 0 6px 0 rgba(31,35,64,.14), 0 14px 30px rgba(31,35,64,.10); }
+  .card .art { background: var(--a); height:150px; display:flex; align-items:center; justify-content:center; gap:10px; color:#fff; }
+  .card .txt { padding: 20px 24px 26px; }
+  .card .t { font-size:36px; font-weight:bold; line-height:1.15; }
+  .card .d2 { font-size:21px; color:#5b5f73; margin-top:6px; line-height:1.3; }
+  .glyph { font-size:64px; font-weight:bold; letter-spacing:2px; }
+  .tile { width:62px; height:62px; border-radius:14px; background:#fff; color: var(--a); font-size:38px; font-weight:bold;
+          display:flex; align-items:center; justify-content:center; box-shadow: 0 4px 0 var(--ad); }
+  .hola { font-size:56px; font-weight:bold; border-bottom: 7px solid #ffd600; line-height:1.1; padding-bottom:2px; }
+  .badge { position:absolute; top:14px; right:14px; background:#fff; color:#1f2340; border-radius:999px;
+           padding:6px 16px; font-size:19px; font-weight:bold; box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+  .card.pressed { transform: translateY(4px); box-shadow: 0 2px 8px rgba(31,35,64,.10); }
+
+  .game { display:flex; flex-direction:column; background: var(--al); position:relative; }
+  .gh { height:76px; flex:none; background: var(--a); color:#fff; display:flex; align-items:center; gap:18px; padding: 0 20px; }
+  .gh h1 { font-size:30px; margin:0; font-weight:bold; white-space:nowrap; }
+  .back { height:56px; display:inline-flex; align-items:center; gap:6px; padding: 0 22px 0 12px; border-radius:999px;
+          background:#fff; color: var(--a); font-size:22px; font-weight:bold; box-shadow: 0 4px 0 var(--ad); flex:none; }
+  .back svg { width:28px; height:28px; }
+  .back.pressed { transform: translateY(4px); box-shadow:none; }
+  .back.icon { width:56px; padding:0; justify-content:center; }
+  .gbody { flex:1; padding:24px; display:flex; flex-direction:column; align-items:center; gap:16px; min-height:0; }
+  .gcard { background:#fff; border-radius:30px; width:100%; max-width:760px; flex:1; padding:24px; display:flex; flex-direction:column; gap:20px;
+           box-shadow: 0 10px 30px rgba(31,35,64,.10); min-height:0; position:relative; }
+  .qrow { display:flex; align-items:center; gap:16px; min-height:56px; }
+  .listen { height:56px; min-width:150px; display:inline-flex; align-items:center; justify-content:center; gap:10px; padding: 0 24px 0 18px;
+            border-radius:999px; border:3px solid var(--a); background:#fff; color: var(--a); font-size:22px; font-weight:bold;
+            box-shadow: 0 4px 0 var(--ad); flex:none; white-space:nowrap; }
+  .listen svg { width:28px; height:28px; flex:none; }
+  .listen.playing { background: var(--a); color:#fff; }
+  .waves { display:inline-flex; gap:3px; align-items:center; height:22px; }
+  .waves i { display:block; width:4px; background: currentColor; border-radius:2px; }
+  .waves i:nth-child(1){ height:10px; } .waves i:nth-child(2){ height:20px; } .waves i:nth-child(3){ height:14px; }
+  .btn { height:56px; min-width:120px; padding: 0 24px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+         font-size:22px; font-weight:bold; flex:none; white-space:nowrap; }
+  .btn.ok { background:#fff; color:#1f2340; border:3px solid #1f2340; box-shadow: 0 4px 0 #1f2340; }
+  .btn.acc { background: var(--a); color:#fff; box-shadow: 0 4px 0 var(--ad); }
+  .btn.big { height:64px; min-width:240px; font-size:26px; padding: 0 32px; }
+  .btn svg { width:28px; height:28px; flex:none; }
+  .btn.pressed { transform: translateY(4px); box-shadow:none; }
+  .qt { margin:0; flex:1; min-width:0; font-size:32px; font-weight:bold; }
+  .qt.big { font-size:40px; }
+  .info { display:flex; align-items:center; gap:18px; height:28px; }
+  .score { font-size:22px; font-weight:bold; white-space:nowrap; }
+  .bar { flex:1; display:flex; gap:4px; }
+  .bar i { flex:1; height:14px; border-radius:7px; background:#dfe3ea; }
+  .bar i.f { background: var(--a); }
+  .sel { font-size:20px; color:#5b5f73; }
+  .mk { position:absolute; top:-13px; right:-13px; width:30px; height:30px; border-radius:50%; background:#17803d; color:#fff;
+        display:flex; align-items:center; justify-content:center; }
+  .mk svg { width:20px; height:20px; }
+  .hide { visibility:hidden; }
+
+  /* valintaruutu (Matikan kortit, SEI-2) */
+  .choose { display:flex; flex-direction:column; gap:8px; }
+  .glabel { font-size:22px; font-weight:bold; }
+  .lv { position:relative; height:128px; border-radius:22px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6;
+        padding:10px 16px; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+  .lv .ln { font-size:28px; font-weight:bold; line-height:1.15; }
+  .lv .lm { font-size:20px; color:#5b5f73; }
+  .lv.sel { border:4px solid var(--a); background: var(--al); box-shadow:0 4px 0 var(--ad); }
+  .lv.pr { transform: translateY(4px); box-shadow:none; }
+  .tick { position:absolute; top:10px; right:10px; width:30px; height:30px; border-radius:50%; background: var(--a); color:#fff;
+          display:flex; align-items:center; justify-content:center; }
+  .tick svg { width:20px; height:20px; }
+  .hint { height:30px; font-size:20px; display:flex; align-items:center; justify-content:center; }
+  .acts { display:flex; justify-content:center; gap:16px; }
+
+  /* ---------- SOVELLUS: Espanja (uutta tässä) ---------- */
+  .coll { margin-left:auto; display:flex; align-items:center; gap:3px; flex:none; }
+  .coll svg { width:24px; height:24px; fill:#ffd23f; stroke:#ffd23f; stroke-width:2; }
+  .coll svg.off { fill:none; stroke:#fff; stroke-width:2.2; }
+  .coll .n { font-size:26px; font-weight:bold; margin-left:6px; white-space:nowrap; }
+  .coll svg.pop { transform: scale(1.35); }
+  .dirs { display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:4px; }
+  .ex { font-size:30px; font-weight:bold; line-height:1.15; }
+  .ex .es { color:#c62828; } .ex .ar { color:#8a8fa3; margin:0 6px; }
+  .wl { font-size:20px; color:#5b5f73; height:28px; display:flex; align-items:center; }
+
+  .gcard.sp { gap:16px; }
+  .eq { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .pw { font-size:48px; font-weight:bold; line-height:1.15; }
+  .ph { font-size:22px; color:#5b5f73; line-height:1.25; }
+  .eopts { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+  .eo { position:relative; height:88px; border-radius:22px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 5px 0 #c9cbd6;
+        font-size:30px; font-weight:bold; display:flex; align-items:center; justify-content:center; text-align:center; line-height:1.15; padding:0 14px; }
+  .eo.pr { transform: translateY(5px); box-shadow:none; }
+  .eo.ok { background:#17803d; border-color:#17803d; color:#fff; box-shadow:0 5px 0 #0f5c2b; }
+  .eo.ok .mk { background:#fff; color:#17803d; }
+  .eo.bad { border:4px solid #c62828; color:#c62828; text-decoration: line-through; text-decoration-thickness:4px; box-shadow:0 5px 0 #f3c4c4; }
+  .eo.bad .mk { background:#c62828; color:#fff; }
+  .eo.dim { opacity:.45; }
+  .fr { min-height:84px; display:flex; align-items:center; gap:16px; }
+  .fbt { flex:1; min-width:0; display:flex; align-items:center; gap:12px; }
+  .fbt .ic { width:32px; height:32px; flex:none; }
+  .fbt.good .ic { color:#17803d; } .fbt.bad .ic { color:#c62828; } .fbt.skip .ic { color:#5b5f73; }
+  .fbt .r1 { display:block; font-size:28px; font-weight:bold; line-height:1.2; }
+  .fbt.good .r1 { color:#17803d; font-size:30px; }
+  .fbt.bad .r1 { color:#c62828; }
+  .fbt .r2 { display:block; font-size:22px; line-height:1.3; color:#1f2340; }
+  /* odottava Seuraava: sama kuin sei-46.html (yksi toteutus kaikille peleille) */
+  .btn.acc.auto { position:relative; overflow:hidden; background: var(--al); color: var(--a); border:3px solid var(--a); box-shadow:0 4px 0 var(--ad); }
+  .btn.auto .lbl, .btn.auto .fill { display:flex; align-items:center; justify-content:center; gap:10px; }
+  .btn.auto .fill { position:absolute; inset:0; background: var(--a); color:#fff; clip-path: inset(0 calc(100% - var(--p)) 0 0); }
+  .btn.auto .tk { position:absolute; top:0; bottom:0; width:3px; margin-left:-1.5px; background: var(--a); opacity:.35; }
+  .btn.acc.auto.pressed { transform: translateY(4px); box-shadow:none; }
+  .btn.f { outline: 3px solid #1f2340; outline-offset: 2px; }
+  .btn.acc.f { box-shadow: 0 4px 0 var(--ad), 0 0 0 9px #ffd23f; }
+  .listen.pressed { transform: translateY(4px); box-shadow:none; }
+  .efoot { display:flex; align-items:center; gap:16px; margin-top:auto; }
+  .efoot .sp1 { margin-left:auto; }
+
+  .pt .eo { height:104px; }
+  .pt .gcard.sp { gap:20px; }
+
+  /* kapea */
+  .narrow .gh { padding:0 12px; gap:12px; }
+  .narrow .gh h1 { font-size:24px; }
+  .narrow .gbody { padding:12px; }
+  .narrow .gcard { padding:16px; }
+  .narrow .qrow { flex-wrap:wrap; }
+  .narrow .eq { flex-basis:100%; }
+  .narrow .pw { font-size:34px; }
+  .narrow .eopts { grid-template-columns: 1fr; gap:10px; }
+  .narrow .eo { height:64px; font-size:24px; }
+  .narrow .dirs { grid-template-columns: 1fr; gap:12px; }
+  .narrow .lv { height:88px; }
+  .narrow .acts { flex-direction:column; } .narrow .acts .btn { width:100%; }
+
+  /* loppuruutu */
+  .end { flex:1; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center; }
+  .res { width:100%; border-radius:24px; padding:18px 12px; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .res.gold { background:#fff4d6; } .res.pink { background:#fdeceb; }
+  .res.two { flex-direction:row; justify-content:center; gap:40px; padding:20px 24px; }
+  .col1 { display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .col2 { display:flex; flex-direction:column; align-items:flex-start; gap:8px; text-align:left; }
+  .medal { width:120px; height:120px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:none; }
+  .medal.gold { background:#ffd23f; } .medal.gold svg { width:84px; height:84px; fill:#fff; stroke:#1f2340; stroke-width:1.4; }
+  .medal.red { background:#c62828; color:#fff; } .medal.red svg { width:72px; height:72px; }
+  .medal.blue { background:#e8f1ff; color:#1f2340; border:3px solid #c9d8f0; } .medal.blue svg { width:64px; height:64px; }
+  .big { font-size:64px; font-weight:bold; line-height:1.05; }
+  .big small { font-size:30px; }
+  .brk { display:flex; flex-direction:column; gap:6px; font-size:24px; align-items:flex-start; text-align:left; }
+  .brk div { display:flex; align-items:center; gap:10px; }
+  .bi { width:32px; height:32px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#fff; flex:none; }
+  .bi svg { width:22px; height:22px; }
+  .bi.g { background:#17803d; } .bi.r { background:#c62828; } .bi.n { background:#5b5f73; }
+  .rew { display:flex; align-items:center; gap:10px; font-size:22px; font-weight:bold; max-width:260px; text-align:left; line-height:1.25; }
+  .rew svg { width:48px; height:48px; flex:none; fill:#ffd23f; stroke:#b7791f; stroke-width:1.4; }
+  .rew svg.off { fill:#fff; }
+  .rew.no { font-weight:normal; }
+  .cheer { display:flex; flex-direction:column; line-height:1.25; }
+  .cheer b { font-size:26px; } .cheer span { font-size:20px; color:#5b5f73; }
+  .conf { position:absolute; inset:0; pointer-events:none; z-index:4;
+    background-image: radial-gradient(circle,#ffd600 6px,transparent 7px), radial-gradient(circle,#c62828 5px,transparent 6px),
+      radial-gradient(circle,#ffec6b 6px,transparent 7px), radial-gradient(circle,#ff8a80 5px,transparent 6px), radial-gradient(circle,#45B7D1 6px,transparent 7px);
+    background-size: 173px 211px, 149px 127px, 233px 181px, 197px 163px, 127px 241px;
+    background-position: 13px 40px, 71px 9px, 140px 90px, 30px 150px, 99px 66px; }
+  .conf.few { background-size: 347px 421px, 299px 383px, 467px 359px, 0 0, 0 0; }
+
+  /* osat todellisessa koossa */
+  .spec { background:#fff; border-radius:16px; padding: 24px; display:flex; flex-wrap:wrap; gap: 28px 30px; align-items:flex-end; }
+  .spec figure { display:flex; flex-direction:column; align-items:center; }
+  .spec figcaption { text-align:center; max-width:200px; font-size:14px; }
+  .barstrip { display:flex; flex-direction:column; gap:14px; }
+  .barstrip .app { height:auto; }
+  .barstrip .gh { border-radius:12px; }
+</style>
+</head>
+<body>
+<!-- Kuvakkeet -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.85 5.95 6.55.8-4.8 4.5 1.25 6.5L12 17.2l-5.85 3.15 1.25-6.5-4.8-4.5 6.55-.8z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-spk" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-spk0" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V5M5.5 11.5L12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-skip" viewBox="0 0 24 24"><path d="M5 6l6 6-6 6M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="page">
+
+<h1>Espanja – miltä peli näyttää (SEI-4, SEI-9, SEI-10)</h1>
+<p class="lead">Tällä sivulla on Espanjavalmentaja uuden sovelluksen sisällä: suunnan valinta, kysymys kumpaankin suuntaan, oikea ja väärä vastaus,
+Ohita, loppuruutu kolmella eri tuloksella, kerätyt tähdet ja kesken jäänyt kierros. Kehys (punainen yläpalkki, Etusivu, Kuuntele) on sama, jonka
+hyväksyit SEI-1:ssä, ja rakenne on sama kuin hyväksytyissä Matikassa ja Sanoissa. Kuvat ovat tietokoneesta ja iPadista pysty- ja vaakatasossa.
+Laitteiden kuvat on pienennetty, mittasuhteet ovat oikeat, ja harmaa palkki ylhäällä on selaimen oma.</p>
+
+<div class="legend"><b>Vaaleanpunainen merkki, esim. <span class="d">E1</span>, tarkoittaa: tämä on erilainen kuin vanhassa Espanjavalmentajassa.</b>
+Jokainen ero on selitetty kohdassa 12. <b>Yksikään vanhan pelin toiminto ei ole poistunut</b>: kohdan 12 ensimmäisessä taulukossa näkyy, missä kukin
+vanha asia on nyt. Keltainen merkki <span class="oq">Kysymys 1</span> tarkoittaa: tämä riippuu vastauksestasi sivun lopussa.</div>
+
+<div class="toc" style="margin-top:14px">
+  <b>Sivulla:</b>
+  <ol>
+    <li>Suunnan valinta</li>
+    <li>Valinta kesken kierroksen</li>
+    <li>Kysymys: Suomi → Espanja</li>
+    <li>Kysymys: Espanja → Suomi</li>
+    <li>Oikein, ja seuraava tulee itsestään</li>
+    <li>Väärin (SEI-10)</li>
+    <li>Ohita (SEI-10)</li>
+    <li>Kymmenes kysymys: Katso tulos</li>
+    <li>Loppuruutu ja tähti</li>
+    <li>Kerätyt tähdet yläpalkissa</li>
+    <li>Kesken jäänyt kierros</li>
+    <li>Mikä on erilaista kuin vanhassa pelissä</li>
+    <li>Korjatut suomennokset (SEI-9)</li>
+    <li>Painikkeet oikeassa koossa</li>
+    <li>Kysymykset sinulle</li>
+  </ol>
+</div>
+
+<!-- ===================================================== 1 -->
+<h2>1. Suunnan valinta</h2>
+<p class="note">Kun Espanja avataan ensimmäisen kerran, lapsi valitsee suunnan ja painaa <b>Aloita</b>. Vanhassa pelissä kierros alkoi heti ja
+suunnan napautus aloitti uuden kierroksen; nyt mikään ei ala ennen Aloita-painiketta <span class="d">E1</span>. Valmiiksi on valittuna
+<b>Suomi → Espanja</b>, kuten vanhassa. Korttien nimet ovat vanhan pelin painikkeiden tekstit. Sanarivi kertoo, mistä sanoista kysytään
+<span class="d">E15</span>. Kuuntele lukee tässä valitun esimerkin espanjaksi: "hola".</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg class="off"><use href="#i-star"/></svg><span class="n">0</span></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä pelataan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="choose">
+            <div class="glabel">Suunta</div>
+            <div class="dirs">
+              <div class="lv sel"><span class="ln">Suomi → Espanja</span><span class="ex">hei<span class="ar">→</span><span class="es">hola</span></span><span class="lm">Valitse espanjaksi</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+              <div class="lv"><span class="ln">Espanja → Suomi</span><span class="ex"><span class="es">hola</span><span class="ar">→</span>hei</span><span class="lm">Valitse suomeksi</span></div>
+            </div>
+            <div class="wl">Sanat: tervehdykset ja värit (18 sanaa)</div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn acc big">Aloita</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, ensimmäinen avaus.</b> Yläpalkissa tyhjä tähti ja 0: tähtiä ei ole vielä kerätty <span class="d">E8</span>.
+    Valittu kortti on punareunainen <i>ja</i> siinä on valintamerkki.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä pelataan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="choose">
+            <div class="glabel">Suunta</div>
+            <div class="dirs">
+              <div class="lv"><span class="ln">Suomi → Espanja</span><span class="ex">hei<span class="ar">→</span><span class="es">hola</span></span><span class="lm">Valitse espanjaksi</span></div>
+              <div class="lv sel"><span class="ln">Espanja → Suomi</span><span class="ex"><span class="es">hola</span><span class="ar">→</span>hei</span><span class="lm">Valitse suomeksi</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+            </div>
+            <div class="wl">Sanat: tervehdykset ja värit (18 sanaa)</div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn acc big">Aloita</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, Espanja → Suomi valittu.</b> Lapsella on kolme kerättyä tähteä aiemmilta kerroilta; ne näkyvät kolmena tähtenä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä pelataan?</h2><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="choose">
+            <div class="glabel">Suunta</div>
+            <div class="dirs">
+              <div class="lv sel"><span class="ln">Suomi → Espanja</span><span class="ex">hei<span class="ar">→</span><span class="es">hola</span></span><span class="lm">Valitse espanjaksi</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+              <div class="lv"><span class="ln">Espanja → Suomi</span><span class="ex"><span class="es">hola</span><span class="ar">→</span>hei</span><span class="lm">Valitse suomeksi</span></div>
+            </div>
+            <div class="wl">Sanat: tervehdykset ja värit (18 sanaa)</div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn acc big">Aloita</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, Kuuntele soi.</b> Kuuntele lukee "hola". Peli puhuu vain espanjaa, joten suomenkielistä ohjetta ei lueta (sama kuin vanhassa).
+    Ruutu vie 390 px tietokoneen 548 px:stä.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 2 -->
+<h2>2. Valinta kesken kierroksen</h2>
+<p class="note">Kysymysruudun <b>Vaihda</b> tuo saman ruudun. Jos suunta on sama, <b>Takaisin kysymykseen</b> palaa täsmälleen samaan kohtaan.
+Jos lapsi vaihtaa suunnan, toinen suunta alkaa vasta uudesta kierroksesta, kuten vanhassakin, ja vihje kertoo sen. Kuten Sanojen teeman vaihto.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä pelataan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="choose">
+            <div class="glabel">Suunta</div>
+            <div class="dirs">
+              <div class="lv sel"><span class="ln">Suomi → Espanja</span><span class="ex">hei<span class="ar">→</span><span class="es">hola</span></span><span class="lm">Valitse espanjaksi</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+              <div class="lv"><span class="ln">Espanja → Suomi</span><span class="ex"><span class="es">hola</span><span class="ar">→</span>hei</span><span class="lm">Valitse suomeksi</span></div>
+            </div>
+            <div class="wl">Sanat: tervehdykset ja värit (18 sanaa)</div>
+            <div class="hint"></div>
+            <div class="acts"><span class="btn ok big">Takaisin kysymykseen</span><span class="btn acc big">Aloita uusi kierros</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, kierros kesken, suunta ennallaan.</b> Kaksi painiketta. Takaisin kysymykseen ei lue mitään ääneen.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard">
+          <div class="qrow"><h2 class="qt">Mitä pelataan?</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="choose">
+            <div class="glabel">Suunta</div>
+            <div class="dirs">
+              <div class="lv"><span class="ln">Suomi → Espanja</span><span class="ex">hei<span class="ar">→</span><span class="es">hola</span></span><span class="lm">Valitse espanjaksi</span></div>
+              <div class="lv sel"><span class="ln">Espanja → Suomi</span><span class="ex"><span class="es">hola</span><span class="ar">→</span>hei</span><span class="lm">Valitse suomeksi</span><span class="tick"><svg><use href="#i-check"/></svg></span></div>
+            </div>
+            <div class="wl">Sanat: tervehdykset ja värit (18 sanaa)</div>
+            <div class="hint">Toinen suunta alkaa uudella kierroksella.</div>
+            <div class="acts"><span class="btn acc big">Aloita uusi kierros</span></div>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, suunta vaihdettu kesken.</b> Takaisin-painike katoaa, vain Aloita uusi kierros. Kerätyt tähdet eivät muutu.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 3 -->
+<h2>3. Kysymys: Suomi → Espanja</h2>
+<p class="note">Kysymyssana on suomeksi isolla, sen alla aihe ja ohje <span class="d">E13</span>. Neljä vaihtoehtoa espanjaksi, kaikki valkoisia;
+väärät ovat samasta aiheesta kuin oikea. Pisteet ja palkki ovat kuten Matikassa ja Sanoissa <span class="d">E4</span>. <b>Seuraava-painiketta
+ei ole ennen vastausta</b>; vastaamatta pääsee eteenpäin vain Ohita-painikkeella <span class="d">E3</span>. Tässä suunnassa uutta kysymystä ei lueta
+ääneen (suomea ei voi lukea espanjan äänellä); Kuuntele lukee neljä vaihtoehtoa espanjaksi selvin tauoin <span class="d">E10</span>.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">punainen</span><span class="ph">Aihe: väri. Valitse espanjaksi.</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 2 / 2</span><span class="bar"><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo">azul</span><span class="eo">rojo</span><span class="eo">morado</span><span class="eo">naranja</span></div>
+          <div class="fr"><div class="fbt"></div></div>
+          <div class="efoot"><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, kysymys 3.</b> Kaksi edellistä oikein. Palauterivi on tyhjä ja varattu, joten mikään ei hyppää vastatessa.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">hyvää iltapäivää</span><span class="ph">Aihe: tervehdys. Valitse espanjaksi.</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 4 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo">buenos días</span><span class="eo">buenas noches</span><span class="eo">buenas tardes</span><span class="eo">¿qué tal?</span></div>
+          <div class="fr"><div class="fbt"></div></div>
+          <div class="efoot"><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, pisin kysymyssana, Kuuntele soi.</b> Kuuntele lukee "buenos días … buenas noches … buenas tardes … qué tal" puolen
+    sekunnin tauoin, noin 6,5 s. Korjattu suomennos "hyvää iltapäivää" <span class="d">E9</span> mahtuu yhdelle riville. Kaikki mahtuu 548 px:iin.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 4 -->
+<h2>4. Kysymys: Espanja → Suomi</h2>
+<p class="note">Kysymyssana on espanjaksi ja se luetaan ääneen heti, kun kysymys tulee näkyviin, samasta napautuksesta <span class="d">E10</span>.
+Kuuntele lukee sen uudelleen. Vaihtoehdot ovat suomeksi.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw" lang="es">por favor</span><span class="ph">Aihe: tervehdys. Valitse suomeksi.</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 0 / 0</span><span class="bar"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo">kiitos</span><span class="eo">ole kiltti</span><span class="eo">näkemiin</span><span class="eo">mitä kuuluu?</span></div>
+          <div class="fr"><div class="fbt"></div></div>
+          <div class="efoot"><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, kierroksen ensimmäinen kysymys.</b> "por favor" luetaan Aloita-napautuksesta. Vaihtoehdoissa korjatut
+    "ole kiltti" ja "näkemiin" <span class="d">E9</span>; "kiitos" kuuluu sanalle gracias.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 5 -->
+<h2>5. Oikein, ja seuraava tulee itsestään <span class="oq">Kysymys 1</span></h2>
+<p class="note">Oikea vaihtoehto muuttuu vihreäksi ✓, muut haalistuvat ja lukittuvat. Palauterivillä kehu ja sanapari <b>espanja = suomi</b>
+<span class="d">E5</span>. Oikea espanjan sana kuuluu ääneen. <b>Oletuksella</b> (kysymys 1) Seuraava-painike ilmestyy <b>vaaleana</b>, ja
+punainen täyttää sen vasemmalta oikealle tasaisesti neljässä sekunnissa. Kun se on täynnä, seuraava kysymys tulee ilman napautusta
+<span class="d">E19</span>. Tämä on <b>täsmälleen sama painike kuin Matikassa ja Sanoissa</b> (SEI-46), vain Espanjan punaisena. Painiketta voi
+painaa milloin tahansa, niin seuraava tulee heti. Jos vastaat kysymykseen 1 "ei", painike on aina täysi ja odottaa napautusta.</p>
+
+<div class="spec app e" style="height:auto; margin-bottom:22px">
+  <figure><span class="btn acc big auto" style="--p:0%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>0 s</b> – juuri vastattu oikein</figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:25%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>1 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:62%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>2,5 s</b></figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:100%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>4 s</b> – täynnä, seuraava kysymys tulee</figcaption></figure>
+  <figure><span class="btn acc big auto f" style="--p:40%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>Näppäimistöllä</b>: fokusrengas, Enter = heti</figcaption></figure>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">punainen</span><span class="ph">Aihe: väri. Valitse espanjaksi.</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 3 / 3</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo dim">azul</span><span class="eo ok">rojo<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="eo dim">morado</span><span class="eo dim">naranja</span></div>
+          <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg><div><span class="r1">Hienoa! 🌟</span><span class="r2"><b>rojo</b> = punainen</span></div></div>
+            <span class="btn acc big auto" style="--p:40%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+          <div class="efoot"><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, oikein, 1,6 s napautuksesta.</b> "rojo" kuuluu ääneen (noin 1 s). Seuraava on 40 % täynnä; 2,4 sekunnin päästä
+    tulee kysymys 4. Ohita on piilossa, koska kysymykseen on vastattu.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw" lang="es">buenas noches</span><span class="ph">Aihe: tervehdys. Valitse suomeksi.</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo dim">hyvää huomenta</span><span class="eo dim">hei</span><span class="eo ok">hyvää yötä<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="eo dim">kiitos</span></div>
+          <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg><div><span class="r1">Bravo! 🎊</span><span class="r2"><b lang="es">buenas noches</b> = hyvää yötä</span></div></div>
+            <span class="btn acc big auto" style="--p:50%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span></div>
+          <div class="efoot"><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, Espanja → Suomi, oikein, "vähennä liikettä" päällä, 1–2 s.</b> "buenas noches" luetaan uudelleen (kuten vanhassa).
+    Väri ei liu'u vaan täyttää painikkeen neljänä askeleena: neljännes heti, puolet sekunnin päästä, kolme neljännestä kahden ja täysi kolmen
+    sekunnin päästä. Ohuet viivat näyttävät askeleet. Seuraava kysymys tulee silti neljän sekunnin kohdalla, ja sen espanjan sana luetaan.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">keltainen</span><span class="ph">Aihe: väri. Valitse espanjaksi.</span></div><span class="listen playing pressed"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 4 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo dim">verde</span><span class="eo dim">blanco</span><span class="eo ok">amarillo<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="eo dim">gris</span></div>
+          <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg><div><span class="r1">Mahtavaa! 🎉</span><span class="r2"><b lang="es">amarillo</b> = keltainen</span></div></div>
+            <span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+          <div class="efoot"><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+        <div class="tap" style="left:836px; top:117px; transform:scale(1.4)"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, Kuuntele napautettu 2 s kohdalla.</b> "amarillo" luetaan loppuun, ja <b>odotus loppuu</b>: Seuraava on nyt
+    täysi ja odottaa napautusta. Muuten seuraava kysymys katkaisisi sen, mitä lapsi juuri pyysi kuulla. Sama käy, jos lapsi käy etusivulla tai
+    Vaihda-ruudussa tai iPad menee lukkoon: palatessa sama kysymys, täysi Seuraava, ei ääntä (kohta 11). Kuten Matikassa ja Sanoissa.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 6 -->
+<h2>6. Väärin (SEI-10)</h2>
+<p class="note">Vanhassa pelissä väärästä kertoi vain punainen väri. Nyt lapsen valinta on punareunainen, yliviivattu ja siinä on ✗, oikea on vihreä ✓,
+ja palauterivillä lukee <b>Ei ihan. Oikea vastaus on …</b> <span class="d">E2</span> <span class="d">E12</span>. Oikea espanjan sana kuuluu ääneen.
+Uutta yritystä ei ole, eikä teksti lupaa sitä (sama kuin Matikassa). Seuraava ei täyty: se on heti täysi ja odottaa, joten lapsi ehtii katsoa
+oikeaa vastausta niin kauan kuin haluaa (sama kuin Matikan väärä vastaus).</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">punainen</span><span class="ph">Aihe: väri. Valitse espanjaksi.</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 2 / 3</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo bad">azul<span class="mk"><svg><use href="#i-cross"/></svg></span></span><span class="eo ok">rojo<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="eo dim">morado</span><span class="eo dim">naranja</span></div>
+          <div class="fr"><div class="fbt bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="r1">Ei ihan.</span><span class="r2">Oikea vastaus on <b>rojo</b>.</span></div></div>
+            <span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+          <div class="efoot"><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, Suomi → Espanja, lapsi valitsi "azul".</b> "rojo" kuuluu ääneen. Pisteet 2 / 3: väärä ei tuo pistettä,
+    mutta lasketaan valmiiksi.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw" lang="es">morado</span><span class="ph">Aihe: väri. Valitse suomeksi.</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 6 / 8</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo ok">violetti<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="eo dim">ruskea</span><span class="eo bad">punainen<span class="mk"><svg><use href="#i-cross"/></svg></span></span><span class="eo dim">harmaa</span></div>
+          <div class="fr"><div class="fbt bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="r1">Ei ihan.</span><span class="r2">Oikea vastaus on violetti.</span></div></div>
+            <span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+          <div class="efoot"><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, Espanja → Suomi, väärin.</b> Oikea vastaus kerrotaan suomeksi, koska vaihtoehdot ovat suomeksi; "morado" kuuluu ääneen.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 7 -->
+<h2>7. Ohita (SEI-10)</h2>
+<p class="note">Vanhassa pelissä Ohita ja Seuraava veivät kumpikin eteenpäin vastaamatta, eikä ohitettua laskettu mihinkään. Nyt vastaamatta pääsee
+eteenpäin vain <b>Ohita</b>-painikkeella. Se näyttää oikean vastauksen, lukee espanjan sanan ja laskee kysymyksen <b>ohitetuksi</b>, ei oikeaksi
+<span class="d">E3</span>. Seuraava kysymys tulee Seuraava-napautuksesta, ei itsestään: Seuraava on heti täysi eikä täyty, kuten Sanojen ohitetun sanan
+jälkeen (päätit Q27).</p>
+
+<div class="story">
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.30"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">mitä kuuluu?</span><span class="ph">Aihe: tervehdys. Valitse espanjaksi.</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 4 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo">gracias</span><span class="eo">adiós</span><span class="eo">¿qué tal?</span><span class="eo">hola</span></div>
+          <div class="fr"><div class="fbt"></div></div>
+          <div class="efoot"><span class="btn ok pressed"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+        <div class="tap" style="left:83px; top:609px; transform:scale(1.4)"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>1.</b> Lapsi ei tiedä vastausta ja napauttaa Ohita.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.30"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">mitä kuuluu?</span><span class="ph">Aihe: tervehdys. Valitse espanjaksi.</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 4 / 7</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo dim">gracias</span><span class="eo dim">adiós</span><span class="eo ok">¿qué tal?<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="eo dim">hola</span></div>
+          <div class="fr"><div class="fbt skip"><svg class="ic"><use href="#i-skip"/></svg><div><span class="r1">Ohitettu.</span><span class="r2">Oikea vastaus on <b>¿qué tal?</b></span></div></div>
+            <span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span></div>
+          <div class="efoot"><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>2.</b> Oikea vastaus näkyy vihreänä, "qué tal" kuuluu ääneen. Pisteet 4 / 7: ohitettu ei tuo pistettä, palkki kasvaa.
+    Seuraava on täysi ja odottaa; se ei täyty.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 8 -->
+<h2>8. Kymmenes kysymys: Katso tulos</h2>
+<p class="note">Kymmenennen jälkeen painikkeessa lukee <b>Katso tulos</b>, se on heti täysi eikä täyty, vaikka vastaus olisi oikein <span class="d">E7</span>.
+Vanhassa tulosteksti tuli heti vastausten paikalle. Nyt lapsi ehtii nähdä viimeisen vastauksen, ja tulos (ja tähti) tulee napautuksesta.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">harmaa</span><span class="ph">Aihe: väri. Valitse espanjaksi.</span></div><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 8 / 10</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i></span></div>
+          <div class="eopts"><span class="eo dim">blanco</span><span class="eo dim">negro</span><span class="eo dim">verde</span><span class="eo ok">gris<span class="mk"><svg><use href="#i-check"/></svg></span></span></div>
+          <div class="fr"><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg><div><span class="r1">Tosi hyvä! 🏆</span><span class="r2"><b>gris</b> = harmaa</span></div></div>
+            <span class="btn acc big">Katso tulos<svg><use href="#i-next"/></svg></span></div>
+          <div class="efoot"><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, kymmenes oikein.</b> Edistymispalkki on täynnä, pisteet 8 / 10. Katso tulos on täysi ja odottaa napautusta.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 9 -->
+<h2>9. Loppuruutu ja tähti</h2>
+<p class="note">Kolme versiota tuloksen mukaan, kuten Matikassa ja Sanoissa, mutta raja on Espanjan oma: <b>8 oikein tai enemmän antaa tähden</b>
+(vanha sääntö). Erittely kertoo oikeat, väärät ja ohitetut erikseen (SEI-10). Tähti näkyy loppuruudussa ja lisätään yläpalkkiin, ja se tallentuu
+laitteeseen <span class="d">E6</span> <span class="d">E8</span>. Koska peli puhuu vain espanjaa, loppuruudussa on espanjankielinen lause
+suomennoksineen, ja Kuuntele lukee sen <span class="d">E11</span>. Vanha "Uusi kierros" on nyt <b>Pelaa uudelleen</b>, kuten muissa peleissä.</p>
+
+<div class="row">
+  <figure>
+    <div class="dev pc" style="--w:1280; --h:800; --s:.40"><div class="screen">
+      <div class="chrome"><span class="tabs">Espanja – Seikkailut</span><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg class="pop"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><h2 class="qt big">Täydellinen tulos!</h2><span class="listen playing"><svg><use href="#i-spk0"/></svg><span class="waves"><i></i><i></i><i></i></span>Kuuntele</span></div>
+          <div class="end">
+            <div class="res gold two">
+              <div class="col1"><span class="medal gold"><svg><use href="#i-star"/></svg></span>
+                <span class="rew"><svg><use href="#i-star"/></svg>Sait tähden!</span></div>
+              <div class="col2"><span class="big">10 / 10 <small>oikein</small></span>
+                <div class="brk"><div><span class="bi g"><svg><use href="#i-check"/></svg></span>10 oikein</div></div>
+                <span class="cheer"><b lang="es">¡Perfecto!</b><span>Täydellistä!</span></span></div>
+            </div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda suuntaa</span></div>
+            <span class="sel">Suomi → Espanja</span>
+          </div>
+        </div></main>
+        <div class="conf"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>Tietokone, 10 / 10.</b> Kultainen kuva, paljon konfettia. Neljäs tähti ilmestyy yläpalkkiin pompulla. Ääneen: "Perfecto".</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:820; --h:1180; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e pt">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg class="pop"><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><h2 class="qt big">Hienoa!</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="end">
+            <div class="res pink"><span class="medal red"><svg><use href="#i-check"/></svg></span><span class="big">8 / 10 <small>oikein</small></span>
+              <div class="brk"><div><span class="bi g"><svg><use href="#i-check"/></svg></span>8 oikein</div>
+                <div><span class="bi r"><svg><use href="#i-cross"/></svg></span>1 väärin</div>
+                <div><span class="bi n"><svg><use href="#i-skip"/></svg></span>1 ohitettu</div></div>
+              <span class="rew"><svg><use href="#i-star"/></svg>Sait tähden!</span>
+              <span class="cheer"><b lang="es">¡Muy bien!</b><span>Tosi hyvä!</span></span></div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda suuntaa</span></div>
+            <span class="sel">Suomi → Espanja</span>
+          </div>
+        </div></main>
+        <div class="conf few"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad pystyssä, 8 / 10: tähti tulee.</b> Kaikki kolme erittelyriviä. Vähän konfettia. Pystyssä tulosalue on yhtenä sarakkeena.
+    Ääneen: "Muy bien".</figcaption>
+  </figure>
+
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.42"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><h2 class="qt big">Kierros valmis!</h2><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="end">
+            <div class="res two">
+              <div class="col1"><span class="medal blue"><svg><use href="#i-up"/></svg></span>
+                <span class="rew no"><svg class="off"><use href="#i-star"/></svg>Tähti tulee, kun saat 8 oikein.</span></div>
+              <div class="col2"><span class="big">6 / 10 <small>oikein</small></span>
+                <div class="brk"><div><span class="bi g"><svg><use href="#i-check"/></svg></span>6 oikein</div>
+                  <div><span class="bi n"><svg><use href="#i-skip"/></svg></span>4 ohitettu</div></div>
+                <span class="cheer"><b lang="es">¡Sigue practicando!</b><span>Jatka harjoittelua!</span></span></div>
+            </div>
+            <div class="acts"><span class="btn acc big">Pelaa uudelleen</span><span class="btn ok big">Vaihda suuntaa</span></div>
+            <span class="sel">Espanja → Suomi</span>
+          </div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>iPad vaakatasossa, 6 oikein ja 4 ohitettu (SEI-10 kriteeri 3).</b> Tulos 6 / 10, ohitukset erikseen, tyhjä tähti ja selitys,
+    ei konfettia. Tähtiä on yhä kolme. Myös 7 / 10 näyttää tältä.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 10 -->
+<h2>10. Kerätyt tähdet yläpalkissa</h2>
+<p class="note">Tähdet säilyvät laitteessa, kun sivu suljetaan ja avataan myöhemmin (SEI-4 kriteeri 9). Yhdestä kymmeneen ne näkyvät tähtinä, kuten
+vanhassa. Yli kymmenen: yksi tähti ja luku, esim. <b>× 12</b>. Vanhassa oli kymmenen tähteä ja perässä "×12", mikä näytti kertolaskulta
+<span class="d">E8</span>. Kapeassa ikkunassa kymmenen tähteä ei mahdu, joten siellä aina tähti ja luku. Vanhan pelin tähdet eivät siirry
+<span class="d">E20</span> <span class="oq">Kysymys 3</span>.</p>
+
+<div class="barstrip">
+  <figure><div class="app game e" style="width:760px"><header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+    <span class="coll"><svg class="off"><use href="#i-star"/></svg><span class="n">0</span></span></header></div>
+    <figcaption><b>0 tähteä.</b> Tyhjä tähti ja 0: lapsi näkee, että tähtiä voi kerätä.</figcaption></figure>
+  <figure><div class="app game e" style="width:760px"><header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+    <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header></div>
+    <figcaption><b>3 tähteä.</b></figcaption></figure>
+  <figure><div class="app game e" style="width:760px"><header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+    <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header></div>
+    <figcaption><b>10 tähteä.</b> Mahtuu iPadin pystyleveyteen ja leveämpään.</figcaption></figure>
+  <figure><div class="app game e" style="width:760px"><header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+    <span class="coll"><svg><use href="#i-star"/></svg><span class="n">× 12</span></span></header></div>
+    <figcaption><b>12 tähteä.</b></figcaption></figure>
+  <figure><div class="app game e narrow" style="width:360px"><header class="gh"><span class="back icon"><svg><use href="#i-back"/></svg></span><h1>Espanja</h1>
+    <span class="coll"><svg><use href="#i-star"/></svg><span class="n">× 3</span></span></header></div>
+    <figcaption><b>Kapea ikkuna, 3 tähteä.</b> Aina tähti ja luku.</figcaption></figure>
+</div>
+
+<!-- ===================================================== 11 -->
+<h2>11. Kesken jäänyt kierros</h2>
+<p class="note">Kuten SEI-1:ssä sovittiin: etusivulla Espanja-kortissa on <b>Kesken 4/10</b> (vastatut ja ohitetut), ja kortin napautus jatkaa
+täsmälleen samasta kohdasta: sama kysymys, samat vaihtoehdot samassa järjestyksessä, samat pisteet <span class="d">E16</span> <span class="d">E17</span>.
+Mitään ei lueta ääneen uudelleen. Jos lapsi lähti Seuraavan täyttyessä, täyttö ei jatku: Seuraava on täysi ja odottaa. Jos sivu ladataan uudelleen, kierros
+katoaa, mutta tähdet säilyvät.</p>
+
+<div class="story">
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back pressed"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">sininen</span><span class="ph">Aihe: väri. Valitse espanjaksi.</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo">verde</span><span class="eo">azul</span><span class="eo">blanco</span><span class="eo">amarillo</span></div>
+          <div class="fr"><div class="fbt"></div></div>
+          <div class="efoot"><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+        <div class="tap" style="left:60px; top:-6px; transform:scale(1.8)"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>1.</b> Kysymys 5. Lapsi napauttaa Etusivu.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut</span></div>
+      <div class="viewport"><div class="app home">
+        <h1>Seikkailut</h1><p class="sub">Mitä pelataan?</p>
+        <div class="cards">
+          <div class="card m"><div class="art"><span class="glyph">1 + 2</span></div><div class="txt"><div class="t">Matikka</div><div class="d2">Laske ja harjoittele numeroita</div></div></div>
+          <div class="card s"><div class="art"><span class="tile">A</span><span class="tile">B</span><span class="tile">C</span></div><div class="txt"><div class="t">Sanat</div><div class="d2">Rakenna suomen sanoja kirjaimista</div></div></div>
+          <div class="card e pressed"><div class="art"><span class="hola">¡Hola!</span></div><div class="txt"><div class="t">Espanja</div><div class="d2">Opi espanjan sanoja</div></div><div class="badge">Kesken 4/10</div></div>
+        </div>
+        <div class="tap" style="left:960px; top:420px; transform:scale(1.8)"></div>
+      </div></div>
+    </div></div>
+    <figcaption><b>2.</b> Etusivulla Espanjassa "Kesken 4/10". Lapsi napauttaa Espanja.</figcaption>
+  </figure>
+  <span class="arrow">→</span>
+  <figure>
+    <div class="dev" style="--w:1180; --h:820; --s:.22; border-width:5px"><div class="screen">
+      <div class="chrome"><span class="addr">seikkailut/#/espanja</span></div>
+      <div class="viewport"><div class="app game e">
+        <header class="gh"><span class="back"><svg><use href="#i-back"/></svg><span>Etusivu</span></span><h1>Espanja</h1>
+          <span class="coll"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+        <main class="gbody"><div class="gcard sp">
+          <div class="qrow"><div class="eq"><span class="pw">sininen</span><span class="ph">Aihe: väri. Valitse espanjaksi.</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+          <div class="info"><span class="score">Pisteet: 3 / 4</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+          <div class="eopts"><span class="eo">verde</span><span class="eo">azul</span><span class="eo">blanco</span><span class="eo">amarillo</span></div>
+          <div class="fr"><div class="fbt"></div></div>
+          <div class="efoot"><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+        </div></main>
+      </div></div>
+    </div></div>
+    <figcaption><b>3.</b> Täsmälleen sama kohta: samat vaihtoehdot samassa järjestyksessä, pisteet 3 / 4. Ei luentaa.</figcaption>
+  </figure>
+</div>
+
+<!-- ===================================================== 12 -->
+<h2>12. Mikä on erilaista kuin vanhassa pelissä</h2>
+<p class="note">Ensin jokainen vanhan pelin asia ja missä se on nyt, jotta näet, ettei mitään ole kadonnut. Sen alla kaikki erot
+<span class="d">E1</span>–<span class="d">E20</span> perusteluineen.</p>
+
+<h3>Vanhan Espanjavalmentajan jokainen toiminto</h3>
+<table class="diff">
+  <tr><th>Vanhassa</th><th>Uudessa</th><th>Kuva</th></tr>
+  <tr><td>Suunta "Suomi → Espanja" / "Espanja → Suomi", vaihto aloittaa uuden kierroksen</td><td><span class="keep">Säilyy</span>, samat nimet; valintaruudulla, uusi kierros Aloita uusi kierros -painikkeesta <span class="d">E1</span></td><td>1, 2</td></tr>
+  <tr><td>18 sanaa: 8 tervehdystä, 10 väriä</td><td><span class="keep">Säilyy</span>; kolme suomennosta korjattu <span class="d">E9</span></td><td>13</td></tr>
+  <tr><td>Kierros 10 kysymystä, ei samaa sanaa kahdesti</td><td><span class="keep">Säilyy</span></td><td>kaikki</td></tr>
+  <tr><td>Neljä vaihtoehtoa, väärät samasta aiheesta</td><td><span class="keep">Säilyy</span>; samat vaihtoehdot palatessa <span class="d">E17</span></td><td>3, 4</td></tr>
+  <tr><td>Vihjerivi "Valitse espanjaksi (väri)."</td><td><span class="keep">Säilyy</span>: "Aihe: väri. Valitse espanjaksi." <span class="d">E13</span></td><td>3, 4</td></tr>
+  <tr><td>Oikea vihreä, väärä punainen, vaihtoehdot lukittuvat</td><td><span class="keep">Säilyy</span>; lisäksi ✓, ✗, yliviivaus ja teksti <span class="d">E2</span> <span class="d">E12</span></td><td>5, 6</td></tr>
+  <tr><td>🔊 Kuuntele: Suomi → Espanja lukee vaihtoehdot, Espanja → Suomi kysymyssanan; oikean jälkeen sana luetaan</td><td><span class="keep">Säilyy</span>; tauot, ei katkea, ei lukitu <span class="d">E10</span> <span class="d">E18</span></td><td>3–6</td></tr>
+  <tr><td>"Ohita ↻"</td><td><span class="keep">Säilyy</span>; näyttää oikean ja lasketaan ohitetuksi <span class="d">E3</span></td><td>7</td></tr>
+  <tr><td>"Seuraava ➜"</td><td><span class="keep">Säilyy</span> vastauksen jälkeen; vastaamatta Ohita <span class="d">E3</span></td><td>5–8</td></tr>
+  <tr><td>Pisteet "Pisteet: x/10" ja edistymispalkki</td><td><span class="keep">Säilyy</span>; pisteet oikein / valmiit, palkki 10 lohkona <span class="d">E4</span></td><td>3–8</td></tr>
+  <tr><td>"Kierros valmis! Sait x/10 pistettä." ja "Uusi kierros ▶"</td><td><span class="keep">Säilyy</span>: loppuruutu "x / 10 oikein", Pelaa uudelleen <span class="d">E6</span> <span class="d">E7</span></td><td>9</td></tr>
+  <tr><td>8/10 tai enemmän: konfetti ja tähti; 7/10 ei</td><td><span class="keep">Säilyy täsmälleen</span></td><td>9</td></tr>
+  <tr><td>Tähdet tallessa selaimessa; 10 tähteä, sitten "×n"</td><td><span class="keep">Säilyy</span>; yli 10: tähti ja "× n" <span class="d">E8</span></td><td>10</td></tr>
+  <tr><td>Merkki "Aihe: tervehdykset &amp; värit"</td><td>Valintaruudun rivi <span class="d">E15</span></td><td>1</td></tr>
+  <tr><td>Otsikko "¡Hola! Espanjaa leikkien 🇪🇸🎈", alalaidan vinkki</td><td>Yläpalkin "Espanja" (hyväksytty SEI-1:ssä) <span class="d">E14</span></td><td>kaikki</td></tr>
+  <tr><td>Ruudunlukija: uusi kysymys ilmoitetaan, vastaukset nimetty "Vastaus …"</td><td><span class="keep">Säilyy</span>, samat nimet</td><td>–</td></tr>
+</table>
+
+<h3>Kaikki erot</h3>
+<table class="diff">
+  <tr><th>#</th><th>Mikä on erilaista</th><th>Miksi</th></tr>
+  <tr><td><span class="d">E1</span></td><td>Suunta valitaan omalla ruudullaan; kierros alkaa Aloita-painikkeesta. Suunnan vaihto kesken: Vaihda → kortti → Aloita uusi kierros. Ensimmäiseen kierrokseen yksi napautus lisää.</td><td>Sama kuin Matikassa ja Sanoissa. Kierros säilyy etusivulla käynnin yli, joten se ei saa kadota yhdellä vahinkonapautuksella.</td></tr>
+  <tr><td><span class="d">E2</span></td><td>Väärä: "Ei ihan. Oikea vastaus on rojo." ja sana ääneen.</td><td>SEI-10: vanhassa kertoi vain väri.</td></tr>
+  <tr><td><span class="d">E3</span></td><td>Seuraava vasta vastauksen jälkeen. Vastaamatta vain Ohita: näyttää oikean, lasketaan ohitetuksi, sitten Seuraava.</td><td>SEI-10; sama kuin Sanoissa (Q27).</td></tr>
+  <tr><td><span class="d">E4</span></td><td>Pisteet = oikein / valmiit kysymykset; palkki 10 lohkona, täyttyy vastatessa.</td><td>Sama kuin muissa peleissä. Lopputulos on silti "x / 10".</td></tr>
+  <tr><td><span class="d">E5</span></td><td>Oikein: kehu ja sanapari "rojo = punainen".</td><td>Vanhassa ei tekstiä lainkaan; pari auttaa muistamaan.</td></tr>
+  <tr><td><span class="d">E6</span></td><td>Loppuruutu kolmena versiona; erittely oikein / väärin / ohitettu; Pelaa uudelleen ja uusi Vaihda suuntaa.</td><td>SEI-10; sama malli kuin Matikassa ja Sanoissa.</td></tr>
+  <tr><td><span class="d">E7</span></td><td>Kymmenennen jälkeen Katso tulos.</td><td>Viimeinen vastaus ehditään nähdä; iPad lukee ääneen vain napautuksesta.</td></tr>
+  <tr><td><span class="d">E8</span></td><td>Tähdet yläpalkissa; yli 10 → tähti ja "× n"; 0 → tyhjä tähti ja 0; saatu tähti näkyy loppuruudussa.</td><td>"10 tähteä ×12" näytti kertolaskulta; lapsi näkee, että tähtiä voi kerätä.</td></tr>
+  <tr><td><span class="d">E9</span></td><td>Suomennokset: "näkemiin", "hyvää iltapäivää", "ole kiltti".</td><td>SEI-9, sanakirjan mukaan (kohta 13).</td></tr>
+  <tr><td><span class="d">E10</span></td><td>Espanja → Suomi: kysymyssana luetaan heti. Espanjan sana kuuluu jokaisen vastauksen ja ohituksen jälkeen. Kuuntele lukee vaihtoehdot tauoin.</td><td>Lapsi ei osaa lukea espanjaa ääneen oikein; vanha katkaisi pidemmät sanat.</td></tr>
+  <tr><td><span class="d">E11</span></td><td>Loppuruudussa espanjan lause ja suomennos, myös ääneen.</td><td>Kuuntele on loppuruudussakin; peli ei voi puhua suomea.</td></tr>
+  <tr><td><span class="d">E12</span></td><td>Oikea ✓, väärä ✗ yliviivattuna.</td><td>Väri ei saa olla ainoa tieto.</td></tr>
+  <tr><td><span class="d">E13</span></td><td>"Aihe: väri. Valitse espanjaksi."</td><td>Sama tieto, helpompi lukea.</td></tr>
+  <tr><td><span class="d">E14</span></td><td>Yläpalkissa "Espanja"; vinkki "Klikkaa 🔊 Kuuntele…" poistettu.</td><td>Hyväksytty SEI-1:ssä; Kuuntele on kysymyksen vieressä.</td></tr>
+  <tr><td><span class="d">E15</span></td><td>"Sanat: tervehdykset ja värit (18 sanaa)" valintaruudulla.</td><td>Sama tieto, ei vie tilaa kysymykseltä.</td></tr>
+  <tr><td><span class="d">E16</span></td><td>Kesken jäänyt kierros jatkuu etusivulla käynnin jälkeen.</td><td>Hyväksytty SEI-1:ssä (Q10).</td></tr>
+  <tr><td><span class="d">E17</span></td><td>Vaihtoehdot pysyvät samoina palatessa.</td><td>Paluu täsmälleen samaan kohtaan.</td></tr>
+  <tr><td><span class="d">E18</span></td><td>Kuuntele ei lukitu.</td><td>Hyväksytty SEI-1:ssä.</td></tr>
+  <tr><td><span class="d">E19</span></td><td>Oikean jälkeen (1.–9.) Seuraava täyttyy neljässä sekunnissa, ja täytenä seuraava kysymys tulee itsestään. <span class="oq">Kysymys 1</span></td><td>Sama painike ja samat säännöt kuin Matikassa ja Sanoissa (Q25, Q28), jos vastaat kyllä.</td></tr>
+  <tr><td><span class="d">E20</span></td><td>Vanhan pelin tähdet eivät siirry. <span class="oq">Kysymys 3</span></td><td>Vanha peli tallensi ne paikkaan, jota uusi sivu ei voi lukea.</td></tr>
+</table>
+
+<!-- ===================================================== 13 -->
+<h2>13. Korjatut suomennokset (SEI-9)</h2>
+<p class="note">Kaikki 18 sanaparia tarkistettiin sanakirjasta (fi.wiktionary.org, 26.10.2026), kuten sovimme (Q7). Kolme muuttuu, 15 on ennallaan.
+<span class="oq">Kysymys 2</span></p>
+<table class="diff">
+  <tr><th>Espanja</th><th>Nyt</th><th>Uusi</th><th>Miksi</th></tr>
+  <tr><td>adiós</td><td>moi moi / hei hei</td><td class="chg">näkemiin</td><td>Sanakirja: "näkemiin". Vinoviivalla vaihtoehto oli kaksi vastausta yhdessä, ja "hei hei" sekoittuu sanaan "hei".</td></tr>
+  <tr><td>buenas tardes</td><td>hyvää iltaa</td><td class="chg">hyvää iltapäivää</td><td>Sanakirja: "hyvää iltapäivää, hyvää iltaa". Iltapäivä on ensimmäinen merkitys, ja se erottaa sanan "buenas noches" (hyvää yötä) -sanasta.</td></tr>
+  <tr><td>por favor</td><td>ole hyvä</td><td class="chg">ole kiltti</td><td>Por favor on pyyntö. Suomen "ole hyvä" tarkoittaa yksinään "tässä, olepa hyvä". "Kiitos" on jo sanan gracias suomennos.</td></tr>
+  <tr><td colspan="2">hola, buenos días, buenas noches, gracias, ¿qué tal?, rojo, amarillo, azul, verde, blanco, negro, naranja, morado, marrón, gris</td><td class="keep">ennallaan</td><td>Sanakirjan mukaan oikein.</td></tr>
+  <tr><td colspan="2">Loppuruudun lauseet (uusia): ¡Perfecto! · ¡Muy bien! · ¡Sigue practicando!</td><td>Täydellistä! · Tosi hyvä! · Jatka harjoittelua!</td><td>Tarkistettu sanakirjasta sana kerrallaan.</td></tr>
+</table>
+
+<!-- ===================================================== 14 -->
+<h2>14. Painikkeet oikeassa koossa</h2>
+<p class="note">Tässä osat ovat siinä koossa kuin iPadilla vaakatasossa. Kaikki napautettavat ovat vähintään 56 pikseliä korkeita.</p>
+<div class="spec app e" style="height:auto">
+  <figure><span class="eo" style="width:300px">buenas tardes</span><figcaption><b>Vaihtoehto</b></figcaption></figure>
+  <figure><span class="eo pr" style="width:300px">buenas tardes</span><figcaption><b>Painettu</b></figcaption></figure>
+  <figure><span class="eo ok" style="width:300px">buenas tardes<span class="mk"><svg><use href="#i-check"/></svg></span></span><figcaption><b>Oikea</b></figcaption></figure>
+  <figure><span class="eo bad" style="width:300px">buenas noches<span class="mk"><svg><use href="#i-cross"/></svg></span></span><figcaption><b>Lapsen väärä valinta</b></figcaption></figure>
+  <figure><span class="eo dim" style="width:300px">¿qué tal?</span><figcaption><b>Muut, lukittu</b></figcaption></figure>
+</div>
+<div class="spec app e" style="height:auto; margin-top:16px">
+  <figure><div class="fbt good"><svg class="ic"><use href="#i-check"/></svg><div><span class="r1">Hienoa! 🌟</span><span class="r2"><b>hola</b> = hei</span></div></div><figcaption><b>Oikein</b></figcaption></figure>
+  <figure><div class="fbt bad"><svg class="ic"><use href="#i-cross"/></svg><div><span class="r1">Ei ihan.</span><span class="r2">Oikea vastaus on <b>rojo</b>.</span></div></div><figcaption><b>Väärin</b></figcaption></figure>
+  <figure><div class="fbt skip"><svg class="ic"><use href="#i-skip"/></svg><div><span class="r1">Ohitettu.</span><span class="r2">Oikea vastaus on <b>rojo</b>.</span></div></div><figcaption><b>Ohitettu</b></figcaption></figure>
+</div>
+<div class="spec app e" style="height:auto; margin-top:16px">
+  <figure><span class="btn acc big">Seuraava<svg><use href="#i-next"/></svg></span><figcaption><b>Seuraava</b> (väärin, ohitettu, odotus loppunut)</figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:62%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>Seuraava täyttyy</b> (oikein, 2,5 s)</figcaption></figure>
+  <figure><span class="btn acc big auto" style="--p:75%"><i class="tk" style="left:25%"></i><i class="tk" style="left:50%"></i><i class="tk" style="left:75%"></i><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>Täyttyy, vähemmän liikettä</b> (2–3 s)</figcaption></figure>
+  <figure><span class="btn acc big auto pressed" style="--p:38%"><span class="lbl">Seuraava<svg><use href="#i-next"/></svg></span><span class="fill">Seuraava<svg><use href="#i-next"/></svg></span></span><figcaption><b>Painettu kesken odotuksen</b>: seuraava heti</figcaption></figure>
+  <figure><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><figcaption><b>Ohita</b></figcaption></figure>
+  <figure><span class="btn ok">Vaihda</span><figcaption><b>Vaihda</b></figcaption></figure>
+  <figure><span class="lv sel" style="width:300px"><span class="ln">Suomi → Espanja</span><span class="ex">hei<span class="ar">→</span><span class="es">hola</span></span><span class="lm">Valitse espanjaksi</span><span class="tick"><svg><use href="#i-check"/></svg></span></span><figcaption><b>Suuntakortti, valittu</b></figcaption></figure>
+  <figure><span class="rew"><svg><use href="#i-star"/></svg>Sait tähden!</span><figcaption><b>Tähti tuli</b></figcaption></figure>
+  <figure><span class="rew no"><svg class="off"><use href="#i-star"/></svg>Tähti tulee, kun saat 8 oikein.</span><figcaption><b>Tähteä ei tullut</b></figcaption></figure>
+</div>
+
+<!-- ===================================================== 15 -->
+<h2>15. Kysymykset sinulle</h2>
+<div class="q">
+  <p><b>1. Siirtyykö Espanja oikean vastauksen jälkeen itsestään seuraavaan kysymykseen, kuten Matikka ja Sanat?</b> Silloin oikean vastauksen jälkeen
+  Seuraava-nappi täyttyy neljässä sekunnissa, ja sitä painamalla pääsee heti (kohta 5). Väärän tai ohitetun jälkeen peli odottaa nappia, ja
+  kymmenennen jälkeen tulee "Katso tulos".<br>Jos et osaa sanoa: kyllä, samat säännöt kuin Matikassa ja Sanoissa.</p>
+  <p><b>2. Käyvätkö nämä kolme korjattua suomennosta?</b> "adiós" = näkemiin, "buenas tardes" = hyvää iltapäivää, "por favor" = ole kiltti
+  (kohta 13). Muut 15 ovat sanakirjan mukaan oikein.<br>Jos et osaa sanoa: nämä kolme korjausta.</p>
+  <p><b>3. Vanhassa espanjapelissä kerätyt tähdet eivät siirry uuteen sovellukseen</b>, koska vanha peli tallensi ne eri paikkaan. Tähdet alkavat
+  uudessa nollasta. Haittaako se lapsia?<br>Jos et osaa sanoa: alkavat nollasta, eikä vanhoja tähtiä yritetä siirtää.</p>
+</div>
+
+</div>
+</body>
+</html>
