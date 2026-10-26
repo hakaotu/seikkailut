@@ -31,10 +31,14 @@ async function levelRound(page, testInfo, level, check) {
     await check(`${level} ${word}`);
     if (i === 1) {
       await spellWrong(page, testInfo);
+      await page.waitForTimeout(600); // the shake (0.5 s) has ended: a moving box is measured a hair off
       await check(`${level} ${word} wrong`);
     }
     await skip(page, testInfo);
-    if (i === 1) await check(`${level} ${word} skipped`);
+    if (i === 1) {
+      await page.waitForTimeout(600); // the picture's appear animation (0.45 s) has ended
+      await check(`${level} ${word} skipped`);
+    }
     await next(page, testInfo);
   }
   return longest;

@@ -69,12 +69,14 @@ test('Sanat: Aloita reads the word inside the tap, then slowly from a timer afte
 });
 
 test('Sanat: every spoken event starts inside its tap; only the parts after a pause start from a timer', async ({ page }, testInfo) => {
+  test.setTimeout(90000);
   await recordAudio(page);
   await seedRandom(page, 13);
   await sn.openSanat(page, testInfo);
   const radio = (name) => sn.view(page).getByRole('radio', { name: new RegExp(`^${name}`) });
   // Runs `act` and checks that the first speak it causes started inside the tap.
   async function event(name, act) {
+    await page.waitForTimeout(1000); // the later part of an earlier reading has been spoken by now
     const before = (await speakCalls(page)).length;
     await act();
     await expect.poll(async () => (await speakCalls(page)).length, { message: `${name} speaks` }).toBeGreaterThan(before);
