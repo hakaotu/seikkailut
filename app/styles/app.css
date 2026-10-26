@@ -1109,6 +1109,236 @@ html[data-booted] .boot-error { display: none; }
   .game-view[data-game='sanat'] .sn-q-end { font-size: 32px; }
 }
 
+/* Question row: the picture (or the dashed ?) and the text beside it (design 3.2) */
+.game-view[data-game='sanat'] .sn-q-play { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.game-view[data-game='sanat'] .sn-image,
+.game-view[data-game='sanat'] .sn-mystery {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  line-height: 1;
+}
+.game-view[data-game='sanat'] .sn-image {
+  --shadow: 0 4px 0 #c9cbd6;
+  border: 3px solid #c9cbd6;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 60px;
+}
+.game-view[data-game='sanat'] .sn-image.is-appearing { animation: sn-appear 0.45s ease; }
+@keyframes sn-appear { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.game-view[data-game='sanat'] .sn-mystery { border: 3px dashed #8a8fa3; border-radius: 50%; color: var(--grey); font-size: 44px; font-weight: bold; }
+.game-view[data-game='sanat'] .sn-q-text { margin: 0; min-width: 0; font-size: 24px; font-weight: bold; line-height: 1.25; }
+.game-view[data-game='sanat'] .sn-q-text.is-instruction { font-weight: normal; }
+.game-view[data-game='sanat'] .sn-q-text:focus { outline: none; }
+
+/* Word screen (design 3.2 - 3.4): info, boxes, feedback, letters, bottom row */
+.game-view[data-game='sanat'] .sn-play { gap: 12px; }
+.game-view[data-game='sanat'] .sn-info { display: flex; align-items: center; gap: 18px; height: 28px; }
+.game-view[data-game='sanat'] .sn-score { font-size: 22px; font-weight: bold; white-space: nowrap; }
+.game-view[data-game='sanat'] .sn-bar { display: flex; flex: 1; gap: 4px; }
+.game-view[data-game='sanat'] .sn-bar i { flex: 1; height: 14px; border-radius: 7px; background: #dfe3ea; }
+.game-view[data-game='sanat'] .sn-bar i.is-full { background: var(--brand); }
+
+.game-view[data-game='sanat'] .sn-slots { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.game-view[data-game='sanat'] .sn-syl { display: inline-flex; align-items: center; gap: 6px; }
+.game-view[data-game='sanat'] .sn-dash { flex: none; width: 14px; color: #8a8fa3; font-size: 32px; font-weight: bold; text-align: center; }
+.game-view[data-game='sanat'] .sn-slot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 64px;
+  padding: 0;
+  border: 3px dashed #8a8fa3;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 36px;
+  font-weight: bold;
+  line-height: 1;
+}
+.game-view[data-game='sanat'] .sn-slot.is-next { border: 4px dashed var(--brand); background: #faf7ff; }
+.game-view[data-game='sanat'] .sn-slot-fill { border: 3px solid var(--brand); background: var(--brand-light); color: var(--brand); }
+.game-view[data-game='sanat'] .sn-slot.is-right { border: 3px solid #17803d; background: #e3f7ea; color: #17803d; }
+.game-view[data-game='sanat'] .sn-slot.is-shown { border: 3px solid #c9cbd6; background: #f1f2f5; color: var(--grey); }
+.game-view[data-game='sanat'] .sn-slots.is-popping { animation: sn-pop 0.5s ease; }
+.game-view[data-game='sanat'] .sn-slots.is-shaking { animation: sn-shake 0.5s ease; }
+@keyframes sn-pop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+@keyframes sn-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+
+.game-view[data-game='sanat'] .sn-feedback { display: flex; align-items: center; gap: 16px; min-height: 64px; }
+.game-view[data-game='sanat'] .sn-fb { display: flex; flex: 1; align-items: center; gap: 12px; min-width: 0; text-align: left; }
+.game-view[data-game='sanat'] .sn-fb-icon { display: flex; flex: none; width: 32px; height: 32px; }
+.game-view[data-game='sanat'] .sn-fb-icon svg { width: 32px; height: 32px; }
+.game-view[data-game='sanat'] .sn-fb[data-kind='right'] { color: #17803d; font-size: 30px; font-weight: bold; }
+.game-view[data-game='sanat'] .sn-fb[data-kind='right'] .sn-fb-praise { animation: sn-pop 0.5s ease; }
+.game-view[data-game='sanat'] .sn-fb[data-kind='wrong'] .sn-fb-icon { color: #c62828; }
+.game-view[data-game='sanat'] .sn-fb[data-kind='skipped'] .sn-fb-icon { color: var(--grey); }
+.game-view[data-game='sanat'] .sn-fb-title { display: block; font-size: 28px; font-weight: bold; line-height: 1.2; }
+.game-view[data-game='sanat'] .sn-fb[data-kind='wrong'] .sn-fb-title { color: #c62828; }
+.game-view[data-game='sanat'] .sn-fb-line { display: block; font-size: 22px; line-height: 1.3; }
+.game-view[data-game='sanat'] .sn-next.is-waiting { visibility: hidden; }
+.game-view[data-game='sanat'] .sn-next { height: 64px; min-width: 240px; padding: 0 32px; font-size: 26px; }
+
+.game-view[data-game='sanat'] .sn-letters.is-tiles { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.game-view[data-game='sanat'] .sn-letters.is-alphabet { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 8px; }
+.game-view[data-game='sanat'] .sn-tile,
+.game-view[data-game='sanat'] .sn-key {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-weight: bold;
+  line-height: 1;
+}
+.game-view[data-game='sanat'] .sn-tile {
+  width: 64px;
+  height: 64px;
+  border: 3px solid var(--brand);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--brand);
+  font-size: 36px;
+}
+.game-view[data-game='sanat'] .sn-key {
+  --shadow: 0 4px 0 #c9cbd6;
+  height: 56px;
+  border: 3px solid #c9cbd6;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 28px;
+}
+.game-view[data-game='sanat'] .sn-key svg { width: 30px; height: 30px; }
+.game-view[data-game='sanat'] .is-tiles .sn-key-delete { width: 64px; height: 64px; margin-left: 8px; border-radius: 14px; }
+.game-view[data-game='sanat'] .is-tiles .sn-key-delete svg { width: 34px; height: 34px; }
+.game-view[data-game='sanat'] .sn-tile:disabled,
+.game-view[data-game='sanat'] .sn-key:disabled { transform: none; cursor: default; }
+.game-view[data-game='sanat'] .sn-tile.is-used { border: 3px dashed #c9cbd6; background: transparent; color: transparent; box-shadow: none; }
+.game-view[data-game='sanat'] .sn-tile.is-locked,
+.game-view[data-game='sanat'] .sn-key.is-locked { opacity: 0.45; box-shadow: var(--shadow); }
+
+.game-view[data-game='sanat'] .sn-foot { display: flex; align-items: center; gap: 16px; margin-top: auto; }
+.game-view[data-game='sanat'] .sn-foot-left { display: flex; align-items: center; gap: 16px; }
+.game-view[data-game='sanat'] .sn-foot-left.is-hidden { visibility: hidden; }
+.game-view[data-game='sanat'] .sn-foot .sn-change { margin-left: auto; }
+
+/* End screen (design 3.7) */
+.game-view[data-game='sanat'] .sn-end { align-items: center; gap: 14px; text-align: center; }
+.game-view[data-game='sanat'] .sn-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 18px 12px;
+  border-radius: 24px;
+  background: #fff;
+}
+.game-view[data-game='sanat'] .sn-result[data-tier='perfect'] { background: #fff4d6; }
+.game-view[data-game='sanat'] .sn-result[data-tier='good'] { background: var(--brand-light); }
+.game-view[data-game='sanat'] .sn-medal { display: flex; flex: none; align-items: center; justify-content: center; width: 120px; height: 120px; border-radius: 50%; }
+.game-view[data-game='sanat'] .sn-medal svg { width: 64px; height: 64px; }
+.game-view[data-game='sanat'] .sn-result[data-tier='perfect'] .sn-medal { background: #ffd23f; }
+.game-view[data-game='sanat'] .sn-result[data-tier='perfect'] .sn-medal svg { width: 84px; height: 84px; fill: #fff; stroke: var(--ink); stroke-width: 1.4; }
+.game-view[data-game='sanat'] .sn-result[data-tier='good'] .sn-medal { background: var(--brand); color: #fff; }
+.game-view[data-game='sanat'] .sn-result[data-tier='good'] .sn-medal svg { width: 72px; height: 72px; }
+.game-view[data-game='sanat'] .sn-result[data-tier='done'] .sn-medal { border: 3px solid #c9d8f0; background: #e8f1ff; color: var(--ink); }
+.game-view[data-game='sanat'] .sn-result-score { font-size: 64px; font-weight: bold; line-height: 1.05; }
+.game-view[data-game='sanat'] .sn-rows { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; font-size: 24px; text-align: left; }
+.game-view[data-game='sanat'] .sn-rows > div { display: flex; align-items: center; gap: 10px; }
+.game-view[data-game='sanat'] .sn-bi { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; color: #fff; }
+.game-view[data-game='sanat'] .sn-bi svg { width: 22px; height: 22px; }
+.game-view[data-game='sanat'] .sn-row-a .sn-bi { background: #17803d; }
+.game-view[data-game='sanat'] .sn-row-b .sn-bi { background: var(--brand); }
+.game-view[data-game='sanat'] .sn-row-c .sn-bi { background: var(--grey); }
+.game-view[data-game='sanat'] .sn-end-stars { display: flex; gap: 6px; }
+.game-view[data-game='sanat'] .sn-end-stars svg { width: 40px; height: 40px; fill: #fff; stroke: #b7791f; stroke-width: 1.8; }
+.game-view[data-game='sanat'] .sn-end-stars svg.is-on { fill: var(--focus-yellow); }
+.game-view[data-game='sanat'] .sn-result-line { font-size: 26px; }
+.game-view[data-game='sanat'] .sn-selection-end { font-size: 20px; color: var(--grey); }
+
+/* Confetti (design 3.7): over the game area, never in the way of a tap */
+.game-view[data-game='sanat'] .sn-confetti { position: absolute; inset: 0; z-index: 4; overflow: hidden; pointer-events: none; }
+.game-view[data-game='sanat'] .sn-piece { position: absolute; top: -14px; width: 11px; height: 11px; animation: sn-fall 2s linear both; }
+@keyframes sn-fall { to { transform: translateY(var(--fall)) rotate(720deg); } }
+
+/* Wide (>= 900 px): the end screen in two columns (design 3.7) */
+@media (min-width: 900px) {
+  .game-view[data-game='sanat'] .sn-result {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'medal score' 'medal rows' 'stars rows' 'stars line';
+    justify-content: center;
+    align-items: center;
+    column-gap: 40px;
+    padding: 20px 24px;
+  }
+  .game-view[data-game='sanat'] .sn-medal { grid-area: medal; justify-self: center; }
+  .game-view[data-game='sanat'] .sn-result-score { grid-area: score; text-align: left; }
+  .game-view[data-game='sanat'] .sn-rows { grid-area: rows; }
+  .game-view[data-game='sanat'] .sn-end-stars { grid-area: stars; justify-self: center; }
+  .game-view[data-game='sanat'] .sn-result-line { grid-area: line; text-align: left; }
+}
+
+/* iPad portrait: bigger pieces (design 3.10) */
+@media (min-width: 600px) and (min-height: 900px) {
+  .game-view[data-game='sanat'] .sn-play { gap: 16px; }
+  .game-view[data-game='sanat'] .sn-image,
+  .game-view[data-game='sanat'] .sn-mystery { width: 96px; height: 96px; }
+  .game-view[data-game='sanat'] .sn-image { font-size: 68px; }
+  .game-view[data-game='sanat'] .sn-mystery { font-size: 52px; }
+  .game-view[data-game='sanat'] .sn-slot { width: 60px; height: 72px; font-size: 40px; }
+  .game-view[data-game='sanat'] .sn-tile { width: 72px; height: 72px; font-size: 40px; }
+  .game-view[data-game='sanat'] .is-tiles .sn-key-delete { width: 72px; height: 72px; }
+  .game-view[data-game='sanat'] .sn-key { height: 64px; font-size: 30px; }
+}
+
+@media (max-width: 599.98px) {
+  .game-view[data-game='sanat'] .sn-image,
+  .game-view[data-game='sanat'] .sn-mystery { width: 72px; height: 72px; }
+  .game-view[data-game='sanat'] .sn-image { font-size: 54px; }
+  .game-view[data-game='sanat'] .sn-mystery { font-size: 40px; }
+  .game-view[data-game='sanat'] .sn-q-text { font-size: 22px; }
+  .game-view[data-game='sanat'] .sn-score { font-size: 20px; }
+  .game-view[data-game='sanat'] .sn-slots { gap: 4px; row-gap: 10px; }
+  .game-view[data-game='sanat'] .sn-syl { gap: 4px; }
+  .game-view[data-game='sanat'] .sn-slot { width: 44px; height: 56px; font-size: 30px; }
+  .game-view[data-game='sanat'] .sn-feedback { flex-direction: column; align-items: stretch; gap: 12px; }
+  .game-view[data-game='sanat'] .sn-next { width: 100%; min-width: 0; }
+  .game-view[data-game='sanat'] .sn-letters.is-tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .game-view[data-game='sanat'] .sn-tile,
+  .game-view[data-game='sanat'] .is-tiles .sn-key-delete { width: auto; height: 56px; }
+  .game-view[data-game='sanat'] .is-tiles .sn-key-delete { margin-left: 0; }
+  .game-view[data-game='sanat'] .sn-letters.is-alphabet { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .game-view[data-game='sanat'] .sn-key { height: 52px; }
+  .game-view[data-game='sanat'] .sn-foot,
+  .game-view[data-game='sanat'] .sn-foot-left { flex-direction: column; align-items: stretch; gap: 12px; }
+  .game-view[data-game='sanat'] .sn-foot .sn-secondary { width: 100%; margin-left: 0; }
+  .game-view[data-game='sanat'] .sn-result-score { font-size: 48px; }
+}
+
+@media (max-width: 419.98px) {
+  .game-view[data-game='sanat'] .sn-image,
+  .game-view[data-game='sanat'] .sn-mystery { width: 64px; height: 64px; }
+  .game-view[data-game='sanat'] .sn-image { font-size: 44px; }
+  .game-view[data-game='sanat'] .sn-mystery { font-size: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-view[data-game='sanat'] .sn-image.is-appearing,
+  .game-view[data-game='sanat'] .sn-slots.is-popping,
+  .game-view[data-game='sanat'] .sn-slots.is-shaking,
+  .game-view[data-game='sanat'] .sn-fb[data-kind='right'] .sn-fb-praise { animation: none; }
+}
+
 /* ---------- Auto-advance (docs/design/sei-46.md) ----------
    The waiting Seuraava: a light button with a brand-coloured fill that grows from the left over
    --aa-ms (4 s). The fill is a second layer inside the button (aria-hidden, label from data-label),

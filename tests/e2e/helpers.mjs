@@ -138,6 +138,29 @@ export async function installFakeSpeech(page, opts = {}) {
   );
 }
 
+// Records every play() and pause() of an audio or video element in window.__audio, as
+// { kind, src, at, inDispatch }, and plays nothing: play() resolves at once. `inDispatch` is read from the
+// same counter as the fake speech's, so use it together with installFakeSpeech. Without this call
+// nothing changes.
+export async function recordAudio(page) {
+  await page.addInitScript(() => {
+    window.__audio = [];
+    const note = (kind, media) =>
+      window.__audio.push({ kind, src: media.currentSrc || media.src, at: performance.now(), inDispatch: window.__inListener > 0 });
+    HTMLMediaElement.prototype.play = function () {
+      note('play', this);
+      return Promise.resolve();
+    };
+    HTMLMediaElement.prototype.pause = function () {
+      note('pause', this);
+    };
+  });
+}
+
+export function audioCalls(page) {
+  return page.evaluate(() => window.__audio);
+}
+
 // Serves tests/e2e/fixtures/registry.js in place of app/src/games/registry.js.
 export async function useFakeRegistry(page) {
   await page.route('**/src/games/registry.js', (route) =>

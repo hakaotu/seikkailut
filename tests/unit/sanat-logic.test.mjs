@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {
   MAX_WORDS, WORDS, HP_WORDS, ALPHABET, PRAISE, syllabify, newDeck, newWordState, shuffleTiles, startWord,
   place, removeAt, removeLast, clearAll, isFull, check, skip, starsFor, endTier, endTexts, chooseHint,
-  backToWord, wordSpeech, letterSpeech, wrongSpeech, skipSpeech, chooseSpeech,
+  backToWord, wordSpeech, letterSpeech, wrongSpeech, skipSpeech, chooseSpeech, selectionLine, selectionLabel,
+  changeLabel,
 } from '../../app/src/games/sanat-logic.js';
 
 // mulberry32: a small seeded generator, so a failure repeats.
@@ -317,4 +318,11 @@ test('chooseHint: list before level before nothing; no hint without a round', ()
   assert.equal(chooseHint({ ...same, level: 'hard' }, round, false), '');
   assert.equal(chooseHint({ ...same, tavutus: true }, round, true), '');
   assert.equal(chooseHint({ ...same, theme: 'hp' }, null, true), '');
+});
+
+test('the selections as text', () => {
+  assert.equal(selectionLine(same), 'Normaali · Helppo');
+  assert.equal(selectionLine({ theme: 'hp', level: 'hard', tavutus: true }), 'Harry Potter · Vaikea · Tavutus');
+  assert.equal(selectionLabel({ theme: 'normal', level: 'easy', tavutus: true }), 'Sanat Normaali. Taso Helppo. Tavutus päällä.');
+  assert.equal(changeLabel(same), 'Vaihda sanoja, tasoa ja tavutusta. Nyt Normaali, Helppo, tavutus pois.');
 });

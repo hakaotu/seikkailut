@@ -335,3 +335,20 @@ export function chooseSpeech(roundOpen) {
     rate: 0.85,
   }];
 }
+
+// ── Selections as text ─────────────────────────────────────────────────────
+
+// `Normaali · Helppo` or `Harry Potter · Vaikea · Tavutus` (the end screen's line).
+export function selectionLine(settings) {
+  return `${THEMES[settings.theme]} · ${LEVELS[settings.level]}${settings.tavutus ? ' · Tavutus' : ''}`;
+}
+
+// The same for a screen reader.
+export function selectionLabel(settings) {
+  return `Sanat ${THEMES[settings.theme]}. Taso ${LEVELS[settings.level]}. Tavutus ${settings.tavutus ? 'päällä' : 'pois'}.`;
+}
+
+// Vaihda's accessible name: what the button does and what is chosen now.
+export function changeLabel(settings) {
+  return `Vaihda sanoja, tasoa ja tavutusta. Nyt ${THEMES[settings.theme]}, ${LEVELS[settings.level]}, tavutus ${settings.tavutus ? 'päällä' : 'pois'}.`;
+}
