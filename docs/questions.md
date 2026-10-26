@@ -2,7 +2,10 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q30 (päätös):** Matikan ja Sanojen toteutussuunnitelma: ensin Matikan
+  automaattinen siirtyminen (julkaistaan ja katsotaan erikseen), sitten
+  Sanat kokonaan automaattisine siirtymisineen. Hyväksytkö? Oletus:
+  hyväksytty. (SEI-3, 7, 8, 46, 47) — avattu 2026-10-26
 
 ## Vastatut
 
