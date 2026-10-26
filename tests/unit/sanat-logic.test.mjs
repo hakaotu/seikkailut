@@ -276,11 +276,13 @@ test('SEI-8 / 3: all right first time is the perfect tier; nothing else says "hy
 
 test('the edges: all skipped, all corrected, singular and plural', () => {
   const skipped = endTexts(0, 0, 10);
-  assert.equal(skipped.speech, 'Kierros valmis. 0 sanaa heti oikein. 10 sanaa ohitettu. Harjoittelemalla oppii!');
+  assert.equal(skipped.speech, 'Kierros valmis. 10 sanaa ohitettu. Harjoittelemalla oppii!');
   assert.deepEqual(skipped.rows.map((r) => r.text), ['0 sanaa heti oikein', '10 sanaa ohitettu']);
   assert.deepEqual(endTexts(0, 10, 0).rows.map((r) => r.text), ['0 sanaa heti oikein', '10 sanaa oikein uudella yrityksellä']);
-  assert.equal(endTexts(0, 10, 0).speech, 'Kierros valmis. 0 sanaa heti oikein. 10 sanaa oikein uudella yrityksellä. Harjoittelemalla oppii!');
+  assert.equal(endTexts(0, 10, 0).speech, 'Kierros valmis. 10 sanaa oikein uudella yrityksellä. Harjoittelemalla oppii!');
   assert.equal(endTexts(1, 9, 0).rows[0].text, '1 sana heti oikein');
+  assert.equal(endTexts(7, 1, 2).speech, 'Hienoa! 7 sanaa heti oikein. 1 sana oikein uudella yrityksellä. 2 sanaa ohitettu. Hyvää työtä!');
+  assert.equal(endTexts(1, 0, 9).speech, 'Kierros valmis. 1 sana heti oikein. 9 sanaa ohitettu. Harjoittelemalla oppii!');
   assert.equal(endTexts(4, 3, 3).speech, 'Kierros valmis. 4 sanaa heti oikein. 3 sanaa oikein uudella yrityksellä. 3 sanaa ohitettu. Harjoittelemalla oppii!');
 });
 

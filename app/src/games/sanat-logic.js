@@ -270,7 +270,8 @@ export function endTexts(a, b, c) {
   // The voice reads the rows shown on screen, in the same order, each as a sentence of its own.
   // Numbers as digits, not inflected: "9 sanaa" is right Finnish and the voice reads it as is.
   const spokenTitle = tier === 'good' ? title : 'Kierros valmis.';
-  const counts = rows.map((r) => `${r.text}.`).join(' ');
+  // With 0 words right first time the voice skips that row ("0 sanaa heti oikein" is not said).
+  const counts = rows.filter((r) => r.kind !== 'a' || a >= 1).map((r) => `${r.text}.`).join(' ');
   return { tier, title, rows, line, speech: `${spokenTitle} ${counts} ${line}` };
 }
 
