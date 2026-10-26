@@ -897,3 +897,52 @@ html[data-booted] .boot-error { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .game-view[data-game='matikka'] .mk-problem.is-appearing, .game-view[data-game='matikka'] .mk-option.is-popping, .game-view[data-game='matikka'] .mk-box.is-popping, .game-view[data-game='matikka'] .mk-option.is-shaking { animation: none; }
 }
+
+/* ---------- Auto-advance (docs/design/sei-46.md) ----------
+   The waiting Seuraava: a light button with a brand-coloured fill that grows from the left over
+   --aa-ms (4 s). The fill is a second layer inside the button (aria-hidden, label from data-label),
+   so the button's own text and accessible name do not change. The 3 px brand border is an inset
+   shadow, so the button keeps its size. Scoped one class deeper than the games' own button rules
+   (.game-view[data-game='matikka'] .mk-primary) so it wins over them. */
+
+.aa-btn { position: relative; overflow: hidden; }
+.aa-fill, .aa-ticks { display: none; }
+
+.game-view[data-game] .aa-btn.aa-counting {
+  background: var(--brand-light);
+  color: var(--brand);
+  box-shadow: inset 0 0 0 3px var(--brand), var(--shadow);
+}
+.game-view[data-game] .aa-btn.aa-counting:focus-visible {
+  box-shadow: inset 0 0 0 3px var(--brand), var(--shadow), 0 0 0 9px var(--focus-yellow);
+}
+.game-view[data-game] .aa-btn.aa-counting:active { box-shadow: inset 0 0 0 3px var(--brand); }
+
+.aa-btn.aa-counting .aa-fill {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--brand);
+  color: #fff;
+  animation: aa-fill var(--aa-ms, 4000ms) linear forwards;
+}
+.aa-fill::before { content: attr(data-label); }
+.aa-fill svg { width: 28px; height: 28px; }
+.aa-btn.aa-counting:active .aa-fill { animation-play-state: paused; }
+@keyframes aa-fill {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* Reduced motion: four steps instead of a slide, and three lines on the light layer to count them */
+@media (prefers-reduced-motion: reduce) {
+  .aa-btn.aa-counting .aa-fill { animation-timing-function: steps(4, jump-start); }
+  .aa-btn.aa-counting .aa-ticks { position: absolute; inset: 0; display: block; pointer-events: none; }
+  .aa-ticks i { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: var(--brand); opacity: 0.35; }
+  .aa-ticks i:nth-child(1) { left: 25%; }
+  .aa-ticks i:nth-child(2) { left: 50%; }
+  .aa-ticks i:nth-child(3) { left: 75%; }
+}

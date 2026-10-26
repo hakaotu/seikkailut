@@ -8,12 +8,17 @@
 // Every handler that speaks changes its state and the DOM first and calls ctx.speech.say last,
 // synchronously, with no pauseMs: the speech then starts inside the tap (registry.js rule 3).
 // Click listeners use addEventListener (tests/e2e/gesture.spec.mjs only sees those).
+//
+// After a right answer on problems 1-9 the next problem comes by itself after 4 s (SEI-46,
+// auto-advance.js). That reading starts from a timer, so it is the one speech here that is not
+// inside a tap; it passes { auto: true } to say. Seuraava and every other control end the wait.
 
 import {
   MAX_QUESTIONS, LEVELS, OPS, CHOOSE_SPEECH, newRound, pickPraise, pickLevel, toggleOp, typeDigit,
   deleteDigit, starsFor, endTexts, endTier, problemSpeech, problemLabel, wrongTexts, settingsLine,
   settingsLabel,
 } from './matikka-logic.js';
+import { fillMarkup, createAutoAdvance } from './auto-advance.js';
 
 const GUARD_MS = 500; // design 3.8: new screen's buttons ignore taps for this long
 const HINT = 'Ainakin yksi laskutapa pitää olla valittuna.';
@@ -125,8 +130,8 @@ export default {
       '<div class="mk-streak" aria-hidden="true"></div>' +
       '<div class="mk-answer"><div class="mk-options"></div><div class="mk-pad" hidden></div></div>' +
       '<div class="mk-feedback"></div>' +
-      '<div class="mk-next-wrap"><button type="button" class="mk-primary mk-big mk-next"><span class="mk-next-label"></span>' +
-      `${ARROW}</button></div>` +
+      '<div class="mk-next-wrap"><button type="button" class="mk-primary mk-big mk-next aa-btn"><span class="mk-next-label"></span>' +
+      `${ARROW}${fillMarkup('Seuraava', ARROW)}</button></div>` +
       '<div class="mk-foot"><span class="mk-settings"><span class="mk-settings-text" aria-hidden="true"></span>' +
       '<span class="sr-only mk-settings-sr"></span></span>' +
       '<button type="button" class="mk-secondary mk-change" aria-label="Vaihda tasoa ja laskuja">Vaihda</button></div>' +
@@ -216,7 +221,7 @@ export default {
 
     // ---------- small helpers ----------
 
-    const say = (text, rate) => ctx.speech.say([{ text, rate }]);
+    const say = (text, rate, opts) => ctx.speech.say([{ text, rate }], opts);
     const announce = (msg) => {
       live.textContent = msg;
     };
@@ -227,6 +232,7 @@ export default {
       if (blocked()) return;
       fn(...args);
     };
+    const auto = createAutoAdvance({ button: nextBtn, onAdvance: () => next({ auto: true }) });
 
     // Adds a class that plays a one-off animation and removes it when it ends, so un-hiding the
     // screen later does not replay it.
@@ -495,7 +501,13 @@ export default {
       if (p.correct) {
         playOnce(isTyped() ? boxEl : optionsEl.querySelector('.is-right'), 'is-popping');
         const streakLine = round.streak >= 3 ? ` ${round.streak} peräkkäin oikein.` : '';
-        announce(`Oikein! ${problemSpeech(p)} on ${p.answer}. ${pointsLine}${streakLine}`);
+        // Problems 1-9: the next one comes by itself; the same sentence is announced (design sei-46 8).
+        const waits = round.index < MAX_QUESTIONS - 1;
+        if (waits) auto.start();
+        announce(
+          `Oikein! ${problemSpeech(p)} on ${p.answer}. ${pointsLine}${streakLine}` +
+            (waits ? ' Seuraava lasku tulee itsestään.' : ''),
+        );
         say(String(p.answer), 0.9);
       } else {
         if (!isTyped()) playOnce(optionsEl.querySelector('.is-wrong'), 'is-shaking');
@@ -522,7 +534,9 @@ export default {
       renderBox();
     }
 
-    function next() {
+    // `auto` is true only when the wait's timer calls this: the new problem is then read from a timer.
+    function next({ auto: byTimer = false } = {}) {
+      auto.cancel();
       if (cur().given === null) return;
       if (round.index === MAX_QUESTIONS - 1) {
         showEnd();
@@ -533,7 +547,7 @@ export default {
       renderProblem();
       focusEl(problemEl);
       announce(`${problemLabel(cur(), round.index + 1)}.`);
-      say(problemSpeech(cur()), 0.75);
+      say(problemSpeech(cur()), 0.75, { auto: byTimer });
     }
 
     function showEnd() {
@@ -549,6 +563,7 @@ export default {
     }
 
     function openChoose() {
+      auto.cancel();
       draft = copySettings(settings);
       hint = false;
       renderChoose();
@@ -587,7 +602,7 @@ export default {
     restartBtn.addEventListener('click', guarded(startFromDraft));
     backBtn.addEventListener('click', guarded(backToRound));
     changeBtn.addEventListener('click', guarded(openChoose));
-    nextBtn.addEventListener('click', guarded(next));
+    nextBtn.addEventListener('click', guarded(() => next()));
     againBtn.addEventListener('click', guarded(beginRound));
     newSettingsBtn.addEventListener('click', guarded(openChoose));
     for (const k of padKeys) {
@@ -638,8 +653,10 @@ export default {
         document.removeEventListener('keydown', onKey);
         window.removeEventListener('resize', fitProblem);
         clearConfetti();
+        auto.cancel();
       },
       listen() {
+        auto.cancel();
         if (screen === 'choose') say(CHOOSE_SPEECH, 0.85);
         else if (screen === 'question') say(problemSpeech(cur()), 0.75);
         else say(endTexts(round.score).speech, 0.85);
