@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q42 (katso):** Sanojen loppuruutu Macilla: pelaa kierros, jossa yksi
+  sana menee ensin väärin, ja paina lopussa Kuuntele. Kuulostaako nyt
+  hyvältä: kyllä / ei? (SEI-49) — avattu 2026-10-26
 
 ## Vastatut
 
