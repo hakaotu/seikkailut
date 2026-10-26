@@ -7,7 +7,10 @@ import { installFakeSpeech, seedRandom, press, speakCalls, settle } from './help
 import { AUTO_ADVANCE_MS } from '../../app/src/games/auto-advance.js';
 import * as mk from './matikka-helpers.mjs';
 
-const WAIT = AUTO_ADVANCE_MS + 500; // long enough to see that nothing happened
+// The design's number, written out here on purpose: a test that reads the app's constant would
+// follow it when it is changed by mistake. 47/14 below checks the app's constant against this one.
+const FOUR_S = 4000;
+const WAIT = FOUR_S + 500; // long enough to see that nothing happened
 
 const matikka = {
   name: 'Matikka',
@@ -56,6 +59,8 @@ function gaps(page) {
 }
 
 const nextBtn = (page, d) => d.view(page).locator(d.nextSel);
+// Read at once, not retried: a retrying expect would wait for a stale timer to remove the class by itself.
+const isCounting = (page, d) => nextBtn(page, d).evaluate((e) => e.classList.contains('aa-counting'));
 const listen = (page, d) => d.view(page).locator('.listen');
 
 // Plays items 1..n-1 right, leaving each wait by pressing Seuraava.
@@ -84,20 +89,20 @@ for (const d of GAMES) {
       await expect(btn).toHaveClass(/aa-counting/);
       await expect(btn).toBeVisible();
       const fill = btn.locator('.aa-fill');
-      expect(await fill.evaluate((e) => getComputedStyle(e).animationDuration)).toBe(`${AUTO_ADVANCE_MS / 1000}s`);
+      expect(await fill.evaluate((e) => getComputedStyle(e).animationDuration)).toBe(`${FOUR_S / 1000}s`);
       await expect(btn.locator('.aa-ticks')).toBeHidden(); // no reduced motion: no ticks
       const waiting = await btn.boundingBox();
       await expect.poll(() => d.itemNo(page), { timeout: 6000 }).toBe(2);
       if (isDesktop(testInfo)) {
         const [gap] = await gaps(page);
         console.log(`${d.name}: right answer to new item ${gap.toFixed(0)} ms`);
-        expect(gap).toBeGreaterThanOrEqual(AUTO_ADVANCE_MS - 10);
-        expect(gap).toBeLessThanOrEqual(AUTO_ADVANCE_MS + 800);
+        expect(gap).toBeGreaterThanOrEqual(FOUR_S - 10);
+        expect(gap).toBeLessThanOrEqual(FOUR_S + 800);
       }
       // the same button without the wait: answer item 2 and end that wait with Kuuntele
       await d.right(page, testInfo);
       await press(listen(page, d), testInfo);
-      await expect(btn).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       const plain = await btn.boundingBox();
       expect(Math.abs(plain.width - waiting.width)).toBeLessThanOrEqual(0.5);
       expect(Math.abs(plain.height - waiting.height)).toBeLessThanOrEqual(0.5);
@@ -111,7 +116,7 @@ for (const d of GAMES) {
       // 0: the item read by Aloita, 1: the answer, 2: the new item (from the timer)
       expect(calls[1].endedAt).not.toBeNull();
       expect(calls[1].endedAt).toBeLessThan(calls[2].at);
-      expect(calls[2].at - calls[1].at).toBeGreaterThanOrEqual(AUTO_ADVANCE_MS - 200);
+      expect(calls[2].at - calls[1].at).toBeGreaterThanOrEqual(FOUR_S - 200);
     });
 
     test('46/3: the new item is read once, has focus, and Seuraava is hidden and not counting', async ({ page }, testInfo) => {
@@ -124,14 +129,14 @@ for (const d of GAMES) {
       expect(calls[2].inDispatch).toBe(false);
       await expect(d.view(page).locator(d.itemSel)).toBeFocused();
       await expect(nextBtn(page, d)).toBeHidden();
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
     });
 
     test('46/4: a wrong answer starts no wait', async ({ page }, testInfo) => {
       await begin(page, testInfo, d);
       await d.wrong(page, testInfo);
       await expect(nextBtn(page, d)).toBeVisible();
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await page.waitForTimeout(WAIT);
       expect(await d.itemNo(page)).toBe(1);
       await expect(nextBtn(page, d)).toBeVisible();
@@ -144,7 +149,7 @@ for (const d of GAMES) {
       await page.waitForTimeout(1000);
       await press(nextBtn(page, d), testInfo);
       expect(await d.itemNo(page)).toBe(2);
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/); // the wait ended with the tap
+      expect(await isCounting(page, d)).toBe(false); // the wait ended with the tap
       await page.waitForTimeout(WAIT);
       expect(await d.itemNo(page)).toBe(2);
       await expect(nextBtn(page, d)).toBeHidden(); // item 2 is still unanswered
@@ -184,7 +189,7 @@ for (const d of GAMES) {
       const before = (await speakCalls(page)).length;
       await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
       await expect(page.locator('#home')).toBeVisible();
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await page.waitForTimeout(WAIT);
       await expect(page.locator('#home')).toBeVisible();
       await expect(d.view(page)).toBeHidden();
@@ -195,7 +200,7 @@ for (const d of GAMES) {
       await begin(page, testInfo, d);
       await d.right(page, testInfo);
       await press(d.view(page).locator(d.changeSel), testInfo);
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       const before = (await speakCalls(page)).length;
       await page.waitForTimeout(WAIT);
       expect(await d.view(page).getByRole('button', { name: d.backName }).isVisible()).toBe(true); // still the choose screen
@@ -206,7 +211,7 @@ for (const d of GAMES) {
       await begin(page, testInfo, d);
       await d.right(page, testInfo);
       await press(listen(page, d), testInfo);
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await expect(nextBtn(page, d)).toBeVisible();
       const before = (await speakCalls(page)).length; // Aloita, the answer, Kuuntele
       expect(before).toBe(3);
@@ -223,7 +228,7 @@ for (const d of GAMES) {
         Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
         document.dispatchEvent(new Event('visibilitychange'));
       });
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await page.waitForTimeout(WAIT);
       expect(await d.itemNo(page)).toBe(1);
       expect((await speakCalls(page)).length).toBe(2);
@@ -237,7 +242,7 @@ for (const d of GAMES) {
       await expect(nextBtn(page, d)).toHaveClass(/aa-counting/);
       await page.keyboard.press('Tab');
       await expect(nextBtn(page, d)).not.toBeFocused();
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await page.waitForTimeout(WAIT);
       expect(await d.itemNo(page)).toBe(1);
       expect((await speakCalls(page)).length).toBe(2);
@@ -252,7 +257,7 @@ for (const d of GAMES) {
       await expect(notice).toBeVisible({ timeout: 3500 });
       await expect(nextBtn(page, d)).toHaveClass(/aa-counting/); // the notice alone does not end it
       await press(notice.locator('.ok-btn'), testInfo);
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await page.waitForTimeout(WAIT);
       expect(await d.itemNo(page)).toBe(1);
     });
@@ -276,7 +281,7 @@ for (const d of GAMES) {
       await press(page.locator(d.cardSel), testInfo);
       await expect(d.view(page)).toBeVisible();
       await expect(nextBtn(page, d)).toBeVisible();
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       const before = (await speakCalls(page)).length;
       await page.waitForTimeout(WAIT);
       expect(await d.itemNo(page)).toBe(1);
@@ -291,7 +296,7 @@ for (const d of GAMES) {
       await settle(page);
       await press(d.view(page).getByRole('button', { name: d.backName }), testInfo);
       await expect(nextBtn(page, d)).toBeVisible();
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await page.waitForTimeout(WAIT);
       expect(await d.itemNo(page)).toBe(1);
       expect((await speakCalls(page)).length).toBe(2);
@@ -303,7 +308,7 @@ for (const d of GAMES) {
       await d.right(page, testInfo);
       await expect(nextBtn(page, d)).toHaveText(d.lastLabel);
       await expect(nextBtn(page, d)).toBeVisible();
-      await expect(nextBtn(page, d)).not.toHaveClass(/aa-counting/);
+      expect(await isCounting(page, d)).toBe(false);
       await page.waitForTimeout(WAIT);
       await expect(d.view(page).locator(d.endSel)).toBeHidden();
       expect(await d.itemNo(page)).toBe(10);
@@ -325,7 +330,7 @@ for (const d of GAMES) {
       if (isDesktop(testInfo)) {
         const [gap] = await gaps(page);
         console.log(`${d.name}, reduced motion: right answer to new item ${gap.toFixed(0)} ms`);
-        expect(gap).toBeGreaterThanOrEqual(AUTO_ADVANCE_MS - 10);
+        expect(gap).toBeGreaterThanOrEqual(FOUR_S - 10);
       }
     });
 
@@ -361,19 +366,20 @@ for (const d of GAMES) {
       console.log(`${d.name}: nine gaps from the right answer to the next item, ms: ${g.map((x) => x.toFixed(0)).join(', ')}`);
       expect(g.length).toBe(9);
       for (const gap of g) {
-        expect(gap).toBeGreaterThanOrEqual(AUTO_ADVANCE_MS - 10);
-        expect(gap).toBeLessThanOrEqual(AUTO_ADVANCE_MS + 800);
+        expect(gap).toBeGreaterThanOrEqual(FOUR_S - 10);
+        expect(gap).toBeLessThanOrEqual(FOUR_S + 800);
       }
       await expect(nextBtn(page, d)).toHaveText(d.lastLabel);
       await page.waitForTimeout(WAIT);
       await expect(d.view(page).locator(d.endSel)).toBeHidden();
     });
 
-    test('47/14: the waiting Seuraava is the shared one (aa-btn) and its fill runs for AUTO_ADVANCE_MS', async ({ page }, testInfo) => {
+    test('47/14: the waiting Seuraava is the shared one (aa-btn) and its fill runs for the shared constant', async ({ page }, testInfo) => {
       await begin(page, testInfo, d);
       await expect(nextBtn(page, d)).toHaveClass(/aa-btn/);
       await d.right(page, testInfo);
       const ms = await nextBtn(page, d).evaluate((e) => e.style.getPropertyValue('--aa-ms'));
+      expect(AUTO_ADVANCE_MS).toBe(FOUR_S);
       expect(ms).toBe(`${AUTO_ADVANCE_MS}ms`);
     });
   });
