@@ -2,13 +2,16 @@
 
 ## Avoimet
 
-- **Q40 (päätös):** Miten rivi "1 sana oikein uudella yrityksellä"
-  sanotaan (ruudulla ja ääneen)? Vaihtoehdot: A "1 sana korjattu",
-  B "1 sana oikein toisella yrittämällä", C oma sanamuoto. Oletus: A.
-  (SEI-49) — avattu 2026-10-26
+- **Q41 (päätös):** Sanojen loppuruudun keskimmäinen rivi ruudulla ja
+  ääneen muotoon "Vain 1 sana meni ensin väärin." (monta: "3 sanaa meni
+  ensin väärin."). Käykö? Oletus: kyllä, ruudulla ja ääneen. (SEI-49)
+  — avattu 2026-10-26
 
 ## Vastatut
 
+- **Q40 (päätös):** Rivin "1 sana oikein uudella yrityksellä" sanamuoto —
+  "ehkä tuossa sanoisin vaan, että 'vain yksi väärin, hienoa' tai jotain
+  sinne päin" → tarkennettu Q41:ksi. (SEI-49) (2026-10-26)
 - **Q39 (katso):** Sanojen loppuruudun Kuuntele — "1 sana oikein uudella
   yrityksellä --> tää ei oo suomea vielä". (SEI-49) (2026-10-26)
 - **Q38 (katso):** Sanat Macilla, voittoääni ja automaattinen siirtyminen —
