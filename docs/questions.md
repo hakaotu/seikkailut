@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q34 (päätös):** Espanjan toteutussuunnitelma: tehdään Sanojen jälkeen,
-  julkaistaan kerralla (peli ja automaattinen siirtyminen). Hyväksytkö?
-  Oletus: hyväksytty. (SEI-4, 9, 10, 48) — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q34 (päätös):** Espanjan toteutussuunnitelma (SEI-4, 9, 10, 48) —
+  "joo", hyväksytty; tehdään Sanojen jälkeen. (2026-10-26)
 - **Q31 (katso):** Espanjan ulkoasuluonnos (SEI-4, SEI-10) — "ok",
   hyväksytty; Espanja siirtyy oikean jälkeen itsestään kuten Matikka ja
   Sanat. (2026-10-26)
