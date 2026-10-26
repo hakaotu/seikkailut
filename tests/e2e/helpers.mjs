@@ -23,6 +23,7 @@ export async function press(locator, testInfo) {
 // Records every speak() call in window.__speak, with whether it ran inside a click listener,
 // when it was called (at) and when its onend fired (endedAt, null until then).
 export async function installFakeSpeech(page, opts = {}) {
+  await installSilentMedia(page);
   await page.addInitScript(
     ({ mode, voices, untrusted }) => {
       const realTimeout = window.setTimeout.bind(window); // page.clock may replace it later
@@ -138,11 +139,12 @@ export async function installFakeSpeech(page, opts = {}) {
   );
 }
 
-// Records every play() and pause() of an audio or video element in window.__audio, as
-// { kind, src, at, inDispatch }, and plays nothing: play() resolves at once. `inDispatch` is read from the
-// same counter as the fake speech's, so use it together with installFakeSpeech. Without this call
-// nothing changes.
-export async function recordAudio(page) {
+// Replaces play() and pause() of every audio or video element, so a test run never makes a sound (the
+// Sanat victory clip would otherwise play on the machine's speakers). Each call is recorded in
+// window.__audio as { kind, src, at, inDispatch }; play() resolves at once. `inDispatch` is read from the
+// same counter as the fake speech's. installFakeSpeech does this by default; recordAudio is the explicit
+// form for tests that read the record.
+async function installSilentMedia(page) {
   await page.addInitScript(() => {
     window.__audio = [];
     const note = (kind, media) =>
@@ -156,6 +158,8 @@ export async function recordAudio(page) {
     };
   });
 }
+
+export const recordAudio = installSilentMedia;
 
 export function audioCalls(page) {
   return page.evaluate(() => window.__audio);
