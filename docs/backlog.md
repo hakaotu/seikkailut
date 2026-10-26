@@ -283,7 +283,7 @@ Kriteerit (lähde: `originals/matikkaseikkailu.html`):
     -painikkeineen.
 
 ### SEI-3 — Sana: kaikki nykyiset toiminnot uudessa sovelluksessa
-Tila: review
+Tila: in-progress
 Perustelu: omistaja vaati kaikki use caset; tämä on Sanaseikkailun koko
 nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -519,7 +519,7 @@ Riskit:
   ei mitattu.
 
 ### SEI-47 — Sanat: oikean sanan jälkeen siirtyy itsestään seuraavaan sanaan
-Tila: review
+Tila: in-progress
 Havainto: ei omaa havaintoa Sanoista; omistaja vahvisti 2026-10-26 (Q28),
 että Sanat toimii kuten Matikka (SEI-46). Kysymys oli sanatarkasti:
 "Siirtyykö myös Sanat oikean sanan jälkeen itsestään seuraavaan (kuten
@@ -735,7 +735,7 @@ Riskit:
   (kriteeri 14).
 
 ### SEI-7 — Sana: virheen jälkeen koko sanaa ei tyhjennetä, askelpalautin kaikilla tasoilla, ohitus
-Tila: review
+Tila: in-progress
 Perustelu: lähtötaso: väärä yritys tyhjentää koko sanan, "Aloita alusta"
 on ainoa korjaus ja Vaikealla tasolla ei ole askelpalautinta; sanaa ei voi
 ohittaa.
@@ -760,7 +760,7 @@ Kriteerit:
    näkyvät loppuruudussa (ks. SEI-8).
 
 ### SEI-8 — Sana: pisteet ja tulos kuvaavat myös virheitä
-Tila: review
+Tila: in-progress
 Perustelu: lähtötaso: pisteet lasketaan vain oikeista, joten tulos on
 aina 10/10 eikä edistymisestä saa tietoa.
 Riippuvuus: SEI-3, SEI-7.
