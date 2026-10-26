@@ -126,3 +126,17 @@ test('Matikka: a round started with 0 answered, Etusivu, the card tap reads prob
   expect(calls[before].inDispatch).toBe(true);
   expect(calls[before].text).toBe(calls[0].text);
 });
+
+// ---- SEI-46: the automatic advance is the one reading that does not start inside a tap ----
+
+test('Matikka: the auto-advance reading starts from a timer (not inDispatch); every other call is inside its tap', async ({ page }, testInfo) => {
+  await seedRandom(page, 5);
+  await openMatikka(page, testInfo);
+  await startRound(page, testInfo, { level: 'Helppo' }); // Aloita
+  await answerRight(page, testInfo); // the answer, then 4 s of waiting with no tap
+  await expect.poll(async () => (await speakCalls(page)).length, { timeout: 6000 }).toBe(3);
+  const calls = await speakCalls(page);
+  expect(calls.map((c) => c.inDispatch)).toEqual([true, true, false]);
+  // the third call is problem 2, read by the timer
+  await expect(view(page).locator('.mk-problem')).toHaveAttribute('aria-label', /^Lasku 2 \/ 10/);
+});
