@@ -403,7 +403,7 @@ Kriteerit:
    loppuruutu eroaa visuaalisesti ja tekstiltään tuloksesta 2/10.
 
 ### SEI-46 — Matikka: oikean vastauksen jälkeen siirtyy itsestään seuraavaan laskuun
-Tila: todo
+Tila: in-progress
 Havainto (2026-10-23): omistaja kokeili julkaistua Matikkaa Macilla
 (https://hakaotu.github.io/seikkailut/) ja sanoi sanatarkasti:
 "matikkahommeliin voisi tehdä sellaisen automatiikan, että oikean vastauksen

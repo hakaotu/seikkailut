@@ -2,13 +2,12 @@
 
 ## Avoimet
 
-- **Q30 (päätös):** Matikan ja Sanojen toteutussuunnitelma: ensin Matikan
-  automaattinen siirtyminen (julkaistaan ja katsotaan erikseen), sitten
-  Sanat kokonaan automaattisine siirtymisineen. Hyväksytkö? Oletus:
-  hyväksytty. (SEI-3, 7, 8, 46, 47) — avattu 2026-10-26
+(ei avoimia)
 
 ## Vastatut
 
+- **Q30 (päätös):** Matikan ja Sanojen toteutussuunnitelma (SEI-3, 7, 8,
+  46, 47) — "ok", hyväksytty. (2026-10-26)
 - **Q29 (katso):** Matikan ja Sanojen automaattisen siirtymisen
   ulkoasuluonnos (SEI-46, SEI-47) — "jatka luonnoksen mukaan", hyväksytty.
   (2026-10-26)
