@@ -333,6 +333,20 @@ poisto osui commitiin 331a67b). Kriteeri 7 mitataan hyväksyttyä ulkoasua vaste
 jäljet (eivät estä): alle 600/520/420 px leveydellä kortit ja fonttikoot
 poikkeavat ulkoasusta — designer hyväksyy tai hylkää; kapean näytön "vaihtoehdot
 yhdessä sarakkeessa" -testi puuttuu.
+Havainto A (pääistunto, 2026-10-26 ~16.00): https://hakaotu.github.io/seikkailut/,
+commit 3ad6158, Chrome 155.0.8059.85 (Playwright channel chrome, headed,
+1280×720), ääni Mónica (Enhanced), es-ES. Koskee SEI-4, 9, 10, 48.
+A1: valintaruutu, Suomi → Espanja valittuna, "Tähtiä: 0"; Kuuntele luki "hola".
+A2: Suomi → Espanja, 10 oikein ilman napautuksia: 9 väliä 4010, 4007, 4004,
+4004, 4005, 4007, 4005, 4004, 4004 ms; "Katso tulos" odotti; napautus →
+"Täydellinen tulos!", "Tähtiä: 1"; uudelleenlatauksen jälkeen "Tähtiä: 1".
+A3: Espanja → Suomi, siemen 26: "buenas tardes" -vastauksen luku päättyi 919 ms,
+seuraava sana "buenas noches" luettiin 4006 ms kohdalla.
+A4: 6 oikein + 4 ohitettu → "6 / 10 oikein", rivit "6 oikein / 4 ohitettu",
+"Tähti tulee, kun saat 8 oikein.", tähtiä 0.
+A5: vaihtoehdoissa "ole kiltti" (por favor) ja "hyvää iltapäivää" (buenas tardes).
+Odottaa: B (omistajan katsominen ja kuuntelu, Q43) ja C (tähti tallessa
+myöhempänä päivänä, kysytään myöhemmin).
 Perustelu: omistaja vaati kaikki use caset; tämä on Espanjavalmentajan
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.

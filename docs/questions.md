@@ -6,6 +6,11 @@
   sana menee ensin väärin, ja paina lopussa Kuuntele. Kuulostaako nyt
   hyvältä: kyllä / ei? (SEI-49) — avattu 2026-10-26
 
+- **Q43 (katso):** Espanja Macilla: valitse Espanja → Suomi, Aloita, vastaa
+  ensimmäiseen oikein äläkä napauta mitään. Kuuluuko espanjan sana, täyttyykö
+  nappi ja tuleeko seuraava sana itsestään ja luetaanko se: kyllä / ei?
+  (SEI-4, 48) — avattu 2026-10-26
+
 ## Vastatut
 
 - **Q41 (päätös):** Sanojen loppuruudun keskimmäinen rivi "Vain 1 sana
