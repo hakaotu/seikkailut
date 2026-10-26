@@ -593,11 +593,11 @@ test('resume, end screen: no badge, the same end screen without confetti or spee
   await press(card(page), testInfo);
   await expect(view(page).locator('.es-end')).toBeVisible();
   await expect(view(page).locator('.es-q-end')).toHaveText('Täydellinen tulos!');
-  expect(await confetti(page)).toBe(0);
   await expect(stars(page)).toHaveAttribute('aria-label', 'Tähtiä: 1');
+  expect(await page.evaluate(() => window.localStorage.getItem('espanja.stars'))).toBe('1');
+  expect(await confetti(page)).toBe(0);
   await settle(page);
   expect((await speakCalls(page)).length).toBe(before);
-  expect(await page.evaluate(() => window.localStorage.getItem('espanja.stars'))).toBe('1');
 });
 
 test('resume: leaving during the confetti removes it', async ({ page }, testInfo) => {
