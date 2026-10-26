@@ -15,6 +15,13 @@ test.beforeEach(async ({ page }) => {
   await seedRandom(page, (seed += 1));
 });
 
+// The number of speak calls once any reading just started has had time to finish, with its pauses and later
+// parts, so that a call counted later is really a new one.
+async function quietLength(page, ms = 1500) {
+  await page.waitForTimeout(ms);
+  return (await speakCalls(page)).length;
+}
+
 const listen = (page) => view(page).locator('.listen');
 const feedback = (page) => view(page).locator('.sn-fb');
 const entryOf = (word) => [...WORDS, ...HP_WORDS].find((e) => e.word === word);
@@ -70,7 +77,7 @@ test('SEI-3 / 3: Helppo shows the picture button and the hint; the tiles are the
   expect([...tiles].sort()).toEqual([...word].sort());
   expect(tiles.join('')).not.toBe(word);
   await expect(view(page).locator('.sn-mystery')).toBeHidden();
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   await press(image, testInfo);
   const calls = await speakCalls(page);
   expect(calls[before].text).toBe(word.toLowerCase());
@@ -120,7 +127,7 @@ test('SEI-3 / 7: with tavutus on, hyphens (aria-hidden) sit between the syllable
   // the boxes of each group are as many as the syllable has letters
   const sizes = await view(page).locator('.sn-syl').evaluateAll((groups) => groups.map((g) => g.querySelectorAll('.sn-slot').length));
   expect(sizes).toEqual(syllables.map((s) => s.length));
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page, 4000);
   await press(listen(page), testInfo);
   await expect.poll(async () => (await speakCalls(page)).length, { timeout: 8000 }).toBe(before + 1 + syllables.length);
   const calls = (await speakCalls(page)).slice(before);
@@ -170,7 +177,7 @@ test('SEI-3 / 10, SEI-7 / 1: a wrong word keeps its letters; tapping the wrong b
   const word = await currentWord(page);
   const wrong = wrongSpelling(word, true);
   const at = [...word].findIndex((l, i) => l !== wrong[i]);
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   await spell(page, testInfo, wrong);
   await expect(feedback(page)).toContainText('Ei ihan.');
   await expect(feedback(page)).toContainText('Napauta kirjainta, jonka haluat vaihtaa.');
@@ -235,7 +242,7 @@ for (const level of ['Helppo', 'Keskitaso', 'Vaikea']) {
 test('SEI-7 / 3: Ohita shows the word in grey, says it, counts it, and waits for Seuraava; no victory clip', async ({ page }, testInfo) => {
   await openSanat(page, testInfo);
   await startRound(page, testInfo, { level: 'Keskitaso' });
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   const word = await skip(page, testInfo);
   expect(await view(page).locator('.sn-slot.is-shown').count()).toBe(word.length);
   expect(await slotLetters(page)).toEqual([...word]);
@@ -335,7 +342,7 @@ test('SEI-3 / 11: Pisteet and the bar follow each finished word, stars follow th
   await expect(button(page, 'Katso tulos')).toBeVisible();
   await next(page, testInfo);
   await expect(view(page).locator('.sn-end')).toBeVisible();
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   await press(button(page, 'Pelaa uudelleen'), testInfo);
   await expect(view(page).locator('.sn-play')).toBeVisible();
   const calls = (await speakCalls(page)).slice(before);
@@ -458,7 +465,7 @@ test('SEI-3 / 6: a level change on an open word restarts it on the new level, ke
   await spell(page, testInfo, word.slice(0, 2));
   await openChoose(page, testInfo);
   await press(radio(page, 'Vaikea'), testInfo);
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   await press(button(page, 'Takaisin sanaan'), testInfo);
   await expect(view(page).locator('.sn-play')).toBeVisible();
   expect(await currentWord(page)).toBe(word);
@@ -496,7 +503,7 @@ test('SEI-3 / 6: a level change on a finished word shows the same finished word,
   const word = await spellRight(page, testInfo);
   await openChoose(page, testInfo);
   await press(radio(page, 'Vaikea'), testInfo);
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   await press(button(page, 'Takaisin sanaan'), testInfo);
   await expect(view(page).locator('.sn-play')).toBeVisible();
   expect(await slotLetters(page)).toEqual([...word]);
@@ -518,7 +525,7 @@ test('SEI-3 / 7: tavutus changed in the middle of a word keeps the letters, adds
   const placed = await slotLetters(page);
   // nothing changed: the same state, no reading
   await openChoose(page, testInfo);
-  let before = (await speakCalls(page)).length;
+  let before = await quietLength(page);
   await press(button(page, 'Takaisin sanaan'), testInfo);
   await settle(page);
   expect(await slotLetters(page)).toEqual(placed);
@@ -527,7 +534,7 @@ test('SEI-3 / 7: tavutus changed in the middle of a word keeps the letters, adds
   await openChoose(page, testInfo);
   await press(button(page, 'Tavutus'), testInfo);
   await expect(hint(page)).toHaveText(''); // no hint for tavutus
-  before = (await speakCalls(page)).length;
+  before = await quietLength(page);
   await press(button(page, 'Takaisin sanaan'), testInfo);
   await expect(view(page).locator('.sn-play')).toBeVisible();
   expect(await slotLetters(page)).toEqual(placed); // the letters stayed (design E2)
@@ -552,7 +559,7 @@ test('Resume: nothing done yet with letters placed, Etusivu, the card tap reads 
   await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
   await expect(page.locator('#home')).toBeVisible();
   await expect(badge(page)).toHaveCount(0);
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
   await expect(view(page).locator('.sn-play')).toBeVisible();
   expect(await slotLetters(page)).toEqual(placed);
@@ -573,7 +580,7 @@ test('Resume: three words done show Kesken 3/10 and a return changes nothing and
   await spell(page, testInfo, word.slice(0, 1));
   await press(page.getByRole('button', { name: 'Etusivu' }), testInfo);
   await expect(badge(page)).toHaveText(/Kesken 3\/10/);
-  const before = (await speakCalls(page)).length;
+  const before = await quietLength(page);
   await press(page.locator('button.game-card[data-game="sanat"]'), testInfo);
   await expect(view(page).locator('.sn-play')).toBeVisible();
   expect((await slotLetters(page))[0]).toBe(word[0]);
