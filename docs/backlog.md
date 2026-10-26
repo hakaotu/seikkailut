@@ -1,6 +1,6 @@
 # Backlog: Seikkailut
 
-Päivitetty 2026-10-26 (pm; SEI-47 lisätty, Q26–Q28 kirjattu). Syöte: `docs/brief.md` ja kolme kopiota
+Päivitetty 2026-10-26 (pm; SEI-48 lisätty, Q31–Q33 kirjattu). Syöte: `docs/brief.md` ja kolme kopiota
 hakemistossa `originals/`. Tämä tiedosto on pm:n tuotos; tilan (todo,
 in-progress, review, verifying, done) siirtää vain pääsessio.
 
@@ -330,6 +330,12 @@ Tila: todo
 Perustelu: omistaja vaati kaikki use caset; tämä on Espanjavalmentajan
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.
+Huomio (2026-10-26): Espanjan ulkoasu `docs/design/sei-4.md` (+ `.html`)
+hyväksytty omistajalla (Q31: "ok"); kattaa SEI-4, SEI-9 ja SEI-10. Omistajan
+päätös (Q33: "ok"): vanhan Espanjavalmentajan tähtiä ei siirretä, tähdet
+alkavat uudessa sovelluksessa nollasta (design kohta 5, E20; kriteeri 11).
+Luonnos kuvaa myös automaattisen siirtymisen oikean vastauksen jälkeen; se on
+oma tehtävänsä SEI-48 (Q31), eikä kuulu SEI-4:n kriteereihin.
 Kriteerit (lähde: `originals/espanjavalmentaja.html`):
 1. Annettu suunta "Suomi → Espanja". Kun pelaan kierroksen. Niin kysymys
    on suomeksi ja neljä vaihtoehtoa on espanjaksi, joista yksi on oikea;
@@ -362,6 +368,11 @@ Kriteerit (lähde: `originals/espanjavalmentaja.html`):
 10. Annettu ruudunlukija. Kun kysymys vaihtuu. Niin uusi kysymys
     ilmoitetaan ruudunlukijalle, ja vastaukset on nimetty (nykyiset
     saavutettavuusmerkinnät säilyvät).
+11. (Lisätty 2026-10-26, Q33.) Annettu laite, jossa vanha Espanjavalmentaja
+    on aiemmin antanut tähtiä (tai jossa niitä ei ole). Kun avaan uuden
+    Espanjan ensimmäisen kerran. Niin kerättyjä tähtiä on 0 (yläpalkissa
+    tyhjä tähti ja `0`, design kohta 3.0); vanhoja tähtiä ei näy eikä niitä
+    yritetä siirtää.
 
 ## C. Nykyisten toimintojen laatu (lähtötaso koodista luettu, ei havaintoja)
 
@@ -600,6 +611,119 @@ Riskit:
 - Kiinteä aika voi tuntua liian nopealta tai hitaalta eri lukutaitoisille
   (sama riski kuin SEI-46:ssa).
 
+### SEI-48 — Espanja: oikean vastauksen jälkeen siirtyy itsestään seuraavaan kysymykseen
+Tila: todo
+Havainto: ei omaa havaintoa Espanjasta; omistaja hyväksyi 2026-10-26 (Q31:
+"ok") Espanjan ulkoasuluonnoksen `docs/design/sei-4.md`, jossa Espanja siirtyy
+oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat
+(luonnoksen avoin kysymys 1, oletus "kyllä"; hyväksyntä kattaa oletuksen).
+Lähtöhavainto on SEI-46:n (omistaja 2026-10-23, Mac, Matikka); säännöt Q25
+(Matikka) ja Q28 (Sanat), ulkoasu `docs/design/sei-46.md` (hyväksytty Q29).
+Säännöt: vain oikean vastauksen jälkeen; 4 s edistymispalkilla (design:
+täyttyvä Seuraava-painike); Seuraava ohittaa odotuksen; 10. kysymyksen
+jälkeen `Katso tulos` säilyy (ei hyppyä loppuruutuun itsestään).
+Perustelu: omistaja haluaa, että kolme peliä toimivat samoin eikä lapsen
+tarvitse painaa Seuraava jokaisen oikean vastauksen jälkeen.
+Riippuvuus: SEI-4, SEI-9, SEI-10 (Espanja uudessa sovelluksessa, ulkoasu
+`docs/design/sei-4.md` hyväksytty Q31) ja SEI-46:n yhteinen automaattisen
+siirtymisen toteutus (design: yksi toteutus kaikille kolmelle pelille; missä
+se asuu, on arkkitehdin asia). Voidaan julkaista vasta, kun Espanja on
+sovelluksessa (SEI-4). Ulkoasu on jo hyväksytty (sei-4.md kohta 3.5 ja
+sei-46.md), joten designeria ei tarvita ellei jokin kriteeri osoittaudu
+ristiriitaiseksi.
+Kriteerit (lapsen näkemä ja kuulema; "oikein" = valittu vaihtoehto on oikea;
+Espanjassa ei ole uutta yritystä; suunta Suomi → Espanja tai Espanja → Suomi,
+ellei toisin sanota):
+1. Annettu lapsi valitsee oikean vaihtoehdon kysymyksessä 1–9. Kun kehu ja
+   pari (esim. `hola = hei`) ovat näkyvissä. Niin Seuraava-painike on vaalea ja
+   täyttyy tasaisesti 4 sekunnin ajan, ja täytyttyään seuraava kysymys tulee
+   ilman yhtään napautusta.
+2. Annettu lapsi valitsee väärän vaihtoehdon. Kun `Ei ihan. Oikea vastaus on
+   …` näkyy. Niin Seuraava on heti täysi (ei täyty) eikä seuraava kysymys
+   tule itsestään; lapsi ehtii katsoa oikeaa vastausta niin kauan kuin
+   haluaa.
+3. Annettu lapsi painaa Ohita. Kun `Ohitettu. Oikea vastaus on …` näkyy ja
+   oikea espanjan sana on luettu. Niin Seuraava on heti täysi eikä seuraava
+   kysymys tule itsestään (Q27:n tapa, design 3.6); lapsi ehtii katsoa
+   oikeaa vastausta niin kauan kuin haluaa.
+4. Annettu 10. kysymys vastataan oikein. Kun kehu näkyy. Niin näkyvissä on
+   täysi `Katso tulos` eikä täyttyvää painiketta; loppuruutu tulee vasta
+   napautuksesta (Q25).
+5. Annettu oikean vastauksen odotus on käynnissä. Kun oikean vastauksen
+   espanjan sana luetaan ääneen. Niin luku ehtii loppuun ennen kuin seuraava
+   kysymys tulee (ääni ei katkea uuden kysymyksen tullessa; pisin sana
+   `buenas noches` / `buenas tardes`, design 3.5 arvio noin 1,2 s,
+   ei mitattu).
+6. Annettu suunta Espanja → Suomi ja seuraava kysymys tuli itsestään. Kun se
+   tulee näkyviin. Niin uusi espanjan kysymyssana luetaan ääneen kuten
+   Seuraava-napautuksen jälkeen, ja täyttyvä painike on korvautunut: Seuraava
+   on piilossa, kunnes taas on vastattu tai ohitettu.
+7. Annettu suunta Suomi → Espanja ja seuraava kysymys tuli itsestään. Kun se
+   tulee näkyviin. Niin sitä ei lueta ääneen (kuten Seuraava-napautuksen
+   jälkeen, design 3.8), ja Kuuntele lukee vaihtoehdot kuten ennenkin.
+8. Annettu odotus on käynnissä. Kun lapsi painaa Seuraavaa. Niin seuraava
+   kysymys tulee heti, täyttö katoaa, eikä ajastin siirrä vielä yhtä
+   kysymystä eteenpäin (ei ohiteta kahta kysymystä); sama kun napautus ja
+   ajastimen päättyminen osuvat samaan hetkeen.
+9. Annettu odotus on käynnissä. Kun lapsi painaa Etusivu, painaa Vaihda
+   (suunnan valintaruutu), aloittaa uuden kierroksen tai selain siirtää
+   sivun piiloon (esim. iPad lukkoon, toinen välilehti). Niin ajastin ei tee
+   mitään uudessa näkymässä (ei kysymystä ilmesty etusivulle,
+   valintaruudun tai uuden kierroksen päälle).
+10. Annettu odotus perutettu kohdan 9 tavalla (esim. paluu etusivulta tai
+    `Takaisin kysymykseen`). Kun palaan kysymykseen. Niin sama kysymys ja
+    sama palaute ovat näkyvissä ja Seuraava on täysi ja odottaa napautusta;
+    kysymys ei siirry itsestään eikä mitään lueta ääneen (oletus, ks. avoin
+    kysymys 1).
+11. Annettu automaattinen siirtyminen. Kun kierros pelataan loppuun. Niin
+    oikein / väärin / ohitettu -luvut, pisteet (`Pisteet`, Kesken-merkki) ja
+    tähti (8/10 tai enemmän; tähti tulee vasta kun `Katso tulos` -napautus
+    avaa loppuruudun) ovat samat kuin jos jokainen kysymys olisi siirretty
+    Seuraavalla: siirtymistapa ei muuta tulosta (Kesken kasvaa vastatessa ja
+    ohittaessa, ei siirtyessä).
+12. Annettu käyttöjärjestelmän asetus "vähennä liikettä" päällä. Kun oikea
+    vastaus on annettu. Niin odotus näkyy silti (täyttö neljänä askeleena
+    ilman liukumista, design 3.5), ja siirtyminen tapahtuu samassa ajassa
+    (4 s).
+13. Annettu ruudunlukija. Kun oikea vastaus annetaan kysymyksessä 1–9. Niin
+    ruudunlukija kertoo, että seuraava kysymys tulee itsestään (ennen
+    siirtymistä); kysymyksessä 10 sitä ei sanota; uusi kysymys ilmoitetaan
+    kuten nykyisin.
+14. Annettu Macilla Chromella pelattu täysi kierros, kaikki oikein. Kun lapsi
+    ei napauta mitään vastausten jälkeen. Niin kysymykset 2–10 tulevat
+    itsestään, ja 10. kysymyksen jälkeen odottaa `Katso tulos`. Mittaus
+    kirjataan: selain, suunta, ja kesto kellolla vastausnapautuksesta
+    seuraavan kysymyksen ilmestymiseen (tavoite 4 s).
+15. Annettu SEI-46 (Matikka), SEI-47 (Sanat) ja SEI-48 (Espanja) valmiina.
+    Kun vertaan kolmen pelin automaattista siirtymistä (kesto, painikkeen
+    ulkoasu, Seuraava-painikkeen ja ruudunlukijan käytös,
+    peruutustilanteet). Niin ne ovat samat; poikkeama kirjataan perusteineen.
+    Poikkeuksia, jotka johtuvat pelin sisällöstä eivätkä ole poikkeamia:
+    Espanjassa ei ole kuvaa eikä voittoääntä; väärä vastaus ei saa uutta
+    yritystä.
+
+Avoimet kysymykset (ei omistajalle; designerille ja arkkitehdille):
+1. Kun lapsi poistuu etusivulle odotuksen aikana ja palaa: oletus
+   (kriteeri 10) Seuraava odottaa napautusta; design sei-4.md kohta 3.5 on
+   samaa mieltä. Sama kysymys on auki SEI-47:ssä.
+
+Riskit:
+- iPad (kuten SEI-46): Espanja → Suomi -suunnassa seuraava kysymyssana
+  luetaan ajastimesta, ei napautuksesta. iPad-Safari voi estää puheen, jota ei
+  ole käynnistetty napautuksesta. Jos estää, espanjan sana näkyy tekstinä mutta
+  jää lukematta; Kuuntele toimii napautuksesta. Lapsi, joka ei vielä osaa
+  lukea espanjaa ääneen, ei kuule sanaa ennen kuin painaa Kuuntele, joten
+  peli ei kaadu mutta kuulemisharjoitus puuttuu (Matikassa lasku näkyy
+  tekstinä; Sanojen Keskitasolla ja Vaikealla ongelma on vakavampi). Peli ei
+  saa jäädä jumiin (SEI-1 kriteeri 5). Tarkistetaan iPadilla SEI-2:n
+  iPad-tarkistuksen yhteydessä; ei tarkistettu. Suomi → Espanja -suunta ei
+  ole tämän riskin alla, koska uutta kysymystä ei lueta.
+- Kiinteä 4 s voi tuntua liian nopealta tai hitaalta eri lukutaitoisille
+  (sama riski kuin SEI-46:ssa ja SEI-47:ssä).
+- Täysi oikea kierros ilman napautuksia vie 9 × 4 s = 36 s odotusta
+  (design kohta 6); ei omistajan kysymys, mutta kirjataan mittauksessa
+  (kriteeri 14).
+
 ### SEI-7 — Sana: virheen jälkeen koko sanaa ei tyhjennetä, askelpalautin kaikilla tasoilla, ohitus
 Tila: todo
 Perustelu: lähtötaso: väärä yritys tyhjentää koko sanan, "Aloita alusta"
@@ -647,15 +771,30 @@ Tila: todo
 Perustelu: lähtötaso: käännösvirheitä (por favor / "ole hyvä", buenas
 tardes / "hyvää iltaa"); lapset oppisivat väärän sanan.
 Riippuvuus: SEI-4. Tarvitsee espanjaa osaavan tarkistajan (ks. K3).
+Huomio (2026-10-26): ulkoasu ja käännöstaulukko `docs/design/sei-4.md`
+(kohta 5, SEI-9) hyväksytty omistajalla (Q31). Tarkistaja: espanjaa osaavaa
+ei ole nimetty (K3), joten omistaja on hyväksynyt käännökset tarkistajana
+(Q32: "ok", 2026-10-26; pohjana designerin sanakirjatarkistus
+fi.wiktionary.org 2026-10-26). Hyväksytyt suomennokset: adiós = näkemiin
+(ennen "moi moi / hei hei"), buenas tardes = hyvää iltapäivää (ennen "hyvää
+iltaa"), por favor = ole kiltti (ennen "ole hyvä"). Muut 15 paria ennallaan.
 Kriteerit:
 1. Annettu 18 nykyistä sanaparia. Kun tarkistaja käy ne läpi. Niin jokaisen
    parin suomi ja espanja tarkoittavat samaa (tarkistajan hyväksyntä
-   kirjataan tehtävään).
+   kirjataan tehtävään). Kirjaus: omistaja tarkistajana, Q32, 2026-10-26,
+   kolme muutettua paria hyväksytty ja 15 ennallaan (ks. Huomio).
 2. Annettu pari "buenas tardes" (nykyisin suomeksi "hyvää iltaa", rivi
    198). Kun kysymys näytetään. Niin suomenkielinen vastine on
    tarkistajan hyväksymä.
 3. Annettu pari "por favor" (nykyisin suomeksi "ole hyvä", rivi 201). Kun
    kysymys näytetään. Niin suomenkielinen vastine on tarkistajan hyväksymä.
+4. (Täsmennys 2026-10-26, Q32.) Annettu hyväksytyt suomennokset. Kun pelaan
+   kierroksen, jossa pari tulee kysymykseksi tai vaihtoehdoksi (molemmat
+   suunnat). Niin "adiós" on suomeksi `näkemiin`, "buenas tardes" on `hyvää
+   iltapäivää` ja "por favor" on `ole kiltti`; vanhoja muotoja (`moi moi /
+   hei hei`, `hyvää iltaa`, `ole hyvä`) ei näy missään vaihtoehdossa tai
+   kysymyksessä. Kriteerit 2 ja 3 täsmentyvät näin: tarkistajan hyväksymä
+   vastine on yllä oleva.
 
 ### SEI-10 — Espanja: palaute väärästä ja "Seuraava" ilman vastausta
 Tila: todo
@@ -664,6 +803,10 @@ Perustelu: lähtötaso: väärästä vastauksesta kerrotaan vain värillä (puna
 vastaamatta. Huom: brief sanoo "ei palautetta väärästä"; koodin
 mukaan värit on, tekstiä ei.
 Riippuvuus: SEI-4. Designer päättää tavan.
+Huomio (2026-10-26): ulkoasu `docs/design/sei-4.md` hyväksytty omistajalla
+(Q31: "ok"). Väärä: `Ei ihan.` / `Oikea vastaus on …`; vastaamatta eteenpäin
+vain `Ohita`, joka näyttää oikean vastauksen ja lasketaan ohitetuksi
+(design kohdat 3.4, 3.6, 3.7).
 Kriteerit:
 1. Annettu väärä vastaus. Kun valitsen sen. Niin näen myös tekstin, joka
    kertoo oikean vastauksen (väri ei ole ainoa tieto).
@@ -1063,3 +1206,4 @@ Kriteerit:
 - 2026-10-23: lisätty SEI-46 (Matikka: automaattinen siirtyminen oikean vastauksen jälkeen), omistajan havainto Macilla julkaistusta Matikasta. Neljä avointa kysymystä oletuksineen (väärä vastaus, kesto 4 s, ohitus Seuraavalla, 10. vastaus). Tila todo.
 - 2026-10-23: SEI-46 avoimet kysymykset 1–4 ratkaistu oletusten mukaan (Q25: "ok"). Odottaa designeria Sanat-luonnoksen katselmoinnin jälkeen.
 - 2026-10-26: Q26: Sanojen ulkoasu `docs/design/sei-3.md` hyväksytty omistajalla ("ok ja jatka"); koskee SEI-3, SEI-7, SEI-8. Q27: ohitettu sana näytetään ja luetaan ensin, sitten Seuraava ("joo", tulkittu oletukseksi; SEI-7, design E5). Q28: omistaja vastasi "joo" kysymykseen, siirtyykö Sanat oikean sanan jälkeen itsestään kuten Matikka, samoin säännöin kuin Q25 → lisätty SEI-47 (tila todo). SEI-46:een kirjattu, että Matikan ja Sanojen automaattisen siirtymisen ulkoasu suunnitellaan yhdessä. Tilarivejä ei muutettu.
+- 2026-10-26: Q31: Espanjan ulkoasu `docs/design/sei-4.md` (+ `.html`) hyväksytty omistajalla ("ok"); kattaa SEI-4, SEI-9, SEI-10, ja sen mukaan Espanja siirtyy oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat (Q25, Q28; `docs/design/sei-46.md`, Q29) → lisätty SEI-48 (tila todo). Q32: suomennokset adiós = näkemiin, buenas tardes = hyvää iltapäivää, por favor = ole kiltti hyväksytty omistajalla tarkistajana (SEI-9; kriteeri 4 lisätty). Q33: vanhan Espanjan tähtiä ei siirretä, alkavat nollasta (SEI-4; kriteeri 11 lisätty). Tilarivejä ei muutettu.
