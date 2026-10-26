@@ -267,11 +267,11 @@ export function endTexts(a, b, c) {
   }
   const title = tier === 'good' ? 'Hienoa!' : 'Kierros valmis!';
   const line = tier === 'good' ? 'Hyvää työtä!' : 'Harjoittelemalla oppii!';
-  // Numbers as digits, not inflected: the voice would say "yksi sanan".
+  // The voice reads the rows shown on screen, in the same order, each as a sentence of its own.
+  // Numbers as digits, not inflected: "9 sanaa" is right Finnish and the voice reads it as is.
   const spokenTitle = tier === 'good' ? title : 'Kierros valmis.';
-  const counts =
-    (a >= 1 ? ` Heti oikein ${a}.` : '') + (b >= 1 ? ` Uudella yrityksellä ${b}.` : '') + (c >= 1 ? ` Ohitettu ${c}.` : '');
-  return { tier, title, rows, line, speech: `${spokenTitle}${counts} ${line}` };
+  const counts = rows.map((r) => `${r.text}.`).join(' ');
+  return { tier, title, rows, line, speech: `${spokenTitle} ${counts} ${line}` };
 }
 
 export const SELECTION_HINTS = {
