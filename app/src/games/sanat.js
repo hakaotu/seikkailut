@@ -338,6 +338,8 @@ export default {
     function renderSlots() {
       const ws = cur();
       const next = ws.result === 'open' ? ws.slots.indexOf(null) : -1;
+      // Design sei-50 3.4: from 11 letters the boxes get narrower (CSS, from 600 px) so the word stays on one row.
+      slotsEl.classList.toggle('is-long', ws.word.length >= 11);
       const nodes = ws.slots.map((slot, i) => {
         if (!slot) return el('span', `sn-slot is-empty${i === next ? ' is-next' : ''}`);
         if (ws.result === 'open') {

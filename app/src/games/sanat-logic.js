@@ -7,7 +7,7 @@
 
 export const MAX_WORDS = 10;
 
-// ── Word bank (originals/sanaseikkailu.html r. 341-389, verbatim) ──────────
+// ── Word bank (the first 24 / 20 words: originals/sanaseikkailu.html r. 341-389, verbatim) ──
 export const WORDS = [
   { word:'KISSA',   emoji:'🐱', hint:'Sanoo miau!' },
   { word:'KOIRA',   emoji:'🐶', hint:'Haukkuu!' },
@@ -33,6 +33,43 @@ export const WORDS = [
   { word:'NORSU',   emoji:'🐘', hint:'Pitkä kärsä' },
   { word:'PISTE',   emoji:'🔴', hint:'Pyöreä merkki' },
   { word:'TULI',    emoji:'🔥', hint:'Kuuma ja punainen' },
+  // SEI-50: docs/design/sei-50.md §4.1
+  { word:'LEHMÄ', emoji:'🐄', hint:'Sanoo ammuu!' },
+  { word:'HEVONEN', emoji:'🐴', hint:'Sillä voi ratsastaa' },
+  { word:'SIKA', emoji:'🐷', hint:'Sanoo röh röh!' },
+  { word:'LAMMAS', emoji:'🐑', hint:'Sanoo mää!' },
+  { word:'KANI', emoji:'🐰', hint:'Pitkät korvat, hyppii' },
+  { word:'KETTU', emoji:'🦊', hint:'Oranssi metsän eläin' },
+  { word:'APINA', emoji:'🐒', hint:'Kiipeilee puissa' },
+  { word:'LEIJONA', emoji:'🦁', hint:'Eläinten kuningas' },
+  { word:'KIRAHVI', emoji:'🦒', hint:'Tosi pitkä kaula' },
+  { word:'ETANA', emoji:'🐌', hint:'Kantaa kotiaan selässä' },
+  { word:'JUNA', emoji:'🚆', hint:'Kulkee kiskoilla' },
+  { word:'BUSSI', emoji:'🚌', hint:'Moni pääsee kyytiin' },
+  { word:'LAIVA', emoji:'🚢', hint:'Kulkee meren yli' },
+  { word:'PYÖRÄ', emoji:'🚲', hint:'Kaksi rengasta ja polkimet' },
+  { word:'RAKETTI', emoji:'🚀', hint:'Lentää avaruuteen' },
+  { word:'PILVI', emoji:'☁️', hint:'Leijuu taivaalla' },
+  { word:'SADE', emoji:'🌧️', hint:'Vettä tulee taivaalta' },
+  { word:'LUMI', emoji:'❄️', hint:'Valkoista ja kylmää' },
+  { word:'SIENI', emoji:'🍄', hint:'Sillä on lakki ja jalka' },
+  { word:'LEHTI', emoji:'🍁', hint:'Putoaa puusta syksyllä' },
+  { word:'SALAMA', emoji:'⚡', hint:'Välähtää ukkosella' },
+  { word:'LEIPÄ', emoji:'🍞', hint:'Leikataan viipaleiksi' },
+  { word:'JUUSTO', emoji:'🧀', hint:'Keltainen ja reikäinen' },
+  { word:'MAITO', emoji:'🥛', hint:'Valkoinen juoma' },
+  { word:'PÄÄRYNÄ', emoji:'🍐', hint:'Vihreä hedelmä' },
+  { word:'KAKKU', emoji:'🎂', hint:'Kynttilät päällä' },
+  { word:'KEKSI', emoji:'🍪', hint:'Rapea ja makea' },
+  { word:'KELLO', emoji:'⏰', hint:'Tik tak!' },
+  { word:'KYNÄ', emoji:'✏️', hint:'Sillä kirjoitetaan' },
+  { word:'REPPU', emoji:'🎒', hint:'Koululaisen laukku' },
+  { word:'NALLE', emoji:'🧸', hint:'Pehmeä lelu' },
+  { word:'RUMPU', emoji:'🥁', hint:'Bum bum bum!' },
+  { word:'KRUUNU', emoji:'👑', hint:'Kuninkaan päässä' },
+  { word:'KENKÄ', emoji:'👟', hint:'Laitetaan jalkaan' },
+  { word:'SUKKA', emoji:'🧦', hint:'Lämmittää varpaita' },
+  { word:'PAITA', emoji:'👕', hint:'Puetaan päälle' },
 ];
 
 export const HP_WORDS = [
@@ -56,6 +93,28 @@ export const HP_WORDS = [
   { word:'TAIKA',      emoji:'🌟',  hint:'Taikurin supervoima' },
   { word:'KAMMIO',     emoji:'🚪',  hint:'Salainen huone' },
   { word:'TAIKAJUOMA', emoji:'🧪',  hint:'Ihmeellinen liemi' },
+  // SEI-51: docs/design/sei-50.md §4.2
+  { word:'ROHKELIKKO', emoji:'🦁', hint:'Leijona on sen merkki' },
+  { word:'LUIHUINEN', emoji:'🐍', hint:'Käärme on sen merkki' },
+  { word:'PUUSKUPUH', emoji:'🦡', hint:'Mäyrä on sen merkki' },
+  { word:'TUPA', emoji:'🏠', hint:'Koulussa niitä on neljä' },
+  { word:'TYLYAHO', emoji:'🏘️', hint:'Taikurien oma kylä' },
+  { word:'PIKAJUNA', emoji:'🚂', hint:'Vie oppilaat kouluun' },
+  { word:'LAITURI', emoji:'🚉', hint:'Yhdeksän ja kolme neljäsosaa' },
+  { word:'TÄHTITORNI', emoji:'🔭', hint:'Täältä katsellaan yötaivasta' },
+  { word:'KASVIHUONE', emoji:'🪴', hint:'Lasinen talo taimille' },
+  { word:'ETSIJÄ', emoji:'🔍', hint:'Nappaa kultaisen pallon' },
+  { word:'PITÄJÄ', emoji:'🥅', hint:'Vartioi maalirenkaita' },
+  { word:'LYÖJÄ', emoji:'🏏', hint:'Pelaaja, jolla on maila' },
+  { word:'KOTIKOLO', emoji:'🏡', hint:'Punatukkaisen perheen talo' },
+  { word:'KALJUUNA', emoji:'💰', hint:'Taikurien kultaraha' },
+  { word:'ARPI', emoji:'⚡', hint:'Salaman muotoinen otsassa' },
+  { word:'KENTAURI', emoji:'🏹', hint:'Puoliksi hevonen' },
+  { word:'SULKAKYNÄ', emoji:'🪶', hint:'Kastetaan musteeseen' },
+  { word:'FEENIKS', emoji:'🔥', hint:'Tulinen lintu' },
+  { word:'ALRUUNA', emoji:'🌱', hint:'Kasvi, joka kiljuu' },
+  { word:'PÄIVÄKIRJA', emoji:'📔', hint:'Salaisuudet sivuilla' },
+  { word:'KORPINKYNSI', emoji:'🦅', hint:'Kotka on sen merkki' },
 ];
 
 export const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'.split('');

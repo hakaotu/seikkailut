@@ -5,9 +5,10 @@ import {
   openEspanja, startRound, current, answerRight, answerWrong, skip, next, playRound, view, button,
 } from './espanja-helpers.mjs';
 
-// Seed 26 asks gris, adiós, por favor, buenas tardes, ... in the first round after a load: `buenas tardes` (13
-// characters, and `hyvää iltapäivää` as its Finnish prompt) is question 4, the longest word on screen.
-const SEED = 26;
+// Seed 5 asks rojo, ¿qué tal?, seis, buenas tardes, hijo, zanahoria, huevo, galleta, ocho, viernes in the first round
+// after a load: `buenas tardes` (13 characters, and `hyvää iltapäivää` as its Finnish prompt) is question 4, the
+// longest word on screen. Found with newRound and the same generator; the list changes it (SEI-50 to SEI-56).
+const SEED = 5;
 const LONGEST = { fi2es: 'hyvää iltapäivää', es2fi: 'buenas tardes' };
 
 test.beforeEach(async ({ page }) => {
@@ -28,7 +29,7 @@ async function toLongest(page, testInfo, direction) {
     await skip(page, testInfo);
     await next(page, testInfo);
   }
-  throw new Error('no buenas tardes in the first round of seed 26');
+  throw new Error('no buenas tardes in the first round of seed 5');
 }
 
 // Walks through every state of the question screen and the choose screen in one direction and runs

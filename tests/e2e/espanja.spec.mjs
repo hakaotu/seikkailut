@@ -34,6 +34,11 @@ const topicWords = (topic, key) => WORDS.filter((w) => w.topic === topic).map((w
 
 // ---------- SEI-4 / 1-3: directions, options, the word ----------
 
+test('SEI-52 to 56 / Q52: the choose screen says how many topics and words there are', async ({ page }, testInfo) => {
+  await openEspanja(page, testInfo);
+  await expect(view(page).locator('.es-words')).toHaveText('Sanat: 7 aihetta (79 sanaa)');
+});
+
 test('SEI-4 / 1: Suomi → Espanja asks in Finnish, shows four Spanish options of the word\'s topic, one of them right', async ({ page }, testInfo) => {
   await openEspanja(page, testInfo);
   await startRound(page, testInfo, { direction: 'fi2es' });
@@ -411,9 +416,10 @@ test('names and focus: Ohita kysymys, Seuraava kysymys, Katso tulos, Vaihda suun
 // ---------- SEI-9 / 4: the corrected words ----------
 
 test('SEI-9 / 4: adiós, buenas tardes and por favor show the corrected Finnish, and no old form shows, in both directions', async ({ page }, testInfo) => {
-  // Seed 26 asks gris, adiós, por favor, buenas tardes, ... in the first round after a load (found with newRound
-  // and the same generator). The page is loaded again for each direction, which starts the seed again.
-  await seedRandom(page, 26);
+  // Seed 826 asks conejo, miércoles, jueves, lunes, por favor, queso, adiós, pato, pan, buenas tardes in the first
+  // round after a load (found with newRound and the same generator). The page is loaded again for each direction,
+  // which starts the seed again.
+  await seedRandom(page, 826);
   const seen = new Set();
   const asked = new Set();
   for (const direction of ['fi2es', 'es2fi']) {

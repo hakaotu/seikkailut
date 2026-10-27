@@ -31,13 +31,20 @@ const spelled = (ws) => ws.slots.map((s) => (s ? s.letter : '_')).join('');
 
 // ---------- SEI-3 / 1, 2: the word lists ----------
 
-test('the word lists are the old ones: 24 and 20 entries with emoji and hint, letters in the alphabet, no duplicates', () => {
-  assert.equal(WORDS.length, 24);
+test('SEI-50 / 1, SEI-51 / 1: the lists are 60 and 41 entries, the old ones first and in order', () => {
+  assert.equal(WORDS.length, 60);
   assert.equal(WORDS[0].word, 'KISSA');
-  assert.equal(WORDS[WORDS.length - 1].word, 'TULI');
-  assert.equal(HP_WORDS.length, 20);
+  assert.equal(WORDS[23].word, 'TULI');
+  assert.equal(WORDS[24].word, 'LEHMÄ');
+  assert.equal(WORDS[WORDS.length - 1].word, 'PAITA');
+  assert.equal(HP_WORDS.length, 41);
   assert.equal(HP_WORDS[0].word, 'JÄSTI');
-  assert.equal(HP_WORDS[HP_WORDS.length - 1].word, 'TAIKAJUOMA');
+  assert.equal(HP_WORDS[19].word, 'TAIKAJUOMA');
+  assert.equal(HP_WORDS[20].word, 'ROHKELIKKO');
+  assert.equal(HP_WORDS[HP_WORDS.length - 1].word, 'KORPINKYNSI');
+});
+
+test('SEI-3 / 1, 2: every entry has emoji and hint, letters in the alphabet, no word twice (in a list or across both: SEI-50 / 2, SEI-51 / 2)', () => {
   for (const list of [WORDS, HP_WORDS]) {
     assert.equal(new Set(list.map((e) => e.word)).size, list.length);
     for (const e of list) {
@@ -45,8 +52,110 @@ test('the word lists are the old ones: 24 and 20 entries with emoji and hint, le
       for (const l of e.word) assert.ok(ALPHABET.includes(l), `${e.word}: ${l}`);
     }
   }
+  assert.equal(new Set([...WORDS, ...HP_WORDS].map((e) => e.word)).size, 101);
   assert.equal(ALPHABET.length, 29);
   assert.equal(ALPHABET.join(''), 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ');
+});
+
+test('SEI-50 / 3, SEI-51 / 4: Normaali words are 3-7 letters; Harry Potter words are at most 10, except KORPINKYNSI with 11 (Q49)', () => {
+  for (const e of WORDS) assert.ok(e.word.length >= 3 && e.word.length <= 7, e.word);
+  const long = HP_WORDS.filter((e) => e.word.length > 10);
+  assert.deepEqual(long.map((e) => e.word), ['KORPINKYNSI']);
+  assert.equal(long[0].word.length, 11);
+});
+
+// The first 24 / 20 entries are exempt: PALLO "Pallolla pelataan" and SAMMAKKO "Suklaasammakko!" give their word away
+// and SEI-50 / 1 keeps them (docs/plans/sei-50.md §9).
+test('SEI-50 / 4, SEI-51 / 5: a new hint is at most 30 characters and does not contain its word', () => {
+  for (const e of [...WORDS.slice(24), ...HP_WORDS.slice(20)]) {
+    assert.ok([...e.hint].length <= 30, `${e.word}: ${e.hint}`);
+    assert.ok(!e.hint.toLowerCase().includes(e.word.toLowerCase()), `${e.word}: ${e.hint}`);
+  }
+});
+
+test('SEI-50 / 5, SEI-51 / 6: an emoji is not repeated within a list, and the five with a variation selector kept it', () => {
+  for (const list of [WORDS, HP_WORDS]) {
+    assert.equal(new Set(list.map((e) => e.emoji)).size, list.length);
+  }
+  for (const w of ['PILVI', 'SADE', 'LUMI', 'KYNÄ', 'TYLYAHO']) {
+    assert.ok(entry(w).emoji.endsWith('\uFE0F'), w);
+  }
+});
+
+test('SEI-50 / 6, SEI-51 / 7: syllabify gives the recorded syllables for all 57 new words', () => {
+  const table = [
+    ['LEHMÄ', 'LEH-MÄ'],
+    ['HEVONEN', 'HE-VO-NEN'],
+    ['SIKA', 'SI-KA'],
+    ['LAMMAS', 'LAM-MAS'],
+    ['KANI', 'KA-NI'],
+    ['KETTU', 'KET-TU'],
+    ['APINA', 'A-PI-NA'],
+    ['LEIJONA', 'LEI-JO-NA'],
+    ['KIRAHVI', 'KI-RAH-VI'],
+    ['ETANA', 'E-TA-NA'],
+    ['JUNA', 'JU-NA'],
+    ['BUSSI', 'BUS-SI'],
+    ['LAIVA', 'LAI-VA'],
+    ['PYÖRÄ', 'PYÖ-RÄ'],
+    ['RAKETTI', 'RA-KET-TI'],
+    ['PILVI', 'PIL-VI'],
+    ['SADE', 'SA-DE'],
+    ['LUMI', 'LU-MI'],
+    ['SIENI', 'SIE-NI'],
+    ['LEHTI', 'LEH-TI'],
+    ['SALAMA', 'SA-LA-MA'],
+    ['LEIPÄ', 'LEI-PÄ'],
+    ['JUUSTO', 'JUUS-TO'],
+    ['MAITO', 'MAI-TO'],
+    ['PÄÄRYNÄ', 'PÄÄ-RY-NÄ'],
+    ['KAKKU', 'KAK-KU'],
+    ['KEKSI', 'KEK-SI'],
+    ['KELLO', 'KEL-LO'],
+    ['KYNÄ', 'KY-NÄ'],
+    ['REPPU', 'REP-PU'],
+    ['NALLE', 'NAL-LE'],
+    ['RUMPU', 'RUM-PU'],
+    ['KRUUNU', 'KRUU-NU'],
+    ['KENKÄ', 'KEN-KÄ'],
+    ['SUKKA', 'SUK-KA'],
+    ['PAITA', 'PAI-TA'],
+    ['ROHKELIKKO', 'ROH-KE-LIK-KO'],
+    ['LUIHUINEN', 'LUI-HUI-NEN'],
+    ['PUUSKUPUH', 'PUUS-KU-PUH'],
+    ['TUPA', 'TU-PA'],
+    ['TYLYAHO', 'TY-LY-A-HO'],
+    ['PIKAJUNA', 'PI-KA-JU-NA'],
+    ['LAITURI', 'LAI-TU-RI'],
+    ['TÄHTITORNI', 'TÄH-TI-TOR-NI'],
+    ['KASVIHUONE', 'KAS-VI-HUO-NE'],
+    ['ETSIJÄ', 'ET-SI-JÄ'],
+    ['PITÄJÄ', 'PI-TÄ-JÄ'],
+    ['LYÖJÄ', 'LYÖ-JÄ'],
+    ['KOTIKOLO', 'KO-TI-KO-LO'],
+    ['KALJUUNA', 'KAL-JUU-NA'],
+    ['ARPI', 'AR-PI'],
+    ['KENTAURI', 'KEN-TAU-RI'],
+    ['SULKAKYNÄ', 'SUL-KA-KY-NÄ'],
+    ['FEENIKS', 'FEE-NIKS'],
+    ['ALRUUNA', 'AL-RUU-NA'],
+    ['PÄIVÄKIRJA', 'PÄI-VÄ-KIR-JA'],
+    ['KORPINKYNSI', 'KOR-PIN-KYN-SI'],
+  ];
+  assert.deepEqual(table.map(([w]) => w), [...WORDS.slice(24), ...HP_WORDS.slice(20)].map((e) => e.word));
+  for (const [w, syl] of table) assert.equal(syllabify(w).join('-'), syl, w);
+});
+
+test('SEI-50 / 7, SEI-51 / 9: the new words are drawn (every group of 5 seeds has a deck with one)', () => {
+  for (const [theme, list, old] of [['normal', WORDS, 24], ['hp', HP_WORDS, 20]]) {
+    for (let from = 1; from <= 500; from += 5) {
+      let drawn = false;
+      for (let seed = from; seed < from + 5; seed++) {
+        if (newDeck(theme, seeded(seed)).some((e) => list.indexOf(e) >= old)) drawn = true;
+      }
+      assert.ok(drawn, `${theme} seeds ${from}-${from + 4}`);
+    }
+  }
 });
 
 test('newDeck gives MAX_WORDS distinct entries, all from the chosen list, over 500 seeds', () => {

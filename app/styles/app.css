@@ -1289,6 +1289,11 @@ html[data-booted] .boot-error { display: none; }
   .game-view[data-game='sanat'] .sn-key { height: 64px; font-size: 30px; }
 }
 
+/* A word of 11 letters or more (KORPINKYNSI) gets 52 px boxes so it stays on one row, also on iPad portrait (design sei-50 3.4) */
+@media (min-width: 600px) {
+  .game-view[data-game='sanat'] .sn-slots.is-long .sn-slot { width: 52px; }
+}
+
 @media (max-width: 599.98px) {
   .game-view[data-game='sanat'] .sn-image,
   .game-view[data-game='sanat'] .sn-mystery { width: 72px; height: 72px; }

@@ -5,8 +5,8 @@
 export const MAX_QUESTIONS = 10;
 export const STARS_KEY = 'espanja.stars'; // registry.js rule 6: the game id first. The old key was es_stars.
 
-// The old game's 18 pairs in the old order (originals/espanjavalmentaja.html r. 193-213), with the three
-// translations fixed in SEI-9 (Q32): adiós, buenas tardes, por favor.
+// The first 18 pairs are the old game's, in the old order (originals/espanjavalmentaja.html r. 193-213), with the three
+// translations fixed in SEI-9 (Q32): adiós, buenas tardes, por favor. The rest: docs/design/sei-50.md §4.4.
 export const WORDS = [
   { es: 'hola', fi: 'hei', topic: 'tervehdys' },
   { es: 'adiós', fi: 'näkemiin', topic: 'tervehdys' },
@@ -26,6 +26,72 @@ export const WORDS = [
   { es: 'morado', fi: 'violetti', topic: 'väri' },
   { es: 'marrón', fi: 'ruskea', topic: 'väri' },
   { es: 'gris', fi: 'harmaa', topic: 'väri' },
+  // SEI-52: numero
+  { es: 'uno', fi: 'yksi', topic: 'numero' },
+  { es: 'dos', fi: 'kaksi', topic: 'numero' },
+  { es: 'tres', fi: 'kolme', topic: 'numero' },
+  { es: 'cuatro', fi: 'neljä', topic: 'numero' },
+  { es: 'cinco', fi: 'viisi', topic: 'numero' },
+  { es: 'seis', fi: 'kuusi', topic: 'numero' },
+  { es: 'siete', fi: 'seitsemän', topic: 'numero' },
+  { es: 'ocho', fi: 'kahdeksan', topic: 'numero' },
+  { es: 'nueve', fi: 'yhdeksän', topic: 'numero' },
+  { es: 'diez', fi: 'kymmenen', topic: 'numero' },
+  { es: 'once', fi: 'yksitoista', topic: 'numero' },
+  { es: 'doce', fi: 'kaksitoista', topic: 'numero' },
+  // SEI-53: eläin
+  { es: 'perro', fi: 'koira', topic: 'eläin' },
+  { es: 'gato', fi: 'kissa', topic: 'eläin' },
+  { es: 'caballo', fi: 'hevonen', topic: 'eläin' },
+  { es: 'vaca', fi: 'lehmä', topic: 'eläin' },
+  { es: 'cerdo', fi: 'sika', topic: 'eläin' },
+  { es: 'oveja', fi: 'lammas', topic: 'eläin' },
+  { es: 'pájaro', fi: 'lintu', topic: 'eläin' },
+  { es: 'pez', fi: 'kala', topic: 'eläin' },
+  { es: 'ratón', fi: 'hiiri', topic: 'eläin' },
+  { es: 'conejo', fi: 'kani', topic: 'eläin' },
+  { es: 'pato', fi: 'ankka', topic: 'eläin' },
+  { es: 'gallina', fi: 'kana', topic: 'eläin' },
+  { es: 'león', fi: 'leijona', topic: 'eläin' },
+  { es: 'elefante', fi: 'norsu', topic: 'eläin' },
+  { es: 'mono', fi: 'apina', topic: 'eläin' },
+  { es: 'oso', fi: 'karhu', topic: 'eläin' },
+  // SEI-54: ruoka
+  { es: 'pan', fi: 'leipä', topic: 'ruoka' },
+  { es: 'leche', fi: 'maito', topic: 'ruoka' },
+  { es: 'agua', fi: 'vesi', topic: 'ruoka' },
+  { es: 'zumo', fi: 'mehu', topic: 'ruoka' },
+  { es: 'manzana', fi: 'omena', topic: 'ruoka' },
+  { es: 'plátano', fi: 'banaani', topic: 'ruoka' },
+  { es: 'fresa', fi: 'mansikka', topic: 'ruoka' },
+  { es: 'pera', fi: 'päärynä', topic: 'ruoka' },
+  { es: 'queso', fi: 'juusto', topic: 'ruoka' },
+  { es: 'huevo', fi: 'muna', topic: 'ruoka' },
+  { es: 'arroz', fi: 'riisi', topic: 'ruoka' },
+  { es: 'sopa', fi: 'keitto', topic: 'ruoka' },
+  { es: 'helado', fi: 'jäätelö', topic: 'ruoka' },
+  { es: 'galleta', fi: 'keksi', topic: 'ruoka' },
+  { es: 'patata', fi: 'peruna', topic: 'ruoka' },
+  { es: 'zanahoria', fi: 'porkkana', topic: 'ruoka' },
+  // SEI-55: viikonpäivä
+  { es: 'lunes', fi: 'maanantai', topic: 'viikonpäivä' },
+  { es: 'martes', fi: 'tiistai', topic: 'viikonpäivä' },
+  { es: 'miércoles', fi: 'keskiviikko', topic: 'viikonpäivä' },
+  { es: 'jueves', fi: 'torstai', topic: 'viikonpäivä' },
+  { es: 'viernes', fi: 'perjantai', topic: 'viikonpäivä' },
+  { es: 'sábado', fi: 'lauantai', topic: 'viikonpäivä' },
+  { es: 'domingo', fi: 'sunnuntai', topic: 'viikonpäivä' },
+  // SEI-56: perhe
+  { es: 'madre', fi: 'äiti', topic: 'perhe' },
+  { es: 'padre', fi: 'isä', topic: 'perhe' },
+  { es: 'hermano', fi: 'veli', topic: 'perhe' },
+  { es: 'hermana', fi: 'sisko', topic: 'perhe' },
+  { es: 'abuelo', fi: 'isoisä', topic: 'perhe' },
+  { es: 'abuela', fi: 'isoäiti', topic: 'perhe' },
+  { es: 'hijo', fi: 'poika', topic: 'perhe' },
+  { es: 'hija', fi: 'tytär', topic: 'perhe' },
+  { es: 'bebé', fi: 'vauva', topic: 'perhe' },
+  { es: 'tía', fi: 'täti', topic: 'perhe' },
 ];
 
 // The same praise as Matikka (design 1, "Kehut"). A copy on purpose; a unit test keeps them equal.

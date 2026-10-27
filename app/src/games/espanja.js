@@ -22,7 +22,7 @@ import { fillMarkup, createAutoAdvance } from './auto-advance.js';
 
 const GUARD_MS = 500; // design 3.9: a new screen's buttons ignore taps for this long
 const MAX_SIDE_BY_SIDE_STARS = 10; // design 3.0: up to this many stars side by side, then one star and × n
-const WORD_LINE = `Sanat: tervehdykset ja värit (${WORDS.length} sanaa)`;
+const WORD_LINE = `Sanat: ${new Set(WORDS.map((w) => w.topic)).size} aihetta (${WORDS.length} sanaa)`; // Q52
 
 const svg = (body, viewBox = '0 0 24 24') => `<svg viewBox="${viewBox}" aria-hidden="true" focusable="false">${body}</svg>`;
 const STROKE = 'fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"';

@@ -20,10 +20,11 @@ function seeded(seed) {
 }
 
 const word = (es) => WORDS.find((w) => w.es === es);
+const TOPICS = [...new Set(WORDS.map((w) => w.topic))];
 
 // ---------- SEI-9: the word list ----------
 
-test('SEI-9 / 1-4: the 18 pairs are the design\'s table, in order, with the three corrected translations', () => {
+test('SEI-9 / 1-4: the first 18 pairs are the design\'s table, in order, with the three corrected translations', () => {
   const table = [
     ['hola', 'hei', 'tervehdys'], ['adiós', 'näkemiin', 'tervehdys'], ['buenos días', 'hyvää huomenta', 'tervehdys'],
     ['buenas tardes', 'hyvää iltapäivää', 'tervehdys'], ['buenas noches', 'hyvää yötä', 'tervehdys'],
@@ -32,7 +33,7 @@ test('SEI-9 / 1-4: the 18 pairs are the design\'s table, in order, with the thre
     ['blanco', 'valkoinen', 'väri'], ['negro', 'musta', 'väri'], ['naranja', 'oranssi', 'väri'], ['morado', 'violetti', 'väri'],
     ['marrón', 'ruskea', 'väri'], ['gris', 'harmaa', 'väri'],
   ];
-  assert.deepEqual(WORDS, table.map(([es, fi, topic]) => ({ es, fi, topic })));
+  assert.deepEqual(WORDS.slice(0, 18), table.map(([es, fi, topic]) => ({ es, fi, topic })));
   assert.equal(word('adiós').fi, 'näkemiin');
   assert.equal(word('buenas tardes').fi, 'hyvää iltapäivää');
   assert.equal(word('por favor').fi, 'ole kiltti');
@@ -43,10 +44,90 @@ test('SEI-9 / 1-4: the 18 pairs are the design\'s table, in order, with the thre
   assert.equal(WORDS.filter((w) => w.topic === 'väri').length, 10);
 });
 
+test('SEI-52 to 56 / 1: the 61 new pairs are the design\'s tables, after the old 18, in order', () => {
+  const table = [
+    ['uno', 'yksi', 'numero'],
+    ['dos', 'kaksi', 'numero'],
+    ['tres', 'kolme', 'numero'],
+    ['cuatro', 'neljä', 'numero'],
+    ['cinco', 'viisi', 'numero'],
+    ['seis', 'kuusi', 'numero'],
+    ['siete', 'seitsemän', 'numero'],
+    ['ocho', 'kahdeksan', 'numero'],
+    ['nueve', 'yhdeksän', 'numero'],
+    ['diez', 'kymmenen', 'numero'],
+    ['once', 'yksitoista', 'numero'],
+    ['doce', 'kaksitoista', 'numero'],
+    ['perro', 'koira', 'eläin'],
+    ['gato', 'kissa', 'eläin'],
+    ['caballo', 'hevonen', 'eläin'],
+    ['vaca', 'lehmä', 'eläin'],
+    ['cerdo', 'sika', 'eläin'],
+    ['oveja', 'lammas', 'eläin'],
+    ['pájaro', 'lintu', 'eläin'],
+    ['pez', 'kala', 'eläin'],
+    ['ratón', 'hiiri', 'eläin'],
+    ['conejo', 'kani', 'eläin'],
+    ['pato', 'ankka', 'eläin'],
+    ['gallina', 'kana', 'eläin'],
+    ['león', 'leijona', 'eläin'],
+    ['elefante', 'norsu', 'eläin'],
+    ['mono', 'apina', 'eläin'],
+    ['oso', 'karhu', 'eläin'],
+    ['pan', 'leipä', 'ruoka'],
+    ['leche', 'maito', 'ruoka'],
+    ['agua', 'vesi', 'ruoka'],
+    ['zumo', 'mehu', 'ruoka'],
+    ['manzana', 'omena', 'ruoka'],
+    ['plátano', 'banaani', 'ruoka'],
+    ['fresa', 'mansikka', 'ruoka'],
+    ['pera', 'päärynä', 'ruoka'],
+    ['queso', 'juusto', 'ruoka'],
+    ['huevo', 'muna', 'ruoka'],
+    ['arroz', 'riisi', 'ruoka'],
+    ['sopa', 'keitto', 'ruoka'],
+    ['helado', 'jäätelö', 'ruoka'],
+    ['galleta', 'keksi', 'ruoka'],
+    ['patata', 'peruna', 'ruoka'],
+    ['zanahoria', 'porkkana', 'ruoka'],
+    ['lunes', 'maanantai', 'viikonpäivä'],
+    ['martes', 'tiistai', 'viikonpäivä'],
+    ['miércoles', 'keskiviikko', 'viikonpäivä'],
+    ['jueves', 'torstai', 'viikonpäivä'],
+    ['viernes', 'perjantai', 'viikonpäivä'],
+    ['sábado', 'lauantai', 'viikonpäivä'],
+    ['domingo', 'sunnuntai', 'viikonpäivä'],
+    ['madre', 'äiti', 'perhe'],
+    ['padre', 'isä', 'perhe'],
+    ['hermano', 'veli', 'perhe'],
+    ['hermana', 'sisko', 'perhe'],
+    ['abuelo', 'isoisä', 'perhe'],
+    ['abuela', 'isoäiti', 'perhe'],
+    ['hijo', 'poika', 'perhe'],
+    ['hija', 'tytär', 'perhe'],
+    ['bebé', 'vauva', 'perhe'],
+    ['tía', 'täti', 'perhe'],
+  ];
+  assert.equal(WORDS.length, 79);
+  assert.deepEqual(WORDS.slice(18), table.map(([es, fi, topic]) => ({ es, fi, topic })));
+});
+
+test('SEI-52 to 56 / 1, SEI-55 / 8: seven topics in order with 8, 10, 12, 16, 16, 7 and 10 pairs; the weekdays Monday to Sunday', () => {
+  assert.deepEqual(TOPICS, ['tervehdys', 'väri', 'numero', 'eläin', 'ruoka', 'viikonpäivä', 'perhe']);
+  assert.deepEqual(TOPICS.map((t) => WORDS.filter((w) => w.topic === t).length), [8, 10, 12, 16, 16, 7, 10]);
+  const days = WORDS.filter((w) => w.topic === 'viikonpäivä');
+  assert.deepEqual(days.map((w) => w.es), ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']);
+  assert.deepEqual(days.map((w) => w.fi), ['maanantai', 'tiistai', 'keskiviikko', 'torstai', 'perjantai', 'lauantai', 'sunnuntai']);
+});
+
+test('SEI-52 / 6: a Spanish text is at most two words', () => {
+  for (const w of WORDS) assert.ok(w.es.split(' ').length <= 2, w.es);
+});
+
 test('design 5: within a topic every Finnish and every Spanish text is unique, and across the list too', () => {
   for (const key of ['fi', 'es']) {
     assert.equal(new Set(WORDS.map((w) => w[key])).size, WORDS.length, key);
-    for (const topic of ['tervehdys', 'väri']) {
+    for (const topic of TOPICS) {
       const texts = WORDS.filter((w) => w.topic === topic).map((w) => w[key]);
       assert.equal(new Set(texts).size, texts.length, `${topic} ${key}`);
     }
@@ -78,7 +159,7 @@ test('SEI-4 / 3: a round has 10 distinct words from the list', () => {
 });
 
 test('SEI-4 / 3: every word is equally likely as question 1 (Fisher-Yates, not the old biased sort)', () => {
-  const N = 20000;
+  const N = 79000; // 1000 per word: about 4.8 standard deviations inside the 15 % band (docs/plans/sei-50.md 6.2)
   const first = new Map();
   for (let seed = 1; seed <= N; seed++) {
     const p = newRound('fi2es', seeded(seed)).questions[0].pair;
@@ -91,18 +172,23 @@ test('SEI-4 / 3: every word is equally likely as question 1 (Fisher-Yates, not t
   }
 });
 
-test('SEI-4 / 1, 2: four options, exactly one right, three others distinct and from the same topic', () => {
-  for (let seed = 1; seed <= 1000; seed++) {
-    for (const q of newRound('es2fi', seeded(seed)).questions) {
-      assert.equal(q.options.length, 4, `seed ${seed}`);
-      assert.equal(q.options.filter((o) => o === q.pair).length, 1, `seed ${seed}`);
-      assert.equal(new Set(q.options).size, 4, `seed ${seed}`);
-      for (const o of q.options) assert.equal(o.topic, q.pair.topic, `seed ${seed}: ${o.es} beside ${q.pair.es}`);
-      assert.equal(new Set(q.options.map((o) => o.fi)).size, 4);
-      assert.equal(new Set(q.options.map((o) => o.es)).size, 4);
-      assert.equal(q.result, 'open');
-      assert.equal(q.chosen, null);
+test('SEI-4 / 1, 2: four options, exactly one right, three others distinct and from the same topic, in both directions; every topic is asked', () => {
+  for (const direction of ['fi2es', 'es2fi']) {
+    const asked = new Set();
+    for (let seed = 1; seed <= 1000; seed++) {
+      for (const q of newRound(direction, seeded(seed)).questions) {
+        asked.add(q.pair.topic);
+        assert.equal(q.options.length, 4, `${direction} seed ${seed}`);
+        assert.equal(q.options.filter((o) => o === q.pair).length, 1, `${direction} seed ${seed}`);
+        assert.equal(new Set(q.options).size, 4, `${direction} seed ${seed}`);
+        for (const o of q.options) assert.equal(o.topic, q.pair.topic, `${direction} seed ${seed}: ${o.es} beside ${q.pair.es}`);
+        assert.equal(new Set(q.options.map((o) => o.fi)).size, 4);
+        assert.equal(new Set(q.options.map((o) => o.es)).size, 4);
+        assert.equal(q.result, 'open');
+        assert.equal(q.chosen, null);
+      }
     }
+    assert.deepEqual([...asked].sort(), [...TOPICS].sort(), `${direction}: every topic was asked`);
   }
 });
 
