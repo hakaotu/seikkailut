@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q55 (päätös):** Mitä lapsi valitsee Espanjassa ennen kierrosta: aiheen,
-  tason, molemmat vai ei vielä mitään? Oletus: aiheen ("Kaikki aiheet"
-  ensimmäisenä). (SEI-57, E6) (2026-10-27)
+(ei avoimia)
 
 ## Vastatut
 
+- **Q55 (päätös):** Espanjassa lapsi valitsee ennen kierrosta — "aihe".
+  (SEI-57, E6) (2026-10-27)
 - **Q54 (katso):** Espanja Macilla, yhden kierroksen uudet sanat kuulostivat
   espanjalta — "kyllä". (SEI-52–56) (2026-10-27)
 - **Q53 (katso):** Sanat Macilla, Normaali ja Harry Potter, kuvat

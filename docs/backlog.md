@@ -1640,8 +1640,9 @@ Kysymykset E1–E5 (omistajan sanat sellaisinaan; vastaukset myös
 - E5 (päätös, pienempi) — EI KYSYTTY, oletus voimassa. Espanjan substantiivit
   artikkelin kanssa (el gato) vai ilman (gato)? Oletus: ilman, kuten nykyiset
   ("rojo").
-- E6 (päätös, SEI-57) — AVOIN, ei vielä kysytty omistajalta (pääsessio kirjoittaa
-  Q-numeron). Kysymys omistajan kielellä: "Espanjan sanat voisi jakaa
+- E6 (päätös, SEI-57) — VASTATTU (Q55, 2026-10-27): "aihe" → vaihtoehto A,
+  aiheen valinta. E7 ei koske. E8: oletus (a) näytetään designerin
+  luonnoksessa, omistaja voi muuttaa katselmoinnissa. Kysymys omistajan kielellä: "Espanjan sanat voisi jakaa
   ryhmiin. Haluatko, että lapsi valitsee ennen kierrosta (a) aiheen, esim.
   viikonpäivät tai eläimet, (b) tason helppo / keskitaso / vaikea, (c) molemmat,
   vai (d) ei vielä mitään, kierros pysyy kuten nyt?" Oletus, jos vastaus on
