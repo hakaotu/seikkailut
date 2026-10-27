@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q59 (katso):** iPadilla Espanjan aloitusruutu: näkyvätkö 8 aiheruutua
+  kuvineen ja Aloita-nappi ilman vierittämistä? kyllä / ei. Kierrosta ei
+  pelata. Korvaa suunnitelman §7.1 Mac-ajon. (SEI-57) (2026-10-27)
 
 ## Vastatut
 
