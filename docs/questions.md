@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q54 (katso):** Macilla Espanja, Espanja → Suomi, yksi kierros: kuuluuko
-  jokainen uusi sana selvästi espanjaksi? kyllä / ei + sana. Oletus: kysyn
-  uudelleen. (SEI-52–56) (2026-10-27)
+(ei avoimia)
 
 ## Vastatut
 
+- **Q54 (katso):** Espanja Macilla, yhden kierroksen uudet sanat kuulostivat
+  espanjalta — "kyllä". (SEI-52–56) (2026-10-27)
 - **Q53 (katso):** Sanat Macilla, Normaali ja Harry Potter, kuvat
   näkyvät — "ok". (SEI-50, 51) (2026-10-27)
 - **Q52 (päätös):** Espanjan aloitusruudun rivi — "lyhyempi": "Sanat: 7
