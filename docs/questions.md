@@ -2,12 +2,14 @@
 
 ## Avoimet
 
-- **Q53 (katso):** Macilla Sanat, Normaali ja Harry Potter, yksi kierros
-  kumpaakin: näkyykö jokaisen sanan kuva (ei tyhjää laatikkoa)? kyllä /
-  ei + sana. Oletus: kysyn uudelleen. (SEI-50, 51) (2026-10-27)
+- **Q54 (katso):** Macilla Espanja, Espanja → Suomi, yksi kierros: kuuluuko
+  jokainen uusi sana selvästi espanjaksi? kyllä / ei + sana. Oletus: kysyn
+  uudelleen. (SEI-52–56) (2026-10-27)
 
 ## Vastatut
 
+- **Q53 (katso):** Sanat Macilla, Normaali ja Harry Potter, kuvat
+  näkyvät — "ok". (SEI-50, 51) (2026-10-27)
 - **Q52 (päätös):** Espanjan aloitusruudun rivi — "lyhyempi": "Sanat: 7
   aihetta (79 sanaa)". Lisäksi idea: "noita vois myös ryhmitellä joko
   aihealueiden mukaan tai sitten luoda tasot helppo, keskitaso, vaikea" —
