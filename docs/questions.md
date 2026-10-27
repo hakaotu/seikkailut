@@ -2,7 +2,14 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q48 (katso):** Uudet sanalistat (https://claude.ai/artifact/N52iKmLGxBHQrzoegcttw5):
+  sopivatko sanat, kuvat ja vihjeet? Oletus: kyllä sellaisenaan.
+  (SEI-50–56) (2026-10-27)
+- **Q49 (päätös):** Harry Potteriin myös KORPINKYNSI (11 kirjainta, pisin
+  sana)? Oletus: ei, kolme tupaa. (SEI-51) (2026-10-27)
+- **Q50 (päätös):** Espanjassa noin joka kolmannella kierroksella ei tule
+  yhtään tervehdystä, kun aiheita on enemmän. Käykö? Oletus: käy, kaikki
+  aiheet sekaisin kuten nyt. (SEI-52–56) (2026-10-27)
 
 ## Vastatut
 

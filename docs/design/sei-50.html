@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Lisää sanoja: Sanat ja Espanja – katselmointi (SEI-50 – SEI-56)</title>
+<style>
+  /* ---------- Sivun oma tyyli: vaalea ja tumma ---------- */
+  :root {
+    --bg:#eceef3; --fg:#1f2340; --card:#ffffff; --muted:#5b5f73; --line:#d5d8e0; --soft:#f4f5f8;
+    --new:#17803d; --newbg:#e3f7ea; --newfg:#0f5c2b; --oldbg:#f1f2f5; --oldfg:#5b5f73;
+    --warnbg:#fff7db; --warnline:#e2b93b; --warnfg:#5a3e00; --es:#c62828; --approx:#8a5a00; --approxbg:#fff1c2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#16181f; --fg:#e8eaf2; --card:#22252f; --muted:#a9adbf; --line:#3a3e4c; --soft:#2a2e3a;
+      --new:#5fd38d; --newbg:#173826; --newfg:#a6f0c3; --oldbg:#2a2e3a; --oldfg:#a9adbf;
+      --warnbg:#3a2f0e; --warnline:#b88d1c; --warnfg:#ffe7a3; --es:#ff8a80; --approx:#ffd36b; --approxbg:#3a2f0e;
+    }
+  }
+  body { margin:0; background:var(--bg); color:var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+  h1 { font-size: 30px; margin: 0 0 6px; line-height:1.2; }
+  h2 { font-size: 24px; margin: 56px 0 6px; padding-top: 18px; border-top: 2px solid var(--line); }
+  h3 { font-size: 19px; margin: 30px 0 8px; }
+  .lead { font-size: 17px; max-width: 860px; }
+  .note { color: var(--muted); max-width: 860px; margin: 4px 0 14px; }
+  .toc { background:var(--card); border-radius:12px; padding:14px 20px; max-width: 860px; }
+  .toc ol { margin: 6px 0; padding-left: 22px; }
+  .toc a { color: inherit; }
+
+  .nums { display:flex; flex-wrap:wrap; gap:16px; margin: 20px 0 8px; }
+  .num { background:var(--card); border-radius:14px; padding:14px 20px; min-width: 220px; }
+  .num .t { font-size:15px; color:var(--muted); }
+  .num .v { font-size:30px; font-weight:700; line-height:1.2; }
+  .num .v small { font-size:17px; font-weight:400; color:var(--muted); }
+  .num .v b { color: var(--new); }
+
+  .badge { display:inline-block; border-radius:999px; padding:0 9px; font-size:13px; font-weight:700; line-height:21px; white-space:nowrap; vertical-align: middle; }
+  .badge.new { background:var(--newbg); color:var(--newfg); border:1.5px solid var(--new); }
+  .badge.old { background:var(--oldbg); color:var(--oldfg); border:1.5px solid var(--line); }
+  .badge.approx { background:var(--approxbg); color:var(--approx); border:1.5px solid var(--warnline); }
+
+  /* sanakortit */
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); gap:12px; }
+  .w { background:var(--card); border-radius:14px; padding:12px 14px; border:2px solid var(--new); position:relative; }
+  .w .e { font-size:44px; line-height:1.1; font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji", system-ui, sans-serif; }
+  .w .word { font-size:21px; font-weight:800; letter-spacing:1px; margin-top:4px; }
+  .w .syl { font-size:14px; color:var(--muted); letter-spacing:1px; }
+  .w .hint { font-size:15px; margin-top:4px; }
+  .w .src { font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.35; }
+  .w .badge { position:absolute; top:10px; right:10px; }
+  .w .badge.approx { top:auto; bottom:10px; right:10px; position:static; margin-top:6px; }
+  .grid.old { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:8px; }
+  .grid.old .w { border:1.5px solid var(--line); background:var(--oldbg); padding:8px 10px; display:flex; align-items:center; gap:10px; }
+  .grid.old .w .e { font-size:28px; }
+  .grid.old .w .word { font-size:15px; margin:0; color:var(--oldfg); }
+
+  /* espanja */
+  .topics { display:grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap:16px; align-items:start; }
+  .topic { background:var(--card); border-radius:14px; padding:14px 16px; border:2px solid var(--new); }
+  .topic.old { border:1.5px solid var(--line); background:var(--oldbg); }
+  .topic h4 { margin:0 0 2px; font-size:19px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .topic .hl { font-size:14px; color:var(--muted); margin-bottom:8px; }
+  .topic table { border-collapse:collapse; width:100%; font-size:16px; }
+  .topic td { padding:4px 6px; border-top:1px solid var(--line); vertical-align:top; }
+  .topic td.es { font-weight:700; color:var(--es); white-space:nowrap; }
+  .topic td.eq { color:var(--muted); width:14px; }
+  .topic td.n { font-size:12.5px; color:var(--muted); }
+  .topic.old td.es { color:var(--oldfg); }
+
+  .left { background:var(--card); border-radius:12px; padding:12px 18px; max-width: 900px; }
+  .left li { margin: 4px 0; }
+  .q { background:var(--warnbg); border:2px solid var(--warnline); color:var(--fg); border-radius:12px; padding:14px 20px; max-width: 860px; margin: 12px 0; }
+  .q b.k { color: var(--warnfg); }
+  .bars { display:grid; grid-template-columns: 130px 1fr 52px; gap:6px 10px; align-items:center; max-width:620px; background:var(--card); border-radius:12px; padding:14px 18px; }
+  .bars .b { height:16px; border-radius:8px; background: var(--new); }
+  .bars .b.old { background: var(--muted); }
+
+  /* ---------- SOVELLUKSEN MALLIKUVAT (sovellus on aina vaalea) ---------- */
+  .row { display:flex; flex-wrap:wrap; gap:28px; align-items:flex-start; }
+  figure { margin:0; }
+  figcaption { font-size: 14.5px; margin-top: 10px; max-width: 470px; }
+  .frame { zoom: .62; width: 760px; border: 10px solid #26272b; border-radius: 26px; overflow:hidden; background:#fff; box-shadow: 0 10px 30px rgba(0,0,0,.25); color-scheme: light; }
+  .app { color:#1f2340; font-family: 'Chalkboard SE', 'Comic Sans MS', 'Comic Neue', system-ui, sans-serif; }
+  .app * { box-sizing: border-box; }
+  .s { --a:#764ba2; --ad:#553578; --al:#efe8fb; }
+  .e { --a:#c62828; --ad:#8e0000; --al:#fdeceb; }
+  .game { display:flex; flex-direction:column; background: var(--al); height: 600px; }
+  .gh { height:76px; flex:none; background: var(--a); color:#fff; display:flex; align-items:center; gap:18px; padding: 0 20px; }
+  .gh h1 { font-size:30px; margin:0; font-weight:bold; color:#fff; }
+  .back { height:56px; display:inline-flex; align-items:center; gap:6px; padding: 0 22px 0 12px; border-radius:999px; background:#fff; color: var(--a); font-size:22px; font-weight:bold; box-shadow: 0 4px 0 var(--ad); }
+  .back svg { width:28px; height:28px; }
+  .stars { margin-left:auto; display:flex; gap:4px; }
+  .stars svg { width:26px; height:26px; fill:#ffd23f; stroke:#ffd23f; stroke-width:2; }
+  .stars svg.off { fill:none; stroke:#fff; }
+  .gbody { flex:1; padding:20px; display:flex; flex-direction:column; min-height:0; }
+  .gcard { background:#fff; border-radius:30px; flex:1; padding:22px; display:flex; flex-direction:column; gap:14px; box-shadow: 0 10px 30px rgba(31,35,64,.10); }
+  .qrow { display:flex; align-items:center; gap:16px; }
+  .qs { flex:1; min-width:0; display:flex; align-items:center; gap:16px; }
+  .pic { width:80px; height:80px; flex:none; border-radius:20px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 4px 0 #c9cbd6; display:flex; align-items:center; justify-content:center; font-size:56px; line-height:1;
+         font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji", sans-serif; }
+  .qtext { font-size:24px; font-weight:bold; line-height:1.25; }
+  .listen { height:56px; display:inline-flex; align-items:center; gap:10px; padding: 0 22px 0 16px; border-radius:999px; border:3px solid var(--a); background:#fff; color: var(--a); font-size:22px; font-weight:bold; box-shadow: 0 4px 0 var(--ad); flex:none; white-space:nowrap; }
+  .listen svg { width:28px; height:28px; }
+  .info { display:flex; align-items:center; gap:18px; height:28px; }
+  .score { font-size:22px; font-weight:bold; white-space:nowrap; }
+  .bar { flex:1; display:flex; gap:4px; }
+  .bar i { flex:1; height:14px; border-radius:7px; background:#dfe3ea; }
+  .bar i.f { background: var(--a); }
+  .slots { display:flex; justify-content:center; align-items:center; gap:6px; }
+  .sl { width:56px; height:64px; border-radius:12px; border:3px dashed #8a8fa3; background:#fff; display:flex; align-items:center; justify-content:center; font-size:36px; font-weight:bold; }
+  .sl.cur { border:4px dashed var(--a); background:#faf7ff; }
+  .sl.fill { border:3px solid var(--a); background: var(--al); color: var(--a); box-shadow:0 4px 0 var(--ad); }
+  .sl.ok { border:3px solid #17803d; background:#e3f7ea; color:#17803d; }
+  .sep { width:14px; text-align:center; font-size:32px; font-weight:bold; color:#8a8fa3; }
+  .fr { min-height:64px; display:flex; align-items:center; gap:16px; }
+  .fbt { flex:1; display:flex; align-items:center; gap:12px; }
+  .fbt .ic { width:32px; height:32px; color:#17803d; flex:none; }
+  .fbt .r1 { display:block; font-size:30px; font-weight:bold; line-height:1.2; color:#17803d; }
+  .fbt .r2 { display:block; font-size:22px; line-height:1.3; color:#1f2340; }
+  .tiles { display:flex; justify-content:center; gap:8px; }
+  .lt { width:64px; height:64px; border-radius:14px; background:#fff; border:3px solid var(--a); color: var(--a); font-size:36px; font-weight:bold; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 0 var(--ad); }
+  .lt.used { border:3px dashed #c9cbd6; box-shadow:none; background:transparent; color:transparent; }
+  .lt.bk { border-color:#c9cbd6; box-shadow:0 4px 0 #c9cbd6; color:#1f2340; margin-left:8px; }
+  .lt.bk svg { width:34px; height:34px; }
+  .lock .lt:not(.used) { opacity:.45; }
+  .foot { display:flex; align-items:center; gap:16px; margin-top:auto; }
+  .foot .sp1 { margin-left:auto; }
+  .btn { height:56px; padding: 0 24px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; gap:10px; font-size:22px; font-weight:bold; white-space:nowrap; }
+  .btn.ok { background:#fff; color:#1f2340; border:3px solid #1f2340; box-shadow: 0 4px 0 #1f2340; }
+  .btn.acc { background: var(--a); color:#fff; box-shadow: 0 4px 0 var(--ad); }
+  .btn.big { height:64px; min-width:220px; font-size:26px; }
+  .btn svg { width:28px; height:28px; }
+  .hide { visibility:hidden; }
+  /* espanja */
+  .eq2 { flex:1; display:flex; flex-direction:column; gap:2px; }
+  .pw { font-size:48px; font-weight:bold; line-height:1.15; }
+  .ph { font-size:22px; color:#5b5f73; line-height:1.25; }
+  .ph mark { background:#fff1c2; color:#1f2340; border-radius:6px; padding:0 4px; }
+  .eopts { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+  .eo { position:relative; height:88px; border-radius:22px; background:#fff; border:3px solid #c9cbd6; box-shadow:0 5px 0 #c9cbd6; font-size:30px; font-weight:bold; display:flex; align-items:center; justify-content:center; color:#1f2340; }
+  .eo.ok { background:#17803d; border-color:#17803d; color:#fff; box-shadow:0 5px 0 #0f5c2b; }
+  .eo.dim { opacity:.45; }
+  .mk { position:absolute; top:-13px; right:-13px; width:30px; height:30px; border-radius:50%; background:#fff; color:#17803d; display:flex; align-items:center; justify-content:center; }
+  .mk svg { width:20px; height:20px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.85 5.95 6.55.8-4.8 4.5 1.25 6.5L12 17.2l-5.85 3.15 1.25-6.5-4.8-4.5 6.55-.8z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-spk" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-skip" viewBox="0 0 24 24"><path d="M5 6l6 6-6 6M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-bksp" viewBox="0 0 24 24"><path d="M9 5h11v14H9l-6-7z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M12 9.5l5 5M17 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M5 12a7 7 0 1 0 2.1-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M4 3.5v5h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="page">
+
+<h1>Lisää sanoja Sanoihin ja Espanjaan</h1>
+<p class="lead">Tällä sivulla ovat kaikki uudet sanat, jotka ehdotan peleihin, sekä neljä kuvaa siitä, miltä uusi sana näyttää lapselle pelissä.
+<b>Pelien ulkoasu ei muutu.</b> Uutta ovat vain sanat, niiden kuvat ja vihjeet, ja Espanjassa viisi uutta aihetta, joiden nimi näkyy kysymyksen alla
+samalla tavalla kuin nyt "Aihe: väri".</p>
+<p class="note">Tarkistin jokaisen sanan sanakirjasta tai muusta lähteestä 27.10.2026, kuten pyysit. Uudet sanat on merkitty vihreällä
+<span class="badge new">Uusi</span>, nykyiset harmaalla <span class="badge old">Ennallaan</span>. Nykyiset sanat pysyvät täsmälleen ennallaan.</p>
+
+<div class="nums">
+  <div class="num"><div class="t">Sanat, Normaali</div><div class="v">24 → <b>60</b> <small>sanaa (+36)</small></div></div>
+  <div class="num"><div class="t">Sanat, Harry Potter</div><div class="v">20 → <b>40</b> <small>sanaa (+20)</small></div></div>
+  <div class="num"><div class="t">Espanja</div><div class="v">18 → <b>79</b> <small>paria (+61)</small></div><div class="t">2 aihetta → 7 aihetta</div></div>
+</div>
+
+<div class="toc">
+  <b>Sivulla:</b>
+  <ol>
+    <li><a href="#kuvat">Miltä uusi sana näyttää pelissä</a></li>
+    <li><a href="#normaali">Sanat: Normaali</a></li>
+    <li><a href="#hp">Sanat: Harry Potter</a></li>
+    <li><a href="#espanja">Espanja: viisi uutta aihetta</a></li>
+    <li><a href="#pois">Mitä jätin pois ja miksi</a></li>
+    <li><a href="#kysymykset">Kaksi kysymystä sinulle</a></li>
+    <li><a href="#eitarkistettu">Mitä en pystynyt tarkistamaan</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================== -->
+<h2 id="kuvat">1. Miltä uusi sana näyttää pelissä</h2>
+<p class="note">Kuvat ovat tietokoneen tai iPadin vaakanäkymästä pienennettyinä. Kaikki on samaa kuin nyt; vain sana, kuva ja vihje ovat uusia.</p>
+
+<div class="row">
+  <figure>
+    <div class="frame"><div class="app game s">
+      <header class="gh"><span class="back"><svg><use href="#i-back"/></svg>Etusivu</span><h1>Sanat</h1>
+        <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg class="off"><use href="#i-star"/></svg><svg class="off"><use href="#i-star"/></svg></span></header>
+      <main class="gbody"><div class="gcard">
+        <div class="qrow"><div class="qs"><span class="pic">🐄</span><span class="qtext">Sanoo ammuu!</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+        <div class="info"><span class="score">Pisteet: 3 / 3</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="slots"><span class="sl fill">L</span><span class="sl fill">E</span><span class="sl cur"></span><span class="sl"></span><span class="sl"></span></div>
+        <div class="fr"><div class="fbt"></div></div>
+        <div class="tiles"><span class="lt">M</span><span class="lt">Ä</span><span class="lt used">L</span><span class="lt used">E</span><span class="lt">H</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+        <div class="foot"><span class="btn ok"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+      </div></main>
+    </div></div>
+    <figcaption><b>Sanat, Normaali, Helppo: uusi sana LEHMÄ.</b> Lapsi on laittanut kaksi ensimmäistä kirjainta. Kuva, vihje ja kirjainlaatat
+    ovat kuten nyt kissalla ja autolla.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="frame"><div class="app game s">
+      <header class="gh"><span class="back"><svg><use href="#i-back"/></svg>Etusivu</span><h1>Sanat</h1>
+        <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg class="off"><use href="#i-star"/></svg></span></header>
+      <main class="gbody"><div class="gcard">
+        <div class="qrow"><div class="qs"><span class="pic">🚂</span><span class="qtext">Vie oppilaat kouluun</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele sana</span></div>
+        <div class="info"><span class="score">Pisteet: 5 / 6</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="slots"><span class="sl ok">P</span><span class="sl ok">I</span><span class="sep">-</span><span class="sl ok">K</span><span class="sl ok">A</span><span class="sep">-</span><span class="sl ok">J</span><span class="sl ok">U</span><span class="sep">-</span><span class="sl ok">N</span><span class="sl ok">A</span></div>
+        <div class="fr"><div class="fbt"><svg class="ic"><use href="#i-check"/></svg><span><span class="r1">Mahtavaa! 🎉</span></span></div><span class="btn acc big">Seuraava <svg><use href="#i-next"/></svg></span></div>
+        <div class="tiles lock"><span class="lt used">K</span><span class="lt used">A</span><span class="lt used">N</span><span class="lt used">P</span><span class="lt used">U</span><span class="lt used">I</span><span class="lt used">A</span><span class="lt used">J</span><span class="lt bk"><svg><use href="#i-bksp"/></svg></span></div>
+        <div class="foot"><span class="btn ok hide"><svg><use href="#i-redo"/></svg>Aloita alusta</span><span class="btn ok hide"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+      </div></main>
+    </div></div>
+    <figcaption><b>Sanat, Harry Potter, tavutus päällä: uusi sana PIKAJUNA oikein.</b> Tavut PI-KA-JU-NA tulevat pelin omasta säännöstä;
+    tarkistin, että jokainen uusi sana tavuttuu oikein.</figcaption>
+  </figure>
+</div>
+
+<div class="row" style="margin-top:28px">
+  <figure>
+    <div class="frame"><div class="app game e">
+      <header class="gh"><span class="back"><svg><use href="#i-back"/></svg>Etusivu</span><h1>Espanja</h1>
+        <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+      <main class="gbody"><div class="gcard">
+        <div class="qrow"><div class="eq2"><span class="pw">keskiviikko</span><span class="ph"><mark>Aihe: viikonpäivä.</mark> Valitse espanjaksi.</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+        <div class="info"><span class="score">Pisteet: 2 / 3</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="eopts"><span class="eo" lang="es">lunes</span><span class="eo" lang="es">miércoles</span><span class="eo" lang="es">sábado</span><span class="eo" lang="es">jueves</span></div>
+        <div class="fr"><div class="fbt"></div></div>
+        <div class="foot"><span class="btn ok"><svg><use href="#i-skip"/></svg>Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+      </div></main>
+    </div></div>
+    <figcaption><b>Espanja, Suomi → Espanja: uusi aihe viikonpäivä.</b> Keltaisella korostettu kohta on ainoa uusi teksti: aiheen nimi.
+    (Korostus on vain tällä sivulla, ei pelissä.) Kaikki neljä vaihtoehtoa ovat viikonpäiviä.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="frame"><div class="app game e">
+      <header class="gh"><span class="back"><svg><use href="#i-back"/></svg>Etusivu</span><h1>Espanja</h1>
+        <span class="stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></span></header>
+      <main class="gbody"><div class="gcard">
+        <div class="qrow"><div class="eq2"><span class="pw" lang="es">perro</span><span class="ph"><mark>Aihe: eläin.</mark> Valitse suomeksi.</span></div><span class="listen"><svg><use href="#i-spk"/></svg>Kuuntele</span></div>
+        <div class="info"><span class="score">Pisteet: 5 / 5</span><span class="bar"><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="eopts"><span class="eo dim">kissa</span><span class="eo ok">koira<span class="mk"><svg><use href="#i-check"/></svg></span></span><span class="eo dim">hevonen</span><span class="eo dim">lehmä</span></div>
+        <div class="fr"><div class="fbt"><svg class="ic"><use href="#i-check"/></svg><span><span class="r1">Hienoa! 🌟</span><span class="r2"><span lang="es">perro</span> = koira</span></span></div><span class="btn acc big">Seuraava <svg><use href="#i-next"/></svg></span></div>
+        <div class="foot"><span class="btn ok hide">Ohita</span><span class="btn ok sp1">Vaihda</span></div>
+      </div></main>
+    </div></div>
+    <figcaption><b>Espanja, Espanja → Suomi: uusi aihe eläin, oikea vastaus.</b> Sama kuin nyt väreillä: kehu, pari "perro = koira"
+    ja Seuraava.</figcaption>
+  </figure>
+</div>
+
+<!-- ================================================================== -->
+<h2 id="normaali">2. Sanat: Normaali (24 → 60)</h2>
+<p class="note">36 uutta sanaa: eläimiä, kulkuneuvoja, säätä ja luontoa, ruokaa, tavaroita ja vaatteita. Kaikki 4–7 kirjainta, kuten nykyiset.
+Pienellä harmaalla sanan tavut, kun tavutus on päällä.</p>
+
+<h3>Uudet sanat <span class="badge new">Uusi · 36</span></h3>
+<div class="grid">
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐄</div><div class="word">LEHMÄ</div><div class="syl">LEH-MÄ</div><div class="hint">Sanoo ammuu!</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐴</div><div class="word">HEVONEN</div><div class="syl">HE-VO-NEN</div><div class="hint">Sillä voi ratsastaa</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐷</div><div class="word">SIKA</div><div class="syl">SI-KA</div><div class="hint">Sanoo röh röh!</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐑</div><div class="word">LAMMAS</div><div class="syl">LAM-MAS</div><div class="hint">Sanoo mää!</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐰</div><div class="word">KANI</div><div class="syl">KA-NI</div><div class="hint">Pitkät korvat, hyppii</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🦊</div><div class="word">KETTU</div><div class="syl">KET-TU</div><div class="hint">Oranssi metsän eläin</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐒</div><div class="word">APINA</div><div class="syl">A-PI-NA</div><div class="hint">Kiipeilee puissa</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🦁</div><div class="word">LEIJONA</div><div class="syl">LEI-JO-NA</div><div class="hint">Eläinten kuningas</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🦒</div><div class="word">KIRAHVI</div><div class="syl">KI-RAH-VI</div><div class="hint">Tosi pitkä kaula</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐌</div><div class="word">ETANA</div><div class="syl">E-TA-NA</div><div class="hint">Kantaa kotiaan selässä</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🚆</div><div class="word">JUNA</div><div class="syl">JU-NA</div><div class="hint">Kulkee kiskoilla</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🚌</div><div class="word">BUSSI</div><div class="syl">BUS-SI</div><div class="hint">Moni pääsee kyytiin</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🚢</div><div class="word">LAIVA</div><div class="syl">LAI-VA</div><div class="hint">Kulkee meren yli</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🚲</div><div class="word">PYÖRÄ</div><div class="syl">PYÖ-RÄ</div><div class="hint">Kaksi rengasta ja polkimet</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🚀</div><div class="word">RAKETTI</div><div class="syl">RA-KET-TI</div><div class="hint">Lentää avaruuteen</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">☁️</div><div class="word">PILVI</div><div class="syl">PIL-VI</div><div class="hint">Leijuu taivaalla</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🌧️</div><div class="word">SADE</div><div class="syl">SA-DE</div><div class="hint">Vettä tulee taivaalta</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">❄️</div><div class="word">LUMI</div><div class="syl">LU-MI</div><div class="hint">Valkoista ja kylmää</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🍄</div><div class="word">SIENI</div><div class="syl">SIE-NI</div><div class="hint">Sillä on lakki ja jalka</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🍁</div><div class="word">LEHTI</div><div class="syl">LEH-TI</div><div class="hint">Putoaa puusta syksyllä</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">⚡</div><div class="word">SALAMA</div><div class="syl">SA-LA-MA</div><div class="hint">Välähtää ukkosella</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🍞</div><div class="word">LEIPÄ</div><div class="syl">LEI-PÄ</div><div class="hint">Leikataan viipaleiksi</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🧀</div><div class="word">JUUSTO</div><div class="syl">JUUS-TO</div><div class="hint">Keltainen ja reikäinen</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🥛</div><div class="word">MAITO</div><div class="syl">MAI-TO</div><div class="hint">Valkoinen juoma</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🍐</div><div class="word">PÄÄRYNÄ</div><div class="syl">PÄÄ-RY-NÄ</div><div class="hint">Vihreä hedelmä</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🎂</div><div class="word">KAKKU</div><div class="syl">KAK-KU</div><div class="hint">Kynttilät päällä</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🍪</div><div class="word">KEKSI</div><div class="syl">KEK-SI</div><div class="hint">Rapea ja makea</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">⏰</div><div class="word">KELLO</div><div class="syl">KEL-LO</div><div class="hint">Tik tak!</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">✏️</div><div class="word">KYNÄ</div><div class="syl">KY-NÄ</div><div class="hint">Sillä kirjoitetaan</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🎒</div><div class="word">REPPU</div><div class="syl">REP-PU</div><div class="hint">Koululaisen laukku</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🧸</div><div class="word">NALLE</div><div class="syl">NAL-LE</div><div class="hint">Pehmeä lelu</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🥁</div><div class="word">RUMPU</div><div class="syl">RUM-PU</div><div class="hint">Bum bum bum!</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">👑</div><div class="word">KRUUNU</div><div class="syl">KRUU-NU</div><div class="hint">Kuninkaan päässä</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">👟</div><div class="word">KENKÄ</div><div class="syl">KEN-KÄ</div><div class="hint">Laitetaan jalkaan</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🧦</div><div class="word">SUKKA</div><div class="syl">SUK-KA</div><div class="hint">Lämmittää varpaita</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">👕</div><div class="word">PAITA</div><div class="syl">PAI-TA</div><div class="hint">Puetaan päälle</div></div>
+</div>
+
+<h3>Nykyiset sanat <span class="badge old">Ennallaan · 24</span></h3>
+<div class="grid old">
+  <div class="w"><span class="e">🐱</span><span class="word">KISSA</span></div><div class="w"><span class="e">🐶</span><span class="word">KOIRA</span></div>
+  <div class="w"><span class="e">🚗</span><span class="word">AUTO</span></div><div class="w"><span class="e">🌳</span><span class="word">PUU</span></div>
+  <div class="w"><span class="e">🏠</span><span class="word">TALO</span></div><div class="w"><span class="e">🐦</span><span class="word">LINTU</span></div>
+  <div class="w"><span class="e">🐟</span><span class="word">KALA</span></div><div class="w"><span class="e">🌸</span><span class="word">KUKKA</span></div>
+  <div class="w"><span class="e">⚽</span><span class="word">PALLO</span></div><div class="w"><span class="e">🥚</span><span class="word">MUNA</span></div>
+  <div class="w"><span class="e">🍎</span><span class="word">OMENA</span></div><div class="w"><span class="e">🍌</span><span class="word">BANAANI</span></div>
+  <div class="w"><span class="e">🍦</span><span class="word">JÄÄTELÖ</span></div><div class="w"><span class="e">⭐</span><span class="word">TÄHTI</span></div>
+  <div class="w"><span class="e">☀️</span><span class="word">AURINKO</span></div><div class="w"><span class="e">🌙</span><span class="word">KUU</span></div>
+  <div class="w"><span class="e">📚</span><span class="word">KIRJA</span></div><div class="w"><span class="e">🎩</span><span class="word">HATTU</span></div>
+  <div class="w"><span class="e">❤️</span><span class="word">SYDÄN</span></div><div class="w"><span class="e">🐭</span><span class="word">HIIRI</span></div>
+  <div class="w"><span class="e">🐻</span><span class="word">KARHU</span></div><div class="w"><span class="e">🐘</span><span class="word">NORSU</span></div>
+  <div class="w"><span class="e">🔴</span><span class="word">PISTE</span></div><div class="w"><span class="e">🔥</span><span class="word">TULI</span></div>
+</div>
+
+<!-- ================================================================== -->
+<h2 id="hp">3. Sanat: Harry Potter (20 → 40)</h2>
+<p class="note">20 uutta sanaa suomennetuista kirjoista: tuvat, paikat, huispaus, esineet ja otukset. Ei henkilöiden nimiä. Jokaisen kohdalla
+lukee, mistä tarkistin, että se on kirjojen suomennoksen sana. Merkintä <span class="badge approx">Kuva suuntaa-antava</span> tarkoittaa,
+että sopivaa tarkkaa kuvaa ei ole, mutta kuva ja vihje yhdessä auttavat.</p>
+
+<h3>Uudet sanat <span class="badge new">Uusi · 20</span></h3>
+<div class="grid">
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🦁</div><div class="word">ROHKELIKKO</div><div class="syl">ROH-KE-LIK-KO</div><div class="hint">Leijona on sen merkki</div><div class="src">Wikipedia, Tylypahka</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🐍</div><div class="word">LUIHUINEN</div><div class="syl">LUI-HUI-NEN</div><div class="hint">Käärme on sen merkki</div><div class="src">Wikipedia, Tylypahka</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🦡</div><div class="word">PUUSKUPUH</div><div class="syl">PUUS-KU-PUH</div><div class="hint">Mäyrä on sen merkki</div><div class="src">Wikipedia, Tylypahka</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🏠</div><div class="word">TUPA</div><div class="syl">TU-PA</div><div class="hint">Koulussa niitä on neljä</div><div class="src">Wikipedia, Tylypahka</div><span class="badge approx">Kuva suuntaa-antava</span></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🏘️</div><div class="word">TYLYAHO</div><div class="syl">TY-LY-A-HO</div><div class="hint">Taikurien oma kylä</div><div class="src">Wikipedia, Tylypahka</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🚂</div><div class="word">PIKAJUNA</div><div class="syl">PI-KA-JU-NA</div><div class="hint">Vie oppilaat kouluun</div><div class="src">Wikipedia, Tylypahka ("Tylypahkan pikajuna")</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🚉</div><div class="word">LAITURI</div><div class="syl">LAI-TU-RI</div><div class="hint">Yhdeksän ja kolme neljäsosaa</div><div class="src">Wikipedia, Tylypahka ("laituri 9 ¾")</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🔭</div><div class="word">TÄHTITORNI</div><div class="syl">TÄH-TI-TOR-NI</div><div class="hint">Täältä katsellaan yötaivasta</div><div class="src">Wikipedia, Tylypahka</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🪴</div><div class="word">KASVIHUONE</div><div class="syl">KAS-VI-HUO-NE</div><div class="hint">Lasinen talo taimille</div><div class="src">Wikipedia, Tylypahka</div><span class="badge approx">Kuva suuntaa-antava</span></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🔍</div><div class="word">ETSIJÄ</div><div class="syl">ET-SI-JÄ</div><div class="hint">Nappaa kultaisen pallon</div><div class="src">Wikipedia, Huispaus</div><span class="badge approx">Kuva suuntaa-antava</span></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🥅</div><div class="word">PITÄJÄ</div><div class="syl">PI-TÄ-JÄ</div><div class="hint">Vartioi maalirenkaita</div><div class="src">Wikipedia, Huispaus</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🏏</div><div class="word">LYÖJÄ</div><div class="syl">LYÖ-JÄ</div><div class="hint">Pelaaja, jolla on maila</div><div class="src">Wikipedia, Huispaus</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🏡</div><div class="word">KOTIKOLO</div><div class="syl">KO-TI-KO-LO</div><div class="hint">Punatukkaisen perheen talo</div><div class="src">Wikipedia, Weasleyn perhe</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">💰</div><div class="word">KALJUUNA</div><div class="syl">KAL-JUU-NA</div><div class="hint">Taikurien kultaraha</div><div class="src">Wikipedia, Weasleyn perhe ("tuhat kaljuunaa")</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">⚡</div><div class="word">ARPI</div><div class="syl">AR-PI</div><div class="hint">Salaman muotoinen otsassa</div><div class="src">Wikipedia, Harry Potter ja viisasten kivi</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🏹</div><div class="word">KENTAURI</div><div class="syl">KEN-TAU-RI</div><div class="hint">Puoliksi hevonen</div><div class="src">Wikipedia, Harry Potter ja Feeniksin kilta</div><span class="badge approx">Kuva suuntaa-antava</span></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🪶</div><div class="word">SULKAKYNÄ</div><div class="syl">SUL-KA-KY-NÄ</div><div class="hint">Kastetaan musteeseen</div><div class="src">Wikipedia, Harry Potter ja Feeniksin kilta</div></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🔥</div><div class="word">FEENIKS</div><div class="syl">FEE-NIKS</div><div class="hint">Tulinen lintu</div><div class="src">Wikipedia, Harry Potter ja salaisuuksien kammio ("feenikslintu")</div><span class="badge approx">Kuva suuntaa-antava</span></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">🌱</div><div class="word">ALRUUNA</div><div class="syl">AL-RUU-NA</div><div class="hint">Kasvi, joka kiljuu</div><div class="src">Wikipedia, Harry Potter ja salaisuuksien kammio</div><span class="badge approx">Kuva suuntaa-antava</span></div>
+  <div class="w"><span class="badge new">Uusi</span><div class="e">📔</div><div class="word">PÄIVÄKIRJA</div><div class="syl">PÄI-VÄ-KIR-JA</div><div class="hint">Salaisuudet sivuilla</div><div class="src">Wikipedia, Harry Potter ja salaisuuksien kammio</div></div>
+</div>
+
+<h3>Nykyiset sanat <span class="badge old">Ennallaan · 20</span></h3>
+<div class="grid old">
+  <div class="w"><span class="e">🧑</span><span class="word">JÄSTI</span></div><div class="w"><span class="e">🪄</span><span class="word">TAIKASAUVA</span></div>
+  <div class="w"><span class="e">🏰</span><span class="word">TYLYPAHKA</span></div><div class="w"><span class="e">🧹</span><span class="word">LUUTA</span></div>
+  <div class="w"><span class="e">🏪</span><span class="word">VIISTOKUJA</span></div><div class="w"><span class="e">✨</span><span class="word">LOITSU</span></div>
+  <div class="w"><span class="e">🫕</span><span class="word">PATA</span></div><div class="w"><span class="e">👻</span><span class="word">HAAMU</span></div>
+  <div class="w"><span class="e">🧙</span><span class="word">TAIKURI</span></div><div class="w"><span class="e">🧙‍♀️</span><span class="word">NOITA</span></div>
+  <div class="w"><span class="e">🐉</span><span class="word">LOHIKÄÄRME</span></div><div class="w"><span class="e">🦉</span><span class="word">PÖLLÖ</span></div>
+  <div class="w"><span class="e">🧥</span><span class="word">VIITTA</span></div><div class="w"><span class="e">🏆</span><span class="word">HUISPAUS</span></div>
+  <div class="w"><span class="e">🐸</span><span class="word">SAMMAKKO</span></div><div class="w"><span class="e">👺</span><span class="word">PEIKKO</span></div>
+  <div class="w"><span class="e">🦔</span><span class="word">KUTKA</span></div><div class="w"><span class="e">🌟</span><span class="word">TAIKA</span></div>
+  <div class="w"><span class="e">🚪</span><span class="word">KAMMIO</span></div><div class="w"><span class="e">🧪</span><span class="word">TAIKAJUOMA</span></div>
+</div>
+
+<!-- ================================================================== -->
+<h2 id="espanja">4. Espanja: viisi uutta aihetta (18 → 79 paria)</h2>
+<p class="note">Valitsemasi aiheet: numerot, eläimet, ruoka, viikonpäivät ja perhe. Sanat ovat Espanjan espanjaa (esim. <span lang="es"><b>zumo</b></span>
+ja <span lang="es"><b>patata</b></span>, ei Latinalaisen Amerikan <span lang="es">jugo</span> ja <span lang="es">papa</span>), ilman artikkelia kuten
+nykyiset (<span lang="es">rojo</span>, ei <span lang="es">el rojo</span>). Jokainen pari on tarkistettu sanakirjasta (Wikisanakirja). Harmaa rivi aiheen
+nimen alla näyttää, mitä peli kirjoittaa kysymyksen alle.</p>
+
+<div class="topics">
+  <div class="topic">
+    <h4>Numerot <span class="badge new">Uusi aihe · 12</span></h4>
+    <div class="hl">Pelissä: "Aihe: numero."</div>
+    <table>
+      <tr><td class="es" lang="es">uno</td><td class="eq">=</td><td>yksi</td></tr>
+      <tr><td class="es" lang="es">dos</td><td class="eq">=</td><td>kaksi</td></tr>
+      <tr><td class="es" lang="es">tres</td><td class="eq">=</td><td>kolme</td></tr>
+      <tr><td class="es" lang="es">cuatro</td><td class="eq">=</td><td>neljä</td></tr>
+      <tr><td class="es" lang="es">cinco</td><td class="eq">=</td><td>viisi</td></tr>
+      <tr><td class="es" lang="es">seis</td><td class="eq">=</td><td>kuusi</td></tr>
+      <tr><td class="es" lang="es">siete</td><td class="eq">=</td><td>seitsemän</td></tr>
+      <tr><td class="es" lang="es">ocho</td><td class="eq">=</td><td>kahdeksan</td></tr>
+      <tr><td class="es" lang="es">nueve</td><td class="eq">=</td><td>yhdeksän</td></tr>
+      <tr><td class="es" lang="es">diez</td><td class="eq">=</td><td>kymmenen</td></tr>
+      <tr><td class="es" lang="es">once</td><td class="eq">=</td><td>yksitoista</td></tr>
+      <tr><td class="es" lang="es">doce</td><td class="eq">=</td><td>kaksitoista</td></tr>
+    </table>
+  </div>
+
+  <div class="topic">
+    <h4>Eläimet <span class="badge new">Uusi aihe · 16</span></h4>
+    <div class="hl">Pelissä: "Aihe: eläin."</div>
+    <table>
+      <tr><td class="es" lang="es">perro</td><td class="eq">=</td><td>koira</td></tr>
+      <tr><td class="es" lang="es">gato</td><td class="eq">=</td><td>kissa</td></tr>
+      <tr><td class="es" lang="es">caballo</td><td class="eq">=</td><td>hevonen</td></tr>
+      <tr><td class="es" lang="es">vaca</td><td class="eq">=</td><td>lehmä</td></tr>
+      <tr><td class="es" lang="es">cerdo</td><td class="eq">=</td><td>sika</td></tr>
+      <tr><td class="es" lang="es">oveja</td><td class="eq">=</td><td>lammas</td></tr>
+      <tr><td class="es" lang="es">pájaro</td><td class="eq">=</td><td>lintu</td></tr>
+      <tr><td class="es" lang="es">pez</td><td class="eq">=</td><td>kala</td></tr>
+      <tr><td class="es" lang="es">ratón</td><td class="eq">=</td><td>hiiri</td></tr>
+      <tr><td class="es" lang="es">conejo</td><td class="eq">=</td><td>kani</td></tr>
+      <tr><td class="es" lang="es">pato</td><td class="eq">=</td><td>ankka</td></tr>
+      <tr><td class="es" lang="es">gallina</td><td class="eq">=</td><td>kana</td></tr>
+      <tr><td class="es" lang="es">león</td><td class="eq">=</td><td>leijona</td></tr>
+      <tr><td class="es" lang="es">elefante</td><td class="eq">=</td><td>norsu</td></tr>
+      <tr><td class="es" lang="es">mono</td><td class="eq">=</td><td>apina</td></tr>
+      <tr><td class="es" lang="es">oso</td><td class="eq">=</td><td>karhu</td></tr>
+    </table>
+  </div>
+
+  <div class="topic">
+    <h4>Ruoka <span class="badge new">Uusi aihe · 16</span></h4>
+    <div class="hl">Pelissä: "Aihe: ruoka."</div>
+    <table>
+      <tr><td class="es" lang="es">pan</td><td class="eq">=</td><td>leipä</td></tr>
+      <tr><td class="es" lang="es">leche</td><td class="eq">=</td><td>maito</td></tr>
+      <tr><td class="es" lang="es">agua</td><td class="eq">=</td><td>vesi</td></tr>
+      <tr><td class="es" lang="es">zumo</td><td class="eq">=</td><td>mehu</td></tr>
+      <tr><td class="es" lang="es">manzana</td><td class="eq">=</td><td>omena</td></tr>
+      <tr><td class="es" lang="es">plátano</td><td class="eq">=</td><td>banaani</td></tr>
+      <tr><td class="es" lang="es">fresa</td><td class="eq">=</td><td>mansikka</td></tr>
+      <tr><td class="es" lang="es">pera</td><td class="eq">=</td><td>päärynä</td></tr>
+      <tr><td class="es" lang="es">queso</td><td class="eq">=</td><td>juusto</td></tr>
+      <tr><td class="es" lang="es">huevo</td><td class="eq">=</td><td>muna</td></tr>
+      <tr><td class="es" lang="es">arroz</td><td class="eq">=</td><td>riisi</td></tr>
+      <tr><td class="es" lang="es">sopa</td><td class="eq">=</td><td>keitto</td></tr>
+      <tr><td class="es" lang="es">helado</td><td class="eq">=</td><td>jäätelö</td></tr>
+      <tr><td class="es" lang="es">galleta</td><td class="eq">=</td><td>keksi</td></tr>
+      <tr><td class="es" lang="es">patata</td><td class="eq">=</td><td>peruna</td></tr>
+      <tr><td class="es" lang="es">zanahoria</td><td class="eq">=</td><td>porkkana</td></tr>
+    </table>
+    <p class="note" style="margin-top:8px">Appelsiini puuttuu tarkoituksella: espanjaksi se on <span lang="es"><b>naranja</b></span>, joka on jo väreissä (oranssi).</p>
+  </div>
+
+  <div class="topic">
+    <h4>Viikonpäivät <span class="badge new">Uusi aihe · 7</span></h4>
+    <div class="hl">Pelissä: "Aihe: viikonpäivä."</div>
+    <table>
+      <tr><td class="es" lang="es">lunes</td><td class="eq">=</td><td>maanantai</td></tr>
+      <tr><td class="es" lang="es">martes</td><td class="eq">=</td><td>tiistai</td></tr>
+      <tr><td class="es" lang="es">miércoles</td><td class="eq">=</td><td>keskiviikko</td></tr>
+      <tr><td class="es" lang="es">jueves</td><td class="eq">=</td><td>torstai</td></tr>
+      <tr><td class="es" lang="es">viernes</td><td class="eq">=</td><td>perjantai</td></tr>
+      <tr><td class="es" lang="es">sábado</td><td class="eq">=</td><td>lauantai</td></tr>
+      <tr><td class="es" lang="es">domingo</td><td class="eq">=</td><td>sunnuntai</td></tr>
+    </table>
+  </div>
+
+  <div class="topic">
+    <h4>Perhe <span class="badge new">Uusi aihe · 10</span></h4>
+    <div class="hl">Pelissä: "Aihe: perhe."</div>
+    <table>
+      <tr><td class="es" lang="es">madre</td><td class="eq">=</td><td>äiti</td></tr>
+      <tr><td class="es" lang="es">padre</td><td class="eq">=</td><td>isä</td></tr>
+      <tr><td class="es" lang="es">hermano</td><td class="eq">=</td><td>veli</td></tr>
+      <tr><td class="es" lang="es">hermana</td><td class="eq">=</td><td>sisko</td></tr>
+      <tr><td class="es" lang="es">abuelo</td><td class="eq">=</td><td>isoisä</td></tr>
+      <tr><td class="es" lang="es">abuela</td><td class="eq">=</td><td>isoäiti</td></tr>
+      <tr><td class="es" lang="es">hijo</td><td class="eq">=</td><td>poika</td></tr>
+      <tr><td class="es" lang="es">hija</td><td class="eq">=</td><td>tytär</td></tr>
+      <tr><td class="es" lang="es">bebé</td><td class="eq">=</td><td>vauva</td></tr>
+      <tr><td class="es" lang="es">tía</td><td class="eq">=</td><td>täti</td></tr>
+    </table>
+    <p class="note" style="margin-top:8px">Setä/eno puuttuu: espanjan <span lang="es"><b>tío</b></span> tarkoittaa kumpaakin, eikä kumpikaan suomen sana yksin
+    olisi oikea vastaus. Täti on suomessakin sama molemmin puolin, joten <span lang="es">tía</span> on mukana.</p>
+  </div>
+
+  <div class="topic old">
+    <h4>Tervehdykset ja värit <span class="badge old">Ennallaan · 8 + 10</span></h4>
+    <div class="hl">Pelissä: "Aihe: tervehdys." / "Aihe: väri."</div>
+    <table>
+      <tr><td class="es" lang="es">hola, adiós, buenos días, buenas tardes, buenas noches, gracias, por favor, ¿qué tal?</td></tr>
+      <tr><td class="es" lang="es">rojo, amarillo, azul, verde, blanco, negro, naranja, morado, marrón, gris</td></tr>
+    </table>
+  </div>
+</div>
+
+<h3>Kuinka usein kukin aihe tulee kierroksella</h3>
+<p class="note">Kierros on edelleen 10 kysymystä kaikista aiheista sekaisin. Keskimäärin yhdessä kierroksessa:</p>
+<div class="bars" role="table" aria-label="Keskimääräinen kysymysmäärä aiheittain yhdessä kierroksessa">
+  <span role="cell">eläin</span><span class="b" style="width:100%"></span><span role="cell">2,0</span>
+  <span role="cell">ruoka</span><span class="b" style="width:100%"></span><span role="cell">2,0</span>
+  <span role="cell">numero</span><span class="b" style="width:75%"></span><span role="cell">1,5</span>
+  <span role="cell">väri</span><span class="b old" style="width:63%"></span><span role="cell">1,3</span>
+  <span role="cell">perhe</span><span class="b" style="width:63%"></span><span role="cell">1,3</span>
+  <span role="cell">tervehdys</span><span class="b old" style="width:50%"></span><span role="cell">1,0</span>
+  <span role="cell">viikonpäivä</span><span class="b" style="width:44%"></span><span role="cell">0,9</span>
+</div>
+<p class="note">Tästä seuraa, että noin joka kolmannessa kierroksessa ei ole yhtään tervehdystä. Nyt tervehdyksiä on joka kierroksessa. Ks. kysymys B.</p>
+
+<!-- ================================================================== -->
+<h2 id="pois">5. Mitä jätin pois ja miksi</h2>
+<div class="left">
+<ul>
+  <li><b>ANKKA, LAMPPU, KARKKI, TELTTA, HANSKA:</b> peli tavuttaisi ne väärin (esim. ANKKA yhtenä tavuna).</li>
+  <li><b>PERHONEN, MANSIKKA, PORKKANA, TRAKTORI:</b> yli 7 kirjainta.</li>
+  <li><b>KUUSI</b> (puu): sama sana kuin numero kuusi.</li>
+  <li><b>Korpinkynsi:</b> 11 kirjainta, kun Harry Potter -sanoissa raja on 10. Ks. kysymys A.</li>
+  <li><b>Kotitonttu, testraali:</b> peli tavuttaisi ne väärin.</li>
+  <li><b>Ankeroinen, mörkö, Kerberos, basiliski:</b> liian pelottavia 7-vuotiaalle.</li>
+  <li><b>Sieppi, kaato, ryhmy</b> (huispauspallot): oikeita sanoja, mutta niille ei ole kuvaa.</li>
+  <li><b>Kermakalja:</b> ainoa kuva olisi olutlasi.</li>
+  <li><b>Muotokuva, kurpitsa, ennustus:</b> en löytänyt lähdettä, että ne ovat suomennoksen sanoja, joten en arvannut.</li>
+  <li><b>Espanja:</b> <span lang="es">naranja</span> (appelsiini, jo värinä), <span lang="es">pescado</span> ja <span lang="es">pollo</span>
+    (kala ja kana olisivat kahdessa aiheessa), <span lang="es">tío</span> (setä tai eno), <span lang="es">primo/prima</span> (molemmat serkku),
+    <span lang="es">mamá/papá</span> (samat kuin äiti ja isä).</li>
+</ul>
+</div>
+
+<!-- ================================================================== -->
+<h2 id="kysymykset">6. Kaksi kysymystä sinulle</h2>
+<p class="note">Kumpikaan ei estä työtä. Jos et ota kantaa, teen oletuksen mukaan; sivun sanat on jo tehty oletuksen mukaan.</p>
+<div class="q"><b class="k">Kysymys A:</b> Harry Potter -sanoissa ovat mukana tuvat Rohkelikko, Luihuinen ja Puuskupuh. Korpinkynsi on yhden kirjaimen
+liian pitkä (11). Saako Korpinkynsi olla mukana, vaikka se on listan pisin sana?<br>
+<b>Oletus:</b> ei, kolme tupaa.</div>
+<div class="q"><b class="k">Kysymys B:</b> Espanjan kierroksessa on edelleen kaikki aiheet sekaisin. Uusien sanojen jälkeen noin joka kolmannessa kierroksessa
+ei ole yhtään tervehdystä (nyt aina on). Onko se hyvä?<br>
+<b>Oletus:</b> kyllä, kaikki aiheet sekaisin kuten nyt.</div>
+
+<!-- ================================================================== -->
+<h2 id="eitarkistettu">7. Mitä en pystynyt tarkistamaan</h2>
+<div class="left">
+<ul>
+  <li><b>Miltä espanjan sanat kuulostavat.</b> En kuule pelin espanjan ääntä. Uudet sanat kuunnellaan Kuuntele-painikkeella, kun ne ovat pelissä.</li>
+  <li><b>Näkyvätkö kuvat.</b> Tämä sivu käyttää samoja kuvia kuin peli. Jos jokin kuva näkyy tällä sivulla tyhjänä laatikkona, se näkyy niin myös
+    pelissä samalla laitteella. Vanhalla iPadilla muutama uusi kuva (🪴, 🪶) voi puuttua, kuten nykyinen taikasauva 🪄; peli toimii silti.</li>
+  <li><b>Kirjojen tekstiä</b> en lukenut. Harry Potter -sanat on tarkistettu suomenkielisestä Wikipediasta, joka käyttää kirjojen suomennoksen nimiä.</li>
+</ul>
+</div>
+
+</div>
+</body>
+</html>
