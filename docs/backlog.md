@@ -1518,7 +1518,7 @@ Kriteerit:
    pitää.
 
 ### SEI-57 — Espanja: aiheiden ryhmittely tai tasot (helppo / keskitaso / vaikea)
-Tila: todo
+Tila: in-progress
 Pyyntö (omistaja, 2026-10-27, Q52, sanatarkasti): "Toisaalta mietin, että noita
 vois myös ryhmitellä joko aihealueiden mukaan tai sitten luoda tasot helppo,
 keskitaso, vaikea". Sanottu heti sen jälkeen, kun Espanja kasvoi kahdesta

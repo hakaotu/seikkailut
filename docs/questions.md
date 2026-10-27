@@ -2,11 +2,11 @@
 
 ## Avoimet
 
-- **Q58 (päätös):** Espanjan aiheen valinnan rakentamissuunnitelma.
-  Hyväksytkö? Oletus: kyllä. (SEI-57) (2026-10-27)
+(ei avoimia)
 
 ## Vastatut
 
+- **Q58 (päätös):** SEI-57 rakentamissuunnitelma — "kyllä". (2026-10-27)
 - **Q57 (päätös):** Lyhyen kierroksen tähti 80 % (6/7, 7/8) — "1".
   (SEI-57) (2026-10-27)
 - **Q56 (katso):** Espanjan aiheen valinnan luonnos — "ok". (SEI-57)
