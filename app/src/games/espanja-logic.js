@@ -2,7 +2,7 @@
 // Every random choice takes an `rng` (a function returning [0, 1)); the default reads Math.random
 // when it is called, so a test can seed it either way. Design: docs/design/sei-4.md.
 
-export const MAX_QUESTIONS = 10;
+export const MAX_QUESTIONS = 10; // the longest round; a topic with fewer words gives a shorter one (SEI-57)
 export const STARS_KEY = 'espanja.stars'; // registry.js rule 6: the game id first. The old key was es_stars.
 
 // The first 18 pairs are the old game's, in the old order (originals/espanjavalmentaja.html r. 193-213), with the three
@@ -94,6 +94,19 @@ export const WORDS = [
   { es: 'tía', fi: 'täti', topic: 'perhe' },
 ];
 
+export const ALL_TOPICS = 'kaikki';
+// design sei-57 §3.1: order = WORDS order; `label` is the tile text (soft hyphens for < 420 px), `name` the accessible name
+export const TOPICS = [
+  { id: 'kaikki', emoji: '🎲', label: 'Kaikki', name: 'Kaikki aiheet' },
+  { id: 'tervehdys', emoji: '👋', label: 'Terveh­dykset', name: 'Tervehdykset' },
+  { id: 'väri', emoji: '🎨', label: 'Värit', name: 'Värit' },
+  { id: 'numero', emoji: '🔢', label: 'Numerot', name: 'Numerot' },
+  { id: 'eläin', emoji: '🐶', label: 'Eläimet', name: 'Eläimet' },
+  { id: 'ruoka', emoji: '🍎', label: 'Ruoka', name: 'Ruoka' },
+  { id: 'viikonpäivä', emoji: '📅', label: 'Viikon­päivät', name: 'Viikonpäivät' },
+  { id: 'perhe', emoji: '👪', label: 'Perhe', name: 'Perhe' },
+];
+
 // The same praise as Matikka (design 1, "Kehut"). A copy on purpose; a unit test keeps them equal.
 export const PRAISE = ['Hienoa! 🌟', 'Oikein! ⭐', 'Mahtavaa! 🎉', 'Tosi hyvä! 🏆', 'Loistavaa! 🌈', 'Upea! 💪', 'Bravo! 🎊', 'Mestari! 🧙'];
 
@@ -119,17 +132,26 @@ export function shuffle(list, rng = defaultRng) {
   return out;
 }
 
-// Ten distinct words. Each question keeps its four options, drawn now, so a return shows the same
+// The words of a topic; `kaikki` is WORDS itself, so the default round draws exactly as it did before topics.
+export const wordsIn = (topic) => (topic === ALL_TOPICS ? WORDS : WORDS.filter((w) => w.topic === topic));
+
+// Ten words, or all of a smaller topic.
+export const roundLength = (topic) => Math.min(MAX_QUESTIONS, wordsIn(topic).length);
+
+// 80 % of the round, rounded up (Q57): 10 -> 8, 8 -> 7, 7 -> 6. Integer arithmetic: 0.8 * n is a float product.
+export const starThreshold = (n) => Math.ceil((4 * n) / 5);
+
+// Distinct words of the topic. Each question keeps its four options, drawn now, so a return shows the same
 // ones in the same order. Wrong options come from the question's own topic (old r. 287-290).
-export function newRound(direction, rng = defaultRng) {
-  const questions = shuffle(WORDS, rng)
-    .slice(0, MAX_QUESTIONS)
+export function newRound(direction, topic, rng = defaultRng) {
+  const questions = shuffle(wordsIn(topic), rng)
+    .slice(0, roundLength(topic))
     .map((pair) => {
       const others = WORDS.filter((w) => w !== pair && w.topic === pair.topic);
       const options = shuffle([pair, ...shuffle(others, rng).slice(0, 3)], rng);
       return { pair, options, result: 'open', chosen: null, praise: null };
     });
-  return { direction, questions, index: 0, endShown: false, starGiven: false };
+  return { direction, topic, questions, index: 0, endShown: false, starGiven: false };
 }
 
 export function pickPraise(rng = defaultRng) {
@@ -179,7 +201,7 @@ export function counts(round) {
 export function listenParts(screen, round) {
   if (screen === 'choose') return [{ text: 'hola', rate: RATE }];
   const { a, b, c } = counts(round);
-  if (screen === 'end') return [{ text: endTexts(a, b, c).speech, rate: RATE }];
+  if (screen === 'end') return [{ text: endTexts(a, b, c, round.questions.length).speech, rate: RATE }];
   const q = round.questions[round.index];
   if (round.direction === 'fi2es' && q.result === 'open') {
     // The four options in the order they are shown, each after a pause (the old 600 ms timers cut words off).
@@ -197,13 +219,13 @@ export const answerParts = (q) => [{ text: spoken(q.pair.es), rate: RATE }];
 
 // ---------- the end screen ----------
 
-export function endTier(a) {
-  if (a >= MAX_QUESTIONS) return 'perfect';
-  if (a >= 8) return 'good';
+export function endTier(a, n) {
+  if (a >= n) return 'perfect';
+  if (a >= starThreshold(n)) return 'good';
   return 'done';
 }
 
-export const earnsStar = (a) => a >= 8;
+export const earnsStar = (a, n) => a >= starThreshold(n);
 
 const PHRASES = {
   perfect: { title: 'Täydellinen tulos!', es: '¡Perfecto!', fi: 'Täydellistä!' },
@@ -212,8 +234,8 @@ const PHRASES = {
 };
 
 // Rows: right always, wrong and skipped only when there are some (design 3.7).
-export function endTexts(a, b, c) {
-  const tier = endTier(a);
+export function endTexts(a, b, c, n) {
+  const tier = endTier(a, n);
   const p = PHRASES[tier];
   const rows = [{ kind: 'a', text: `${a} oikein` }];
   if (b >= 1) rows.push({ kind: 'b', text: `${b} väärin` });
@@ -221,11 +243,11 @@ export function endTexts(a, b, c) {
   return {
     tier,
     title: p.title,
-    scoreNumber: `${a} / ${MAX_QUESTIONS}`, // shown big, with scoreWord small after it
+    scoreNumber: `${a} / ${n}`, // shown big, with scoreWord small after it
     scoreWord: 'oikein',
-    score: `${a} / ${MAX_QUESTIONS} oikein`,
+    score: `${a} / ${n} oikein`,
     rows,
-    starLine: earnsStar(a) ? 'Sait tähden!' : 'Tähti tulee, kun saat 8 oikein.',
+    starLine: earnsStar(a, n) ? 'Sait tähden!' : `Tähti tulee, kun saat ${starThreshold(n)} oikein.`,
     phraseEs: p.es,
     phraseFi: p.fi,
     speech: spoken(p.es),
@@ -234,10 +256,30 @@ export function endTexts(a, b, c) {
 
 // ---------- the choose screen ----------
 
-// A round is open and the card is the other direction: only a new round can follow.
-export function chooseHint(draftDir, round) {
-  return round && !round.endShown && round.direction !== draftDir ? 'Toinen suunta alkaa uudella kierroksella.' : '';
+// A round is open and the draft differs from it: only a new round can follow.
+export function chooseHint(draftDir, draftTopic, round) {
+  if (!round || round.endShown) return '';
+  const otherTopic = round.topic !== draftTopic;
+  const otherDir = round.direction !== draftDir;
+  if (otherTopic && otherDir) return 'Toinen aihe ja suunta alkavat uudella kierroksella.';
+  if (otherTopic) return 'Toinen aihe alkaa uudella kierroksella.';
+  if (otherDir) return 'Toinen suunta alkaa uudella kierroksella.';
+  return '';
 }
+
+export const topicName = (topic) => TOPICS.find((t) => t.id === topic).name;
+const lower = (text) => text.toLocaleLowerCase('fi');
+
+// The line beside `Aihe`: `Kaikki aiheet: 79 sanaa`, `Viikonpäivät: 7 sanaa, kierroksessa 7 kysymystä` (design sei-57 3.2).
+export function topicLine(topic) {
+  const s = wordsIn(topic).length;
+  return `${topicName(topic)}: ${s} sanaa${s < MAX_QUESTIONS ? `, kierroksessa ${s} kysymystä` : ''}`;
+}
+
+// The grey line on the end screen, its accessible name, and the name of `Vaihda` (design sei-57 3.4, 8).
+export const selectionLine = (topic, dir) => `${topicName(topic)} · ${DIRECTIONS[dir].name}`;
+export const selectionLabel = (topic, dir) => `Aihe ${lower(topicName(topic))}. Suunta ${DIRECTIONS[dir].name}.`;
+export const changeLabel = (topic, dir) => `Vaihda aihetta tai suuntaa. Nyt ${lower(topicName(topic))}, ${DIRECTIONS[dir].name}.`;
 
 // ---------- texts for the game's own live region (design 8) ----------
 
@@ -250,7 +292,7 @@ const pointsLine = (round) => {
 export function questionLive(round) {
   const q = current(round);
   const dir = round.direction;
-  return `Kysymys ${round.index + 1} / ${MAX_QUESTIONS}: ${promptOf(q.pair, dir)}. Aihe ${q.pair.topic}. ${DIRECTIONS[dir].how}.`;
+  return `Kysymys ${round.index + 1} / ${round.questions.length}: ${promptOf(q.pair, dir)}. Aihe ${q.pair.topic}. ${DIRECTIONS[dir].how}.`;
 }
 
 // The sentence about the wait is added only when the game starts one (items 1-9).
@@ -272,10 +314,11 @@ export function skippedLive(round) {
 
 export function endLive(round, starGot, total) {
   const { a, b, c } = counts(round);
-  const t = endTexts(a, b, c);
+  const n = round.questions.length;
+  const t = endTexts(a, b, c, n);
   const skipped = c >= 1 ? ` ${c} ohitettu.` : '';
-  const star = starGot ? ` Sait tähden! Tähtiä nyt ${total}.` : ' Tähti tulee, kun saat 8 oikein.';
-  return `${t.title} ${a} / ${MAX_QUESTIONS} oikein.${skipped}${star}`;
+  const star = starGot ? ` Sait tähden! Tähtiä nyt ${total}.` : ` Tähti tulee, kun saat ${starThreshold(n)} oikein.`;
+  return `${t.title} ${a} / ${n} oikein.${skipped}${star}`;
 }
 
 // ---------- collected stars (design 5) ----------

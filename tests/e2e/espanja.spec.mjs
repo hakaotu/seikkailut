@@ -34,9 +34,9 @@ const topicWords = (topic, key) => WORDS.filter((w) => w.topic === topic).map((w
 
 // ---------- SEI-4 / 1-3: directions, options, the word ----------
 
-test('SEI-52 to 56 / Q52: the choose screen says how many topics and words there are', async ({ page }, testInfo) => {
+test('SEI-52 to 56 / Q52, SEI-57: the choose screen says how many words there are, on the line beside Aihe', async ({ page }, testInfo) => {
   await openEspanja(page, testInfo);
-  await expect(view(page).locator('.es-words')).toHaveText('Sanat: 7 aihetta (79 sanaa)');
+  await expect(view(page).locator('.es-topic-line')).toHaveText('Kaikki aiheet: 79 sanaa');
 });
 
 test('SEI-4 / 1: Suomi → Espanja asks in Finnish, shows four Spanish options of the word\'s topic, one of them right', async ({ page }, testInfo) => {
@@ -388,7 +388,7 @@ test('SEI-4 / 10: after the answer the options are named right, mine and wrong',
   );
 });
 
-test('names and focus: Ohita kysymys, Seuraava kysymys, Katso tulos, Vaihda suuntaa, the group Suunta, the stars; focus moves with the game', async ({ page }, testInfo) => {
+test('names and focus: Ohita kysymys, Seuraava kysymys, Katso tulos, Vaihda aihetta tai suuntaa, the group Suunta, the stars; focus moves with the game', async ({ page }, testInfo) => {
   await openEspanja(page, testInfo);
   await expect(view(page).getByRole('radiogroup', { name: 'Suunta' })).toBeVisible();
   await expect(view(page).getByRole('radio', { name: /^Suomi → Espanja/ })).toHaveAttribute('aria-checked', 'true');
@@ -398,7 +398,7 @@ test('names and focus: Ohita kysymys, Seuraava kysymys, Katso tulos, Vaihda suun
   await startRound(page, testInfo, { direction: 'fi2es' });
   await expect(view(page).locator('.es-word')).toBeFocused();
   await expect(button(page, 'Ohita kysymys')).toBeVisible();
-  await expect(button(page, 'Vaihda suuntaa. Nyt Suomi → Espanja.')).toBeVisible();
+  await expect(button(page, 'Vaihda aihetta tai suuntaa. Nyt kaikki aiheet, Suomi → Espanja.')).toBeVisible();
   await answerWrong(page, testInfo);
   await expect(button(page, 'Seuraava kysymys')).toBeFocused();
   await next(page, testInfo);
@@ -616,13 +616,14 @@ test('resume: leaving during the confetti removes it', async ({ page }, testInfo
   expect(await confetti(page)).toBe(0);
 });
 
-test('end screen: Vaihda suuntaa gives the choose screen with Aloita, and the star count does not change', async ({ page }, testInfo) => {
+test('end screen: Vaihda valintoja gives the choose screen with Aloita, and the star count does not change', async ({ page }, testInfo) => {
   await openEspanja(page, testInfo);
   await startRound(page, testInfo, { direction: 'fi2es' });
   await playRound(page, testInfo, 'rrrrrrrrrr');
-  await press(button(page, 'Vaihda suuntaa'), testInfo);
+  await press(button(page, 'Vaihda valintoja'), testInfo);
   await settle(page);
   await expect(view(page).locator('.es-choose')).toBeVisible();
+  await expect(view(page).getByRole('radio', { name: 'Kaikki aiheet' })).toHaveAttribute('aria-checked', 'true');
   await expect(button(page, 'Aloita')).toBeVisible();
   await expect(button(page, 'Takaisin kysymykseen')).toBeHidden();
   await press(dirCard(page, 'es2fi'), testInfo);
@@ -636,7 +637,7 @@ test('end screen: the direction line names the direction', async ({ page }, test
   await openEspanja(page, testInfo);
   await startRound(page, testInfo, { direction: 'es2fi' });
   await playRound(page, testInfo, 'wwwwwwwwww');
-  await expect(view(page).locator('.es-dir-end')).toHaveText('Espanja → Suomi');
+  await expect(view(page).locator('.es-dir-end')).toHaveText('Kaikki aiheet · Espanja → Suomi');
   await expect(view(page).locator('.es-rows > div')).toHaveText(['0 oikein', '10 väärin']);
 });
 

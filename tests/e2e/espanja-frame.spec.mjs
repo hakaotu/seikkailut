@@ -17,6 +17,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 const dirCard = (page, dir) => view(page).locator(`.es-dir[data-dir="${dir}"]`);
+const tile = (page, id) => view(page).locator(`.es-topic[data-topic="${id}"]`);
 
 // Skips ahead to the question with the longest word.
 async function toLongest(page, testInfo, direction) {
@@ -37,6 +38,10 @@ async function toLongest(page, testInfo, direction) {
 async function eachScreen(page, testInfo, direction, check) {
   await openEspanja(page, testInfo);
   await check('choose');
+  // the longest topic line; tile taps draw no random numbers, so the seed's first round is unchanged
+  await press(tile(page, 'viikonpäivä'), testInfo);
+  await check('choose, Viikonpäivät (longest topic line)');
+  await press(tile(page, 'kaikki'), testInfo);
   await startRound(page, testInfo, { direction });
   await check('question 1, unanswered');
   await toLongest(page, testInfo, direction);
@@ -54,6 +59,9 @@ async function eachScreen(page, testInfo, direction, check) {
   await check('mid-round choose');
   await press(dirCard(page, direction === 'fi2es' ? 'es2fi' : 'fi2es'), testInfo);
   await check('mid-round choose, other direction (hint)');
+  await press(tile(page, 'perhe'), testInfo);
+  await check('mid-round choose, other topic and direction (hint)');
+  await press(tile(page, 'kaikki'), testInfo);
   await press(dirCard(page, direction), testInfo);
   await press(button(page, 'Takaisin kysymykseen'), testInfo);
   await settle(page);
@@ -100,6 +108,28 @@ test('SEI-1 / 3: the end screen of each tier fits', async ({ page }, testInfo) =
       const ih = await page.evaluate(() => window.innerHeight);
       for (const r of await buttonRects(page)) expect(r.bottom, `end ${pattern}: ${r.name} bottom`).toBeLessThanOrEqual(ih);
       expect(await page.evaluate(() => document.documentElement.scrollHeight), `end ${pattern}: scrollHeight`).toBeLessThanOrEqual(ih);
+    }
+  }
+});
+
+// SEI-57: the short rounds end after 7 or 8 questions, and the longest selection line sits under the buttons.
+test('SEI-57 / 9: the end screen of a short round fits, with the longest selection lines', async ({ page }, testInfo) => {
+  for (const { topic, direction, pattern } of [
+    { topic: 'viikonpäivä', direction: 'fi2es', pattern: 'rrrrrrr' },
+    { topic: 'tervehdys', direction: 'es2fi', pattern: 'rrrrrrww' },
+  ]) {
+    await openEspanja(page, testInfo);
+    await startRound(page, testInfo, { direction, topic });
+    await playRound(page, testInfo, pattern);
+    await expect(view(page).locator('.es-end')).toBeVisible();
+    const name = `end ${topic} ${pattern}`;
+    await noSidewaysOverflow(page, name);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await checkSizes(page, name);
+    if (testInfo.project.name !== 'narrow') {
+      const ih = await page.evaluate(() => window.innerHeight);
+      for (const r of await buttonRects(page)) expect(r.bottom, `${name}: ${r.name} bottom`).toBeLessThanOrEqual(ih);
+      expect(await page.evaluate(() => document.documentElement.scrollHeight), `${name}: scrollHeight`).toBeLessThanOrEqual(ih);
     }
   }
 });

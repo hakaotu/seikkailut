@@ -75,6 +75,7 @@ button {
 .es-primary,
 .es-secondary,
 .es-dir,
+.es-topic,
 .es-option {
   --shadow: 0 4px 0 var(--brand-dark);
   box-shadow: var(--shadow);
@@ -103,6 +104,7 @@ button {
 .es-primary:active,
 .es-secondary:active,
 .es-dir:active,
+.es-topic:active,
 .es-option:active {
   transform: translateY(4px);
   box-shadow: none;
@@ -131,6 +133,7 @@ button {
 .es-primary:focus,
 .es-secondary:focus,
 .es-dir:focus,
+.es-topic:focus,
 .es-option:focus { outline: none; }
 
 .game-card:focus-visible,
@@ -156,6 +159,7 @@ button {
 .es-primary:focus-visible,
 .es-secondary:focus-visible,
 .es-dir:focus-visible,
+.es-topic:focus-visible,
 .es-option:focus-visible {
   outline: 3px solid var(--ink);
   outline-offset: 2px;
@@ -1393,8 +1397,31 @@ html[data-booted] .boot-error { display: none; }
 
 /* Choose screen (design 3.1) */
 .game-view[data-game='espanja'] .es-choose { gap: 8px; }
-.game-view[data-game='espanja'] .es-group-label { font-size: 22px; font-weight: bold; }
-.game-view[data-game='espanja'] .es-dirs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 4px; }
+.game-view[data-game='espanja'] .es-group-label { height: 28px; font-size: 22px; font-weight: bold; line-height: 28px; }
+/* SEI-57: `Aihe` and the word line on one row, then eight tiles; heights are the design's (sei-57 §7) */
+.game-view[data-game='espanja'] .es-topic-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 28px; }
+.game-view[data-game='espanja'] .es-topic-line { font-size: 20px; color: var(--grey); white-space: nowrap; }
+.game-view[data-game='espanja'] .es-topics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 4px; }
+.game-view[data-game='espanja'] .es-topic {
+  --shadow: 0 4px 0 #c9cbd6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+  height: 68px;
+  padding: 0 6px;
+  border: 3px solid #c9cbd6;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--ink);
+}
+.game-view[data-game='espanja'] .es-topic-emoji { font-size: 26px; line-height: 1; }
+.game-view[data-game='espanja'] .es-topic-name { font-size: 20px; font-weight: bold; line-height: 1.1; white-space: nowrap; }
+.game-view[data-game='espanja'] .es-topic.is-selected { --shadow: 0 4px 0 var(--brand-dark); border: 4px solid var(--brand); background: var(--brand-light); }
+.game-view[data-game='espanja'] .es-dirs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .game-view[data-game='espanja'] .es-dir {
   --shadow: 0 4px 0 #c9cbd6;
   position: relative;
@@ -1432,8 +1459,10 @@ html[data-booted] .boot-error { display: none; }
   color: #fff;
 }
 .game-view[data-game='espanja'] .es-tick svg { width: 20px; height: 20px; }
-.game-view[data-game='espanja'] .es-dir.is-selected .es-tick { display: flex; }
-.game-view[data-game='espanja'] .es-words { display: flex; align-items: center; min-height: 28px; font-size: 20px; color: var(--grey); }
+.game-view[data-game='espanja'] .es-dir.is-selected .es-tick,
+.game-view[data-game='espanja'] .es-topic.is-selected .es-tick { display: flex; }
+.game-view[data-game='espanja'] .es-topic .es-tick { top: 6px; right: 6px; width: 24px; height: 24px; }
+.game-view[data-game='espanja'] .es-topic .es-tick svg { width: 16px; height: 16px; }
 .game-view[data-game='espanja'] .es-choose-hint { display: flex; align-items: center; justify-content: center; height: 30px; font-size: 20px; text-align: center; }
 
 /* Question screen (design 3.2 - 3.4, 3.9): one column */
@@ -1584,6 +1613,10 @@ html[data-booted] .boot-error { display: none; }
 
 @media (max-width: 599.98px) {
   .game-view[data-game='espanja'] .es-word { font-size: 34px; }
+  .game-view[data-game='espanja'] .es-topic-head { flex-direction: column; align-items: flex-start; gap: 0; height: auto; }
+  .game-view[data-game='espanja'] .es-topic-line { font-size: 18px; white-space: normal; }
+  .game-view[data-game='espanja'] .es-topics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .game-view[data-game='espanja'] .es-topic-name { font-size: 18px; }
   .game-view[data-game='espanja'] .es-dirs { grid-template-columns: 1fr; gap: 12px; }
   .game-view[data-game='espanja'] .es-dir {
     display: grid;
@@ -1623,6 +1656,8 @@ html[data-booted] .boot-error { display: none; }
 }
 
 @media (max-width: 419.98px) {
+  .game-view[data-game='espanja'] .es-topic { height: auto; min-height: 68px; padding: 6px; }
+  .game-view[data-game='espanja'] .es-topic-name { white-space: normal; text-align: center; }
   .game-view[data-game='espanja'] .es-heading { font-size: 28px; }
   .game-view[data-game='espanja'] .es-q-end { font-size: 32px; }
   .game-view[data-game='espanja'] .es-options { grid-template-columns: 1fr; gap: 10px; }

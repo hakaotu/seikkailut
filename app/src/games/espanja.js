@@ -9,20 +9,19 @@
 // synchronously: the speech then starts inside the tap (registry.js rule 3). Click listeners use
 // addEventListener (tests/e2e/gesture.spec.mjs only sees those).
 //
-// After a right answer on questions 1-9 the next question comes by itself after 4 s (SEI-48,
+// After a right answer on every question but the last the next question comes by itself after 4 s (SEI-48,
 // auto-advance.js). In Espanja -> Suomi that reading starts from a timer, so it is the one speech here
 // that is not inside a tap; it passes { auto: true } to say. Seuraava and every other control end the wait.
 
 import {
-  MAX_QUESTIONS, DIRECTIONS, newRound, promptOf, optionText, hintLine, pairLine, choose, skip, counts,
-  listenParts, answerParts, earnsStar, endTexts, chooseHint, questionLive, rightLive, wrongLive,
-  skippedLive, endLive, loadStars, saveStars, WORDS,
+  MAX_QUESTIONS, DIRECTIONS, ALL_TOPICS, TOPICS, newRound, promptOf, optionText, hintLine, pairLine, choose, skip,
+  counts, listenParts, answerParts, earnsStar, endTexts, chooseHint, topicLine, selectionLine, selectionLabel,
+  changeLabel, questionLive, rightLive, wrongLive, skippedLive, endLive, loadStars, saveStars,
 } from './espanja-logic.js';
 import { fillMarkup, createAutoAdvance } from './auto-advance.js';
 
 const GUARD_MS = 500; // design 3.9: a new screen's buttons ignore taps for this long
 const MAX_SIDE_BY_SIDE_STARS = 10; // design 3.0: up to this many stars side by side, then one star and × n
-const WORD_LINE = `Sanat: ${new Set(WORDS.map((w) => w.topic)).size} aihetta (${WORDS.length} sanaa)`; // Q52
 
 const svg = (body, viewBox = '0 0 24 24') => `<svg viewBox="${viewBox}" aria-hidden="true" focusable="false">${body}</svg>`;
 const STROKE = 'fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"';
@@ -68,6 +67,18 @@ function dirButtonHtml(id) {
   );
 }
 
+// design sei-57 3.1: the picture is decoration, the accessible name is set on the button so a soft hyphen in the
+// visible label never reaches it.
+function topicButtonHtml(t) {
+  return (
+    `<button type="button" class="es-topic" role="radio" aria-checked="false" aria-label="${t.name}" aria-describedby="es-topic-line" data-topic="${t.id}">` +
+    `<span class="es-topic-emoji" aria-hidden="true">${t.emoji}</span>` +
+    `<span class="es-topic-name">${t.label}</span>` +
+    `<span class="es-tick" aria-hidden="true">${CHECK}</span>` +
+    '</button>'
+  );
+}
+
 export default {
   create(ctx) {
     const { root, question, status } = ctx;
@@ -76,6 +87,8 @@ export default {
 
     let direction = 'fi2es'; // committed: the direction of the current or the next round
     let draft = direction; // the choose screen's working copy
+    let topic = ALL_TOPICS; // committed, like direction: Kaikki aiheet is today's round
+    let draftTopic = topic;
     let screen = 'choose';
     let round = null;
     let stars = loadStars(getStorage) ?? 0; // null (storage blocked) keeps the count in memory, from 0
@@ -85,6 +98,7 @@ export default {
 
     const roundOpen = () => round !== null && !round.endShown;
     const cur = () => round.questions[round.index];
+    const total = () => round.questions.length; // 10, or the topic's size when smaller (SEI-57)
 
     // ---------- DOM ----------
 
@@ -95,9 +109,10 @@ export default {
 
     root.innerHTML =
       '<section class="es-screen es-choose">' +
+      '<div class="es-topic-head"><div class="es-group-label">Aihe</div><div class="es-topic-line" id="es-topic-line"></div></div>' +
+      `<div class="es-topics" role="radiogroup" aria-label="Aihe">${TOPICS.map(topicButtonHtml).join('')}</div>` +
       '<div class="es-group-label">Suunta</div>' +
       `<div class="es-dirs" role="radiogroup" aria-label="Suunta">${Object.keys(DIRECTIONS).map(dirButtonHtml).join('')}</div>` +
-      `<div class="es-words">${WORD_LINE}</div>` +
       '<div class="es-choose-hint" role="status"></div>' +
       '<div class="es-actions">' +
       '<button type="button" class="es-secondary es-big es-back-to-round" hidden>Takaisin kysymykseen</button>' +
@@ -123,7 +138,7 @@ export default {
       '<span class="es-phrase"><b class="es-phrase-es" lang="es"></b><span class="es-phrase-fi"></span></span></div>' +
       '<div class="es-actions">' +
       '<button type="button" class="es-primary es-big es-again">Pelaa uudelleen</button>' +
-      '<button type="button" class="es-secondary es-big es-new-dir">Vaihda suuntaa</button>' +
+      '<button type="button" class="es-secondary es-big es-new-dir">Vaihda valintoja</button>' +
       '</div>' +
       '<span class="es-dir-end"></span>' +
       '</section>' +
@@ -135,6 +150,8 @@ export default {
     const screens = { choose: $('.es-choose'), question: $('.es-play'), end: $('.es-end') };
     const questions = { choose: $q('.es-q-choose'), question: $q('.es-q-play'), end: $q('.es-q-end') };
     const dirButtons = [...root.querySelectorAll('.es-dir')];
+    const topicButtons = [...root.querySelectorAll('.es-topic')];
+    const topicLineEl = $('.es-topic-line');
     const chooseHintEl = $('.es-choose-hint');
     const startBtn = $('.es-start');
     const restartBtn = $('.es-restart');
@@ -211,14 +228,20 @@ export default {
     }
 
     function renderChoose() {
+      for (const b of topicButtons) {
+        const on = b.dataset.topic === draftTopic;
+        b.setAttribute('aria-checked', String(on));
+        b.classList.toggle('is-selected', on);
+      }
+      topicLineEl.textContent = topicLine(draftTopic);
       for (const b of dirButtons) {
         const on = b.dataset.dir === draft;
         b.setAttribute('aria-checked', String(on));
         b.classList.toggle('is-selected', on);
       }
-      chooseHintEl.textContent = chooseHint(draft, round);
+      chooseHintEl.textContent = chooseHint(draft, draftTopic, round);
       const open = roundOpen();
-      backBtn.hidden = !(open && round.direction === draft);
+      backBtn.hidden = !(open && round.direction === draft && round.topic === draftTopic);
       restartBtn.hidden = !open;
       startBtn.hidden = open;
     }
@@ -226,8 +249,12 @@ export default {
     function renderHud() {
       const { a, done } = round ? counts(round) : { a: 0, done: 0 };
       scoreEl.textContent = `Pisteet: ${a} / ${done}`;
-      barBlocks.forEach((b, i) => b.classList.toggle('is-full', i < done));
-      barEl.setAttribute('aria-label', `${done} kysymystä ${MAX_QUESTIONS}:stä tehty`);
+      const n = round ? total() : MAX_QUESTIONS; // renderHud also runs once before any round exists
+      barBlocks.forEach((b, i) => {
+        b.hidden = i >= n; // the rest of the blocks are flex: 1, so a shorter round fills the same width
+        b.classList.toggle('is-full', i < done);
+      });
+      barEl.setAttribute('aria-label', `${done} kysymystä ${n}:stä tehty`);
     }
 
     function buildOptions(q) {
@@ -300,7 +327,7 @@ export default {
       const q = cur();
       renderOptions(q);
       renderFeedback(q);
-      const last = round.index === MAX_QUESTIONS - 1;
+      const last = round.index === total() - 1;
       nextBtn.classList.toggle('is-waiting', q.result === 'open');
       nextLabel.textContent = last ? 'Katso tulos' : 'Seuraava';
       nextBtn.setAttribute('aria-label', last ? 'Katso tulos' : 'Seuraava kysymys');
@@ -311,7 +338,7 @@ export default {
     function renderQuestion() {
       const q = cur();
       const dir = round.direction;
-      wordEl.setAttribute('aria-label', `Kysymys ${round.index + 1} / ${MAX_QUESTIONS}: ${promptOf(q.pair, dir)}`);
+      wordEl.setAttribute('aria-label', `Kysymys ${round.index + 1} / ${total()}: ${promptOf(q.pair, dir)}`);
       wordEl.textContent = promptOf(q.pair, dir);
       if (dir === 'es2fi') wordEl.lang = 'es';
       else wordEl.removeAttribute('lang');
@@ -319,13 +346,13 @@ export default {
       buildOptions(q);
       renderAnswerState();
       renderHud();
-      changeBtn.setAttribute('aria-label', `Vaihda suuntaa. Nyt ${DIRECTIONS[dir].name}.`);
+      changeBtn.setAttribute('aria-label', changeLabel(round.topic, dir));
       playOnce(wordEl.parentElement, 'is-appearing');
     }
 
     function renderEnd() {
       const { a, b, c } = counts(round);
-      const t = endTexts(a, b, c);
+      const t = endTexts(a, b, c, total());
       resultEl.dataset.tier = t.tier;
       questions.end.textContent = t.title;
       medalEl.innerHTML = t.tier === 'perfect' ? STAR : t.tier === 'good' ? CHECK : UP;
@@ -341,14 +368,14 @@ export default {
           return row;
         }),
       );
-      const earned = earnsStar(a);
+      const earned = earnsStar(a, total());
       rewardEl.classList.toggle('is-none', !earned);
       rewardEl.innerHTML = `${STAR}<span></span>`;
       rewardEl.lastElementChild.textContent = t.starLine;
       phraseEs.textContent = t.phraseEs;
       phraseFi.textContent = t.phraseFi;
-      dirEnd.textContent = DIRECTIONS[round.direction].name;
-      dirEnd.setAttribute('aria-label', `Suunta ${DIRECTIONS[round.direction].name}.`);
+      dirEnd.textContent = selectionLine(round.topic, round.direction);
+      dirEnd.setAttribute('aria-label', selectionLabel(round.topic, round.direction));
     }
 
     function goTo(next) {
@@ -397,10 +424,10 @@ export default {
     // Aloita, Aloita uusi kierros, Pelaa uudelleen. A fresh question 1: in Espanja -> Suomi it is read.
     function beginRound() {
       auto.cancel();
-      round = newRound(direction);
+      round = newRound(direction, topic);
       goTo('question');
       renderQuestion();
-      ctx.reportProgress({ done: 0, total: MAX_QUESTIONS, finished: false });
+      ctx.reportProgress({ done: 0, total: total(), finished: false });
       focusEl(wordEl);
       announce(questionLive(round));
       if (round.direction === 'es2fi') say(listenParts('question', round));
@@ -410,15 +437,15 @@ export default {
       const q = cur();
       if (q.result !== 'open') return;
       choose(q, option);
-      ctx.reportProgress({ done: counts(round).done, total: MAX_QUESTIONS, finished: false });
+      ctx.reportProgress({ done: counts(round).done, total: total(), finished: false });
       renderAnswerState();
       renderHud();
       focusEl(nextBtn);
       const chosenButton = optionsEl.children[q.options.indexOf(option)];
       if (q.result === 'right') {
         playOnce(chosenButton, 'is-popping');
-        // Questions 1-9: the next one comes by itself; the same sentence is announced (design 8).
-        const waits = round.index < MAX_QUESTIONS - 1;
+        // Every question but the last: the next one comes by itself; the same sentence is announced (design 8).
+        const waits = round.index < total() - 1;
         if (waits) auto.start();
         announce(rightLive(round, waits));
       } else {
@@ -432,7 +459,7 @@ export default {
       const q = cur();
       if (q.result !== 'open') return;
       skip(q);
-      ctx.reportProgress({ done: counts(round).done, total: MAX_QUESTIONS, finished: false });
+      ctx.reportProgress({ done: counts(round).done, total: total(), finished: false });
       renderAnswerState();
       renderHud();
       focusEl(nextBtn);
@@ -445,7 +472,7 @@ export default {
       // backstop: moving focus already cancels the wait, so no test can observe this call
       auto.cancel();
       if (cur().result === 'open') return;
-      if (round.index === MAX_QUESTIONS - 1) {
+      if (round.index === total() - 1) {
         showEnd();
         return;
       }
@@ -456,23 +483,23 @@ export default {
       if (round.direction === 'es2fi') say(listenParts('question', round), { auto: byTimer });
     }
 
-    // The first time the end screen shows for a round, a round with 8 or more right gives one star, kept
-    // at once. starGiven keeps a second call from giving another.
+    // The first time the end screen shows for a round, a round with 80 % or more right (8/10, 7/8, 6/7) gives
+    // one star, kept at once. starGiven keeps a second call from giving another.
     function showEnd() {
       round.endShown = true;
       const { a, b, c } = counts(round);
       let starGot = false;
-      if (earnsStar(a) && !round.starGiven) {
+      if (earnsStar(a, total()) && !round.starGiven) {
         round.starGiven = true;
         stars += 1;
         saveStars(getStorage, stars);
         starGot = true;
         renderStatus(true);
       }
-      ctx.reportProgress({ done: MAX_QUESTIONS, total: MAX_QUESTIONS, finished: true });
+      ctx.reportProgress({ done: total(), total: total(), finished: true });
       renderEnd();
       goTo('end');
-      const t = endTexts(a, b, c);
+      const t = endTexts(a, b, c, total());
       showConfetti(t.tier);
       focusEl(questions.end);
       announce(endLive(round, starGot, stars));
@@ -482,6 +509,7 @@ export default {
     function openChoose() {
       auto.cancel();
       draft = direction;
+      draftTopic = topic;
       renderChoose();
       goTo('choose');
       focusEl(questions.choose);
@@ -489,6 +517,7 @@ export default {
 
     function startFromDraft() {
       direction = draft;
+      topic = draftTopic;
       beginRound();
     }
 
@@ -499,6 +528,12 @@ export default {
 
     // ---------- listeners ----------
 
+    for (const b of topicButtons) {
+      b.addEventListener('click', guarded(() => {
+        draftTopic = b.dataset.topic;
+        renderChoose();
+      }));
+    }
     for (const b of dirButtons) {
       b.addEventListener('click', guarded(() => {
         draft = b.dataset.dir;
