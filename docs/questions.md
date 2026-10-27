@@ -2,16 +2,16 @@
 
 ## Avoimet
 
-- **Q51 (päätös):** Rakentamissuunnitelma uusille sanoille (Sanat ensin,
-  sitten Espanja; KORPINKYNNELLE hieman kapeammat ruudut leveällä
-  näytöllä). Hyväksytkö? Oletus: kyllä. (SEI-50–56) (2026-10-27)
-- **Q52 (päätös):** Espanjan aloitusruudun rivi "Sanat: tervehdykset ja
-  värit (18 sanaa)" muuttuu. Oletus: "Sanat: tervehdykset, värit,
-  numerot, eläimet, ruoka, viikonpäivät ja perhe (79 sanaa)".
-  (SEI-52–56) (2026-10-27)
+(ei avoimia)
 
 ## Vastatut
 
+- **Q52 (päätös):** Espanjan aloitusruudun rivi — "lyhyempi": "Sanat: 7
+  aihetta (79 sanaa)". Lisäksi idea: "noita vois myös ryhmitellä joko
+  aihealueiden mukaan tai sitten luoda tasot helppo, keskitaso, vaikea" —
+  kirjataan ehdotukseksi tämän jälkeen. (SEI-52–56) (2026-10-27)
+- **Q51 (päätös):** Rakentamissuunnitelma — "hyväksytty". (SEI-50–56)
+  (2026-10-27)
 - **Q50 (päätös):** Kierros ilman tervehdystä käy, aiheet sekaisin — "käy".
   (SEI-52–56) (2026-10-27)
 - **Q49 (päätös):** KORPINKYNSI mukaan Harry Potteriin — "saa olla
