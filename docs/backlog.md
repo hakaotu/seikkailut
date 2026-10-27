@@ -1314,7 +1314,7 @@ hakemistoon (sana, kuva, vihje / es, fi, aihe) ja omistaja hyväksyy sen ennen
 arkkitehtia, kuten SEI-9:ssä (Q32). Ulkoasu ei muutu.
 
 ### SEI-50 — Sanat: lisää sanoja Normaali-listaan
-Tila: review
+Tila: verifying
 Perustelu: omistaja pyysi lisää sanoja ("normi"); 24 sanan lista toistuu
 10 sanan kierroksilla nopeasti.
 Riippuvuus: SEI-3 (done). Sisällön tarkistus (ks. kriteeri 8).
@@ -1354,7 +1354,7 @@ kysytty, E4):
    näkee taulukon design-katselmoinnissa, mutta ei ole sen tarkistaja.
 
 ### SEI-51 — Sanat: lisää sanoja Harry Potter -listaan
-Tila: review
+Tila: verifying
 Perustelu: omistaja pyysi lisää sanoja ("harry potter"); 20 sanan lista toistuu
 10 sanan kierroksilla nopeasti.
 Riippuvuus: SEI-3 (done). Sisällön tarkistus (ks. kriteeri 8).
@@ -1395,7 +1395,7 @@ oletuksia, ei kysytty, E4):
    kahdesti.
 
 ### SEI-52 — Espanja: uusi aihe "numerot"
-Tila: review
+Tila: verifying
 Perustelu: omistaja pyysi lisää espanjan sanastoa A1-tasolle 1.–2. luokalle;
 numerot ovat K3:n (Q7) ensimmäinen lisäaihe.
 Riippuvuus: SEI-4, SEI-9 (done). Aihe ja määrä: omistaja vastasi (Q45, Q46,
@@ -1432,7 +1432,7 @@ Kriteerit:
    ei 7/10:llä).
 
 ### SEI-53 — Espanja: uusi aihe "eläimet"
-Tila: review
+Tila: verifying
 Perustelu: omistaja pyysi lisää espanjan sanastoa; eläimet ovat K3:n (Q7)
 toinen lisäaihe ja konkreettinen, kuvittuva sanasto.
 Riippuvuus: SEI-4, SEI-9 (done). Voi julkaista erikseen SEI-52:sta. Aihe ja
@@ -1447,7 +1447,7 @@ Kriteerit:
    vastaus ja väärät vaihtoehdot ovat eläimiä (ei numeroita eikä värejä).
 
 ### SEI-54 — Espanja: uusi aihe "ruoka"
-Tila: review
+Tila: verifying
 Perustelu: omistaja valitsi aiheen (Q46, 2026-10-27: "Saa olla myös ruoka ...
 Noita kaikkia noilla on jo ollut", eli lapset ovat opiskelleet sen koulussa).
 Riippuvuus: SEI-4, SEI-9 (done). Voi julkaista erikseen muista aiheista.
@@ -1466,7 +1466,7 @@ Kriteerit:
    erikseen kirjaten sen tehtävään.
 
 ### SEI-55 — Espanja: uusi aihe "viikonpäivät"
-Tila: review
+Tila: verifying
 Perustelu: omistaja valitsi aiheen (Q46, 2026-10-27; lapset ovat opiskelleet
 sen koulussa).
 Riippuvuus: SEI-4, SEI-9 (done). Voi julkaista erikseen muista aiheista.
@@ -1488,7 +1488,7 @@ Kriteerit:
    tarkistettu ja kirjattu sanakohtaisesti kriteerin 6 tapaan.
 
 ### SEI-56 — Espanja: uusi aihe "perhe"
-Tila: review
+Tila: verifying
 Perustelu: omistaja valitsi aiheen (Q46, 2026-10-27: "sekä perhe"; lapset ovat
 opiskelleet sen koulussa).
 Riippuvuus: SEI-4, SEI-9 (done). Voi julkaista erikseen muista aiheista.
