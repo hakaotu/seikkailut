@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q44 (katso):** Avaa Espanja: näkyykö yläpalkissa yhä eilen ansaittu
+  tähti? kyllä / ei. Oletus: jos et ehdi, kysyn uudelleen myöhemmin.
+  (SEI-4, 9, 10) (2026-10-27)
 
 ## Vastatut
 
