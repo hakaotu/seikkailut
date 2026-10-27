@@ -2,19 +2,17 @@
 
 ## Avoimet
 
-- **Q45 (päätös):** Kuinka paljon uutta? Oletus: 20 uutta sanaa kumpaankin
-  Sanat-listaan (Normaali ja Harry Potter) ja Espanjaan kaksi uutta aihetta,
-  10 sanaa kumpaankin. (SEI-50–53, E1) (2026-10-27)
-- **Q46 (päätös):** Espanjan uudet aiheet? Oletus: numerot ja eläimet;
-  kierros sekoittaa kaikki aiheet kuten nyt, lapsi ei valitse aihetta.
-  (SEI-52, 53, E2) (2026-10-27)
-- **Q47 (tieto):** Kuka tarkistaa espanjan sanat? Oletus: tarkistan
-  sanakirjasta ja sinä hyväksyt listan ennen rakentamista, kuten
-  käännöskorjauksissa; jos tunnet espanjan opettajan, hän tarkistaa ensin.
-  (SEI-52, 53, E3) (2026-10-27)
+(ei avoimia)
 
 ## Vastatut
 
+- **Q47 (tieto):** Espanjan sanojen tarkistaja — "sinä": Claude tarkistaa
+  sanakirjasta ja kirjaa lähteen. (SEI-52, 53, E3) (2026-10-27)
+- **Q46 (päätös):** Espanjan uudet aiheet — "numerot ja eläimet on hyvät.
+  Saa olla myös ruoka ja viikonpäivät sekä perhe. Noita kaikkia noilla on
+  jo ollut." (SEI-52, 53, E2) (2026-10-27)
+- **Q45 (päätös):** Määrä — "saa olla enemmänkin" kuin 20 uutta sanaa per
+  Sanat-lista ja 10 sanaa per Espanja-aihe. (SEI-50–53, E1) (2026-10-27)
 - **Q44 (katso):** Espanjan tähti näkyy seuraavana päivänä — "joo".
   (SEI-4, 9, 10) (2026-10-27)
 - **Q43 (katso):** Espanja Macilla, Espanja → Suomi, automaattinen
