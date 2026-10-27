@@ -2,7 +2,8 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q58 (päätös):** Espanjan aiheen valinnan rakentamissuunnitelma.
+  Hyväksytkö? Oletus: kyllä. (SEI-57) (2026-10-27)
 
 ## Vastatut
 
