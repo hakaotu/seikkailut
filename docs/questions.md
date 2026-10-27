@@ -2,7 +2,13 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q51 (päätös):** Rakentamissuunnitelma uusille sanoille (Sanat ensin,
+  sitten Espanja; KORPINKYNNELLE hieman kapeammat ruudut leveällä
+  näytöllä). Hyväksytkö? Oletus: kyllä. (SEI-50–56) (2026-10-27)
+- **Q52 (päätös):** Espanjan aloitusruudun rivi "Sanat: tervehdykset ja
+  värit (18 sanaa)" muuttuu. Oletus: "Sanat: tervehdykset, värit,
+  numerot, eläimet, ruoka, viikonpäivät ja perhe (79 sanaa)".
+  (SEI-52–56) (2026-10-27)
 
 ## Vastatut
 
