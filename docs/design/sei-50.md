@@ -2,7 +2,12 @@
 
 Tehtävät: SEI-50 (Sanat, Normaali), SEI-51 (Sanat, Harry Potter), SEI-52
 (Espanja, numero), SEI-53 (eläin), SEI-54 (ruoka), SEI-55 (viikonpäivä),
-SEI-56 (perhe). Backlog osio E, omistajan vastaukset Q45–Q47.
+SEI-56 (perhe). Backlog osio E, omistajan vastaukset Q45–Q47 ja Q48–Q50
+(2026-10-27, kohta 11).
+
+**Tila: omistaja hyväksynyt 2026-10-27** (Q48 "ok"). Ainoa muutos
+katselmoinnin jälkeen: KORPINKYNSI lisätty (Q49), ja siitä seuraava
+asettelusääntö 11-kirjaimiselle sanalle (kohta 3.4).
 
 Katselmointisivu omistajalle: `docs/design/sei-50.html`.
 
@@ -11,7 +16,8 @@ mitä ei, kohta 9.
 
 **Ruudulla ei muutu mikään rakenne, väri, painike tai teksti.** Muuttuvat vain
 sanat, kuvat ja vihjeet (Sanat) ja sanaparit sekä viisi uutta aiheen nimeä
-vihjerivillä (Espanja). Kaikki näkymät, tilat, äänet ja saavutettavuus ovat
+vihjerivillä (Espanja). Yksi poikkeus: kirjainruudun leveys ≥ 11-kirjaimisella
+sanalla ≥ 600 px:n leveydellä (kohta 3.4). Kaikki näkymät, tilat, äänet ja saavutettavuus ovat
 `sei-3.md`:n (Sanat) ja `sei-4.md`:n (Espanja) mukaiset.
 
 ---
@@ -29,7 +35,7 @@ vihjerivillä (Espanja). Kaikki näkymät, tilat, äänet ja saavutettavuus ovat
 - **Jos tätä ei tehdä:** lapsi oppii listan ulkoa ja Espanjassa tunnistaa
   vastauksen vaihtoehtojen joukosta muistin, ei kielen perusteella.
 - **Mitä Espanjassa muuttuu kierroksen sisällä:** kierros arvotaan edelleen
-  kaikista pareista (backlog E2, oletus). 18 → 79 paria tarkoittaa, että
+  kaikista pareista (backlog E2; omistaja vahvisti Q50). 18 → 79 paria tarkoittaa, että
   tervehdykset ja värit tulevat harvemmin (kohta 5.3).
 
 ## 2. Kulku
@@ -41,7 +47,7 @@ polut, jotka eivät ole onnellisia.
 flowchart TD
   S0[Lapsi avaa Sanat] --> S1{Valintaruutu: lista}
   S1 -- Normaali --> S2[10 sanaa 60:stä, ei toistoa]
-  S1 -- Harry Potter --> S3[10 sanaa 40:stä, ei toistoa]
+  S1 -- Harry Potter --> S3[10 sanaa 41:stä, ei toistoa]
   S2 --> S4[Sana: kuva + vihje Helpolla; Keskitasolla ja Vaikealla kuva tulee näkyviin vasta valmiissa sanassa]
   S3 --> S4
   S4 --> S5{Näkyykö kuva?}
@@ -71,8 +77,10 @@ flowchart TD
   kohta 4.1 ja 4.2. Kuvan koko, vihjeen fontti ja rivitys `sei-3.md` §3.2 ja
   §3.10.
 - Pisin uusi Normaali-sana 7 kirjainta (HEVONEN, KIRAHVI, RAKETTI, PÄÄRYNÄ),
-  sama kuin nyt (AURINKO). Pisin uusi HP-sana 10 (ROHKELIKKO, TÄHTITORNI,
-  KASVIHUONE, PÄIVÄKIRJA), sama kuin nyt (TAIKASAUVA). Ei uutta asettelua.
+  sama kuin nyt (AURINKO). Ei uutta asettelua.
+- Pisin uusi HP-sana on **KORPINKYNSI, 11 kirjainta** (Q49); nyt pisin on 10
+  (TAIKASAUVA). Se tarvitsee yhden asettelusäännön, kohta 3.4. Muut uudet
+  HP-sanat ≤ 10.
 - Pisin uusi vihje 28 merkkiä (`Yhdeksän ja kolme neljäsosaa`,
   `Täältä katsellaan yötaivasta`). Nyt pisin 23. 28 merkkiä 24 px:llä on noin
   340 px: mahtuu yhdelle riville tietokoneella ja iPadilla, rivittyy kahdelle
@@ -117,6 +125,43 @@ Ruudunlukijan kysymysilmoitus muuttuu samalla tavalla:
 Tyhjä, lataus ja virhe eivät ole mahdollisia: sisältö on kiinteä ja pelin
 muistissa (kuten `sei-3.md` §3.1, `sei-4.md` §5). Ainoa uusi osittainen tila
 on kuva, joka ei piirry vanhalla laitteella (kohta 7).
+
+### 3.4 Sanat: 11 kirjaimen sana (KORPINKYNSI, Q49)
+
+Nykyinen asettelu (`sei-3.md` §3.10; `app/styles/app.css`: `.sn-slot` 56 px,
+iPad pysty 60 px, < 600 px 44 px; väli 6 px, < 600 px 4 px; väliviiva
+`.sn-dash` 14 px) on mitoitettu 10 kirjaimelle. Laskettu 11:lle
+(KOR-PIN-KYN-SI = 4 tavua, 3 väliviivaa; tavutus päällä välejä 13, pois 10):
+
+| Leveys (pelin sisältö) | Tavutus pois | Tavutus päällä | Tulos nykyisellä CSS:llä |
+|---|---|---|---|
+| Tietokone / iPad vaaka (712) | 11 × 56 + 10 × 6 = 676 | 11 × 56 + 42 + 13 × 6 = **736** | Tavutettuna **ei mahdu**: SI rivittyy toiselle riville (+70 px korkeutta). Vaikealla korkeus 540 + 70 = 610 > 548: pelialue vierittyy. |
+| iPad pysty (724) | 11 × 60 + 10 × 6 = 720 | 11 × 60 + 42 + 78 = **780** | Tavutettuna ei mahdu, rivittyy (korkeutta on, mutta sana katkeaa ilman syytä). |
+| < 600 px | rivittyy 5 / rivi (320 px:llä 5 + 5 + 1) | rivittyy tavurajalla (320 px: KOR- / PIN- / KYN-SI) | Toimii nykyisellä säännöllä (`sei-3.md` §3.10). 3 riviä, kun nykyinen TAIKASAUVA tavutettuna on 320 px:llä jo 4 riviä (TAI- / KA- / SAU- / VA), joten ei uutta korkeuden pahinta tapausta. |
+
+**Vaatimus (rakentajalle):** kun sanassa on **11 kirjainta tai enemmän**, ja
+leveys on ≥ 600 px (sekä tietokone / iPad vaaka että iPad pysty),
+kirjainruudun leveys on **52 px**. Korkeus, kirjainkoko (36 / 40 px),
+reunukset, välit ja väliviiva pysyvät ennallaan. Sanat, joissa on ≤ 10
+kirjainta, eivät muutu millään leveydellä. < 600 px ei muutu.
+
+Tarkistus: 11 × 52 + 42 + 13 × 6 = 692 ≤ 712 (20 px varaa) ja ≤ 724.
+Tavutus pois 11 × 52 + 60 = 632. Kirjainruudut pysyvät yhdellä rivillä, joten
+`sei-3.md` §3.10:n korkeuslaskelma (540 px) pätee ennallaan. Suurin kirjain
+(Ö, Ä tai M, 40 px lihava) on noin 30 px leveä; 52 px:n ruutuun jää yli 8 px
+kummallekin puolelle reunuksen sisään.
+
+Miten sääntö kiinnitetään (luokka, data-attribuutti tai muu), on arkkitehdin
+päätös; vaatimus on vain leveys ja raja (≥ 11 kirjainta, ≥ 600 px).
+
+Muut tasot ja osat, tarkistettu, ei muutosta:
+- **Laatat (Helppo, Keskitaso):** 11 laattaa + `Poista` = 12. ≥ 600 px
+  712 px:iin mahtuu 10 (10 × 64 + 9 × 8 = 712), joten rivi rivittyy kahdelle,
+  kuten nykyisillä 10-kirjaimisilla sanoilla (11 näppäintä) jo nyt.
+  < 600 px ruudukko 5 saraketta: 12 → 3 riviä, sama kuin nykyinen 11.
+- **Aakkoset (Vaikea):** eivät riipu sanan pituudesta.
+- **Ruudunlukija:** `Sana 4 / 10. 11 kirjainta.` ja `Sanasi, 11 kirjainta`
+  syntyvät nykyisestä koodista sellaisenaan.
 
 ---
 
@@ -181,7 +226,7 @@ Harry Potter -listassa, kuva ei toistu Normaali-listan sisällä, vihje ei
 sisällä sanaa eikä sen vartaloa, vihje ≤ 30 merkkiä. Kirjaimet B (BUSSI) ja D
 (SADE) ovat Vaikean tason aakkosissa (A–Z, Å, Ä, Ö).
 
-### 4.2 Harry Potter (SEI-51): 20 nykyistä + 20 uutta = 40
+### 4.2 Harry Potter (SEI-51): 20 nykyistä + 21 uutta = 41
 
 Lähde: suomenkielinen Wikipedia (haettu 2026-10-27), joka käyttää kirjojen
 suomennoksen termejä. Lainaus on sivun oma muoto.
@@ -208,9 +253,18 @@ suomennoksen termejä. Lainaus on sivun oma muoto.
 | 38 | FEENIKS | 🔥 | Tulinen lintu (13) | FEE-NIKS | Harry Potter ja salaisuuksien kammio: "feenikslintu Fawkes"; kirjan nimi "Feeniksin kilta" | likimääräinen |
 | 39 | ALRUUNA | 🌱 | Kasvi, joka kiljuu (18) | AL-RUU-NA | Harry Potter ja salaisuuksien kammio: "alruunajuomalla" | likimääräinen |
 | 40 | PÄIVÄKIRJA | 📔 | Salaisuudet sivuilla (20) | PÄI-VÄ-KIR-JA | Harry Potter ja salaisuuksien kammio: "Tom Valedron päiväkirja" | hyvä |
+| 41 | KORPINKYNSI | 🦅 | Kotka on sen merkki (19) | KOR-PIN-KYN-SI | Tylypahka: "Korpinkynsi (eng. Ravenclaw)"; "Tuvan maskotti on kotka" | tuvan eläin |
+
+Rivi 41 lisätty omistajan päätöksellä (Q49, 2026-10-27), lähde tarkistettu
+uudelleen samana päivänä. Tavutus jäljitetty sovelluksen säännön läpi
+(K-O-R-P-I-N-K-Y-N-S-I): kaikki kolme konsonanttiryhmää (RP, NK, NS) ovat
+kahden konsonantin ryhmiä vokaalien välissä, joten sääntö VCC-V katkaisee
+niiden keskeltä: indeksit 3 (R|P), 6 (N|K), 9 (N|S). Kolmen konsonantin
+ryhmää ei ole. Tulos KOR-PIN-KYN-SI = suomen tavutussääntö. Kuva 🦅 on
+Unicode 9, ei toistu kummassakaan listassa.
 
 Tarkistettu jokaisesta: suomennoksen termi (ei englantia), ei henkilön nimi
-(E4), yksi sana, ≤ 10 kirjainta, ei Normaali-listassa, kuva ei toistu HP-listan
+(E4), yksi sana, ≤ 10 kirjainta (poikkeus KORPINKYNSI 11, Q49), ei Normaali-listassa, kuva ei toistu HP-listan
 sisällä, vihje ≤ 30 merkkiä, ei sisällä sanaa eikä sen vartaloa, ei paljasta
 juonta, ei pelottava.
 
@@ -234,7 +288,6 @@ rakentajalle: kuva on yksilöllinen listan sisällä, ei listojen välillä.
 | KUUSI | Myös numero; kuva ei olisi yksiselitteinen. |
 | PIZZA | Suomen kirjakielen asu on "pitsa"; lapsi kirjoittaisi kumman tahansa. |
 | SIILI, OVI | Kuva on jo HP-listassa (🦔 KUTKA, 🚪 KAMMIO); vältetty, vaikka sääntö sallisi. |
-| KORPINKYNSI | 11 kirjainta, raja 10 (kriteeri 4). Kolme muuta tupaa on listassa. Kohta 11, Q-a. |
 | KOTITONTTU, TESTRAALI | Tavutus väärin (NTT, STR); testraali myös pelottava. |
 | ANKEROINEN, MÖRKÖ, KERBEROS, BASILISKI | Pelottava 7-vuotiaalle (kriteeri 5). |
 | Iseeviot-peili, Lajitteluhattu, muistipallo | Kaksi sanaa tai yli 10 kirjainta. (Huom: peili ei ole "Iseeviskan kuvastin", jonka ensin oletin; Wikipedian muoto on "Iseeviot-peili".) |
@@ -386,7 +439,7 @@ ovat kaikille ymmärrettäviä.
 | Lista / aihe | Nyt | Uusia | Yhteensä | Peruste |
 |---|---|---|---|---|
 | Sanat, Normaali | 24 | 36 | **60** | Kuusi kierrosta ennen kuin sana voisi toistua, jos kierrokset eivät menisi päällekkäin. Kaikki 4–7 kirjainta, enimmäkseen kaksitavuisia. Rajana oli se, että kuvan on oltava yksiselitteinen ja tavutuksen oikea; 40 uutta olisi vaatinut likimääräisiä kuvia. |
-| Sanat, Harry Potter | 20 | 20 | **40** | Vähimmäismäärä. Rajana on, että sana on löydettävä suomennoksesta lähteen kanssa, mahduttava 10 kirjaimeen, olla pelottamaton ja sillä on oltava kuva. Kohdassa 4.3 on 17 Potter-ehdokasta, jotka eivät läpäisseet. |
+| Sanat, Harry Potter | 20 | 21 | **41** | Vähimmäismäärä 40 + KORPINKYNSI (Q49). Rajana on, että sana on löydettävä suomennoksesta lähteen kanssa, mahduttava 10 kirjaimeen (poikkeus KORPINKYNSI), olla pelottamaton ja sillä on oltava kuva. Kohdassa 4.3 on 16 Potter-ehdokasta, jotka eivät läpäisseet. |
 | Espanja, numero | – | 12 | 12 | 1–10 on koulun ydin; 11 ja 12 tarvitaan kellossa ja kuukausissa ja ovat vielä lyhyitä. 13–19 (trece–diecinueve) ovat oma sarjansa; jätetty, jottei numeroaihe ylitä muita. |
 | Espanja, eläin | – | 16 | 16 | Kotieläimet, maatilan eläimet ja tutuimmat villieläimet. |
 | Espanja, ruoka | – | 16 | 16 | Aamiainen, hedelmät, perusruoat ja juomat. |
@@ -398,7 +451,7 @@ ovat kaikille ymmärrettäviä.
 
 Todennäköisyys, ettei 10 sanan kierroksessa ole yhtään uutta sanaa:
 - Normaali: C(24, 10) / C(60, 10) = 1 961 256 / 75 394 027 566 ≈ 0,003 %.
-- Harry Potter: C(20, 10) / C(40, 10) = 184 756 / 847 660 528 ≈ 0,02 %.
+- Harry Potter: C(20, 10) / C(41, 10) = 184 756 / 1 121 099 408 ≈ 0,02 %.
 
 Viidessä kierroksessa uusi sana tulee siis vastaan käytännössä aina.
 Kriteerin testi voi käyttää siemenarvottua satunnaislukugeneraattoria
@@ -416,7 +469,8 @@ Odotettu määrä kierroksessa = 10 × aiheen koko / 79:
 Kierroksia, joissa ei ole yhtään tervehdystä: C(71, 10) / C(79, 10) ≈ 32 %
 (laskettu tulona (71/79)(70/78)…(62/70)). Nyt (18 paria): 1 / C(18, 10) =
 1 / 43 758, eli käytännössä ei koskaan. Tämä on backlogin riski "vanhat aiheet
-harvemmin"; se näytetään omistajalle katselmointisivulla (kohta 11, Q-b).
+harvemmin"; omistaja hyväksyi sen (Q50, 2026-10-27): kierrokset ilman
+tervehdystä ovat kunnossa, aiheet pysyvät sekaisin.
 
 Jos aiheet julkaistaan yksi kerrallaan, osuudet muuttuvat joka julkaisulla;
 kaikki muu toimii jokaisessa välivaiheessa, koska jokaisessa aiheessa on
@@ -432,12 +486,13 @@ vähintään 7 paria.
 | Parille `es`, `fi`, `topic` | Kyllä | Sama rakenne; `topic` on näytettävä teksti (kohta 3.2), joten se kirjoitetaan täsmälleen kuten taulukossa. |
 | Lähde ja tarkistuspäivä sanakohtaisesti | **Ei koodissa** | Kirjataan tähän dokumenttiin ja tehtäviin, ei sovellukseen (kriteeri 8 vaatii kirjauksen tehtävään, ei dataan). |
 | Emoji, jossa on muunnosmerkki U+FE0F | Kyllä | ☁️ (U+2601 U+FE0F), 🌧️ (U+1F327 U+FE0F), ❄️ (U+2744 U+FE0F), ✏️ (U+270F U+FE0F), 🏘️ (U+1F3D8 U+FE0F). Ilman U+FE0F:ää ne voivat piirtyä mustavalkoisena merkkinä. Kopioi tästä dokumentista sellaisenaan; nykyinen ☀️ ja ❤️ tehdään samoin. |
-| Tavutus | Kyllä | Nykyinen `syllabify` riittää kaikille 56 uudelle sanalle (kohta 4). Ei muutosta sääntöön. |
+| Tavutus | Kyllä | Nykyinen `syllabify` riittää kaikille 57 uudelle sanalle (kohta 4). Ei muutosta sääntöön. |
+| 11 kirjaimen asettelu | **Ei nykyisessä CSS:ssä** | Kirjainruudun leveys 52 px ≥ 11-kirjaimiselle sanalle ≥ 600 px:llä, kohta 3.4. Sanan pituus on tiedossa (`ws.word.length`); uutta dataa ei tarvita. |
 | Aakkoset Vaikealla | Kyllä | Uusissa sanoissa B, D, F; kaikki ovat aakkosissa. |
 | Testit, jotka lukitsevat nykyiset määrät | Kyllä, muuttuvat | `tests/unit/sanat-logic.test.mjs` lukitsee 24 ja 20 sekä viimeiset sanat (TULI, TAIKAJUOMA); `tests/unit/espanja-logic.test.mjs` lukitsee taulukon ja aiheiden koot (8, 10) sekä luettelee aiheet `['tervehdys', 'väri']` yksilöllisyystestissä. Arkkitehti päättää, miten ne laajennetaan; tämän dokumentin taulukot ovat odotettu sisältö. |
 
 **Testattavat ehdot rakentajalle** (ehdotus arkkitehdille, ei määräys):
-- Jokainen Normaali-sana 3–7 kirjainta, HP-sana ≤ 10, vain ALPHABETin
+- Jokainen Normaali-sana 3–7 kirjainta, HP-sana ≤ 11 (vain KORPINKYNSI on 11), vain ALPHABETin
   kirjaimia; ei sanaa kahdesti listojen yli; emoji yksilöllinen listan sisällä.
 - Jokaisen uuden sanan `syllabify` = kohdan 4.1/4.2 sarake "Sovellus".
 - Mikään vihje ei sisällä sanaa (pienillä kirjaimilla vertaillen).
@@ -464,6 +519,8 @@ vähintään 7 paria.
   joten "poika" voi tarkoittaa vain *hijo*.
 - **Nolla uutta sanaa kierroksessa:** mahdollista mutta hyvin harvinaista
   (5.2).
+- **Pisin sana** KORPINKYNSI, 11 kirjainta, ensimmäinen yli 10: kohta 3.4.
+  Esiintyy noin joka neljännessä HP-kierroksessa (10 / 41).
 - **Lyhyin uusi sana** 4 kirjainta (SIKA, KANI, JUNA, SADE, LUMI, KYNÄ, TUPA,
   ARPI); lyhyin nykyinen 3 (PUU, KUU). Ei uutta tapausta.
 - **Sana, jonka kaikki kirjaimet sekoitettuna voisivat olla sama sana:**
@@ -498,11 +555,11 @@ ja kontrastit `sei-3.md` §7 ja `sei-4.md` §8 mukaan.
 - Sanat, Normaali (36): merkitys ja tavutus fi.wiktionarysta sana kerrallaan
   (34 tavutusriviä; LUMI ja KELLO: merkitys löytyi, tavutusriviä ei,
   tavutus suomen perussäännöstä).
-- Sanat, Harry Potter (20): suomennoksen termi suomenkielisestä
+- Sanat, Harry Potter (21; KORPINKYNSI lisätty Q49:n jälkeen): suomennoksen termi suomenkielisestä
   Wikipediasta (artikkelit Tylypahka, Huispaus, Weasleyn perhe, Harry Potter
   ja viisasten kivi, Harry Potter ja salaisuuksien kammio, Harry Potter ja
   Feeniksin kilta). Tavutus suomen tavutussäännöllä.
-- Sovelluksen tavutus: jokainen 56 uutta sanaa jäljitetty käsin nykyisen
+- Sovelluksen tavutus: jokainen 57 uutta sanaa jäljitetty käsin nykyisen
   säännön läpi; tulos = lähteen tavutus jokaisessa.
 - Vihjeet: pituus, ei sanaa eikä vartaloa, sopivuus 7-vuotiaalle.
 
@@ -544,9 +601,9 @@ ja kontrastit `sei-3.md` §7 ja `sei-4.md` §8 mukaan.
 | SEI-50/6, SEI-51/7 tavutus | 4.1, 4.2, 6 |
 | SEI-50/7, SEI-51/9 uusi sana 5 kierroksessa | 5.2 |
 | SEI-50/8, SEI-51/8 tarkistuksen kirjaus | 9 |
-| SEI-51/1 määrä ≥ 40 | 4.2, 5.1 (40) |
+| SEI-51/1 määrä ≥ 40 | 4.2, 5.1 (41) |
 | SEI-51/3 suomennoksen termi, lähde | 4.2 |
-| SEI-51/4 ≤ 10 kirjainta | 4.2 |
+| SEI-51/4 ≤ 10 kirjainta | 4.2; poikkeus KORPINKYNSI 11 omistajan päätöksellä (Q49), asettelu 3.4 |
 | SEI-52 – 56/1 määrä | 4.4, 5.1 |
 | SEI-52 – 56/2 ei kahta samaa | 4.5 |
 | SEI-52 – 56/3 neljä vaihtoehtoa samasta aiheesta | 4.5 (pienin aihe 7); nykyinen `newRound` |
@@ -561,20 +618,12 @@ ja kontrastit `sei-3.md` §7 ja `sei-4.md` §8 mukaan.
 
 ---
 
-## 11. Avoimet kysymykset omistajalle
+## 11. Omistajan päätökset (2026-10-27)
 
-Kumpikaan ei estä rakentamista; oletus on kirjattu, ja taulukot yllä noudattavat
-oletusta.
+Avoimia kysymyksiä ei ole.
 
-- **Q-a (päätös):** Harry Potter -sanoissa ovat mukana tuvat Rohkelikko,
-  Luihuinen ja Puuskupuh. Korpinkynsi on 11 kirjainta, ja raja on 10. Saako
-  Korpinkynsi olla mukana, vaikka se on listan pisin sana?
-  **Oletus:** ei; kolme tupaa. (Jos kyllä: kohdan 4.2 riville 41 KORPINKYNSI,
-  🦅, `Kotka on sen merkki`, tavutus KOR-PIN-KYN-SI, joka on sovelluksen
-  säännön mukainen; asettelu 11 ruudulle pitää silloin tarkistaa kapealla
-  näytöllä.)
-- **Q-b (päätös):** Espanjassa kierros arvotaan kaikista aiheista. Kun pareja
-  on 79, noin joka kolmannessa kierroksessa ei ole yhtään tervehdystä (nyt
-  aina on). Onko se hyvä?
-  **Oletus:** kyllä, kaikki aiheet sekaisin kuten nyt. (Aiheen valinta lapselle
-  olisi oma tehtävänsä, backlog E2.)
+| Kysymys | Vastaus | Mitä muuttui |
+|---|---|---|
+| Q48 Sanalistat katselmointisivulla | "ok", hyväksytty sellaisenaan | Ei muutoksia taulukoihin. |
+| Q49 (ent. Q-a) Saako Korpinkynsi olla mukana 11 kirjaimella? | "saa olla korpinkynsi" | 4.2 rivi 41, HP 41 sanaa, pituusraja 11 tälle sanalle; asettelusääntö 3.4. |
+| Q50 (ent. Q-b) Kierrokset ilman tervehdystä, aiheet sekaisin? | Kierrokset ilman tervehdystä ovat kunnossa; aiheet pysyvät sekaisin. | Ei muutoksia; 5.3 kirjattu päätökseksi. |
