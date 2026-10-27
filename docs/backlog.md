@@ -1518,7 +1518,8 @@ Kriteerit:
    pitää.
 
 ### SEI-57 — Espanja: aiheiden ryhmittely tai tasot (helppo / keskitaso / vaikea)
-Tila: verifying
+Tila: done
+Havainto (2026-10-27): julkaistu 19f516b, tarkistettu curlilla hakaotu.github.io/seikkailut (starThreshold, wordsIn, "Vaihda valintoja"). Q59: omistaja avasi Espanjan iPadilla, kierrosta ei pelattu — "näkyy": 8 aiheruutua kuvineen ja Aloita ilman vierittämistä. iPadin asento ja malli kirjaamatta. Suunnitelman §7.1 Mac-ajo korvattiin tällä katsomisella; pelattua lyhyttä kierrosta ei ole nähty oikeassa selaimessa (e2e kattaa).
 Pyyntö (omistaja, 2026-10-27, Q52, sanatarkasti): "Toisaalta mietin, että noita
 vois myös ryhmitellä joko aihealueiden mukaan tai sitten luoda tasot helppo,
 keskitaso, vaikea". Sanottu heti sen jälkeen, kun Espanja kasvoi kahdesta

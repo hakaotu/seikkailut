@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q59 (katso):** iPadilla Espanjan aloitusruutu: näkyvätkö 8 aiheruutua
-  kuvineen ja Aloita-nappi ilman vierittämistä? kyllä / ei. Kierrosta ei
-  pelata. Korvaa suunnitelman §7.1 Mac-ajon. (SEI-57) (2026-10-27)
+(ei avoimia)
 
 ## Vastatut
 
+- **Q59 (katso):** iPadilla Espanjan aloitusruutu, aiheruudut ja Aloita
+  näkyvät — "näkyy". (SEI-57) (2026-10-27)
 - **Q58 (päätös):** SEI-57 rakentamissuunnitelma — "kyllä". (2026-10-27)
 - **Q57 (päätös):** Lyhyen kierroksen tähti 80 % (6/7, 7/8) — "1".
   (SEI-57) (2026-10-27)
