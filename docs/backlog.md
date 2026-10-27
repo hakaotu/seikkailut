@@ -328,7 +328,7 @@ Kriteerit (lähde: `originals/sanaseikkailu.html`):
     ja "Pelaa uudelleen".
 
 ### SEI-4 — Espanja: kaikki nykyiset toiminnot uudessa sovelluksessa
-Tila: verifying
+Tila: done
 iPad (omistaja, 2026-10-26): "testasin ipadilla ja hyvin toimii kaikki" — yleishavainto,
 malli, iOS-versio ja yksittäiset §10 C -kohdat kirjaamatta.
 APPROVED 2026-10-26 (commitit 3329b59, bb817ed, b5aea2f, 0311e50; placeholderin
@@ -352,6 +352,8 @@ A5: vaihtoehdoissa "ole kiltti" (por favor) ja "hyvää iltapäivää" (buenas t
 B (omistaja, Mac, 2026-10-26, Q43): "toimii" — sana kuului, nappi täyttyi,
 seuraava sana tuli ja luettiin. SEI-48 done. SEI-4/9/10 odottavat C:tä (tähti
 tallessa myöhempänä päivänä, kysytään aikaisintaan 2026-10-27).
+C (omistaja, 2026-10-27, Q44): avasi Espanjan seuraavana päivänä, eilen
+ansaittu tähti näkyi yläpalkissa — "joo". SEI-4, SEI-9 ja SEI-10 done.
 Perustelu: omistaja vaati kaikki use caset; tämä on Espanjavalmentajan
 koko nykyinen käyttö.
 Riippuvuus: SEI-1.
@@ -921,7 +923,7 @@ Kriteerit:
    Kun kierros päättyy. Niin tulos on 10/10 ja eroaa kohdan 1 tuloksesta.
 
 ### SEI-9 — Espanja: sanalistan käännökset oikein
-Tila: verifying
+Tila: done
 Perustelu: lähtötaso: käännösvirheitä (por favor / "ole hyvä", buenas
 tardes / "hyvää iltaa"); lapset oppisivat väärän sanan.
 Riippuvuus: SEI-4. Tarvitsee espanjaa osaavan tarkistajan (ks. K3).
@@ -951,7 +953,7 @@ Kriteerit:
    vastine on yllä oleva.
 
 ### SEI-10 — Espanja: palaute väärästä ja "Seuraava" ilman vastausta
-Tila: verifying
+Tila: done
 Perustelu: lähtötaso: väärästä vastauksesta kerrotaan vain värillä (punainen
 / vihreä) ilman tekstiä tai ääntä, ja "Seuraava" siirtää eteenpäin
 vastaamatta. Huom: brief sanoo "ei palautetta väärästä"; koodin

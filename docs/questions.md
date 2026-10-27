@@ -2,12 +2,12 @@
 
 ## Avoimet
 
-- **Q44 (katso):** Avaa Espanja: näkyykö yläpalkissa yhä eilen ansaittu
-  tähti? kyllä / ei. Oletus: jos et ehdi, kysyn uudelleen myöhemmin.
-  (SEI-4, 9, 10) (2026-10-27)
+(ei avoimia)
 
 ## Vastatut
 
+- **Q44 (katso):** Espanjan tähti näkyy seuraavana päivänä — "joo".
+  (SEI-4, 9, 10) (2026-10-27)
 - **Q43 (katso):** Espanja Macilla, Espanja → Suomi, automaattinen
   siirtyminen ja ääni — "toimii". (SEI-4, 48) (2026-10-26)
 - **Q42 (katso):** Sanojen loppuruudun Kuuntele uudella sanamuodolla —
