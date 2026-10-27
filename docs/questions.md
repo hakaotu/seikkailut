@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q55 (päätös):** Mitä lapsi valitsee Espanjassa ennen kierrosta: aiheen,
+  tason, molemmat vai ei vielä mitään? Oletus: aiheen ("Kaikki aiheet"
+  ensimmäisenä). (SEI-57, E6) (2026-10-27)
 
 ## Vastatut
 

@@ -1376,7 +1376,11 @@ oletuksia, ei kysytty, E4):
    paikkoja, otuksia ja käsitteitä; ei henkilöhahmojen nimiä.
 4. Annettu jokainen uusi sana. Kun tarkistan merkit ja pituuden. Niin sana on
    yksi sana (ei välilyöntiä eikä väliviivaa), vain kirjaimia A–Z, Å, Ä, Ö, ja
-   enintään 10 kirjainta (pisin nykyinen HP-sana on 10).
+   enintään 10 kirjainta, paitsi KORPINKYNSI (11 kirjainta), joka on sallittu
+   poikkeus (Q49, 2026-10-27: "saa olla korpinkynsi"; pisin muu HP-sana on
+   10). Muita 11-kirjaimisia ei ole sallittu ilman omaa päätöstä.
+   (Kriteeriä muutettu 2026-10-27; alkuperäinen sanamuoto oli "enintään 10
+   kirjainta, pisin nykyinen on 10".)
 5. Annettu jokainen uusi sana. Kun luen vihjeen. Niin vihje on suomea, enintään
    30 merkkiä (pisin nykyinen 23), ei sisällä itse sanaa eikä sen vartaloa, ei
    paljasta kirjojen juonta ja sopii 1.–2.-luokkalaiselle (ei pelottava).
@@ -1513,6 +1517,90 @@ Kriteerit:
    designer valitsee ja kirjaa, kumpi, jotta kriteeri 2 (ei kahta samaa suomea)
    pitää.
 
+### SEI-57 — Espanja: aiheiden ryhmittely tai tasot (helppo / keskitaso / vaikea)
+Tila: todo
+Pyyntö (omistaja, 2026-10-27, Q52, sanatarkasti): "Toisaalta mietin, että noita
+vois myös ryhmitellä joko aihealueiden mukaan tai sitten luoda tasot helppo,
+keskitaso, vaikea". Sanottu heti sen jälkeen, kun Espanja kasvoi kahdesta
+aiheesta (18 paria) seitsemään aiheeseen (79 paria; SEI-52–56, done). Kirjattu
+ehdotukseksi, ei päätökseksi: omistaja ei ole valinnut, kumpi tai molemmat.
+Tavoite ja kenelle: 1.–2.-luokkalainen, joka harjoittelee espanjaa. Nyt
+kierros (10 kysymystä) arvotaan kaikista 79 parista sekaisin ja lapsi valitsee
+vain suunnan (suomi → espanja / espanja → suomi). Ongelmaa "lapsi ei löydä
+tai ei pysty rajaamaan harjoitusta" ei ole nähty käytössä; omistajan oma idea
+on tämän perustelu. Pelkkä ajatus voi ratkaista kolme eri asiaa (harjoittele
+juuri koulussa käsiteltyä aihetta; aloita helpolla; vaikeutuva eteneminen), ja
+mikä niistä on tarkoitus, on avoin (E6).
+Riippuvuus: SEI-4, SEI-52–56 (done). Vaatii designerin (uusi valinta
+aloitusruudulla, tekstit) ja omistajan hyväksynnän ennen arkkitehtia.
+Suhde muihin: SEI-40 kriteeri 1 ("Kun valitsen sen [aiheen]") olettaa jo
+aiheen valinnan, mutta mikään tehtävä ei tilaa sitä; vaihtoehto A olisi se
+puuttuva tehtävä. Sanojen tasot (Helppo/Keskitaso/Vaikea, Q21) ovat olemassa
+(SEI-3 kr 3–5: ne muuttavat apuja, eivät sanoja; kuva näkyy / piilossa, laatat
+/ koko aakkosto) ja Matikalla omansa; Espanjan "tasot" olisivat oma, ei
+samaa asiaa (ks. E7).
+Vaihtoehdot (pm kuvaa mitä lapsi näkee, ei miten se tehdään):
+- A. Aiheen valinta. Lapsi valitsee ennen kierrosta aiheen (esim. "viikonpäivät")
+  tai "kaikki aiheet" (= nykyinen toiminta). Kierros tulee vain valitusta
+  aiheesta.
+- B. Tasot. Lapsi valitsee Helppo / Keskitaso / Vaikea. Mitä taso muuttaa, on
+  avoin (E7); pm ei päätä sitä.
+- C. Molemmat: sekä aihe että taso. Kallein ja eniten valintoja yhdellä
+  ruudulla; ei suositus.
+Kriteerit (ehdolliset: kukin vaihtoehto vain, jos omistaja valitsee sen;
+kaikille yhteiset 1–2):
+1. Annettu mikä tahansa vaihtoehto. Kun omistaja ei ole valinnut mitään tai
+   valitsee "ei vielä". Niin Espanja toimii kuten nyt: ei uutta valintaa, kierros
+   arvotaan kaikista pareista, suunnan valinta ja kaikki SEI-4 kriteerit
+   (ml. tähti 8/10:llä) ennallaan.
+2. Annettu valittu vaihtoehto. Kun lapsi ei koske uuteen valintaan. Niin
+   oletusvalinta vastaa nykyistä toimintaa ("kaikki aiheet"; taso: omistajan
+   E7-vastauksen mukainen oletus) eikä lapsen tarvitse tehdä yhtään
+   lisäpainallusta aloittaakseen verrattuna nykyiseen (mitataan: painallukset
+   aloitusruudulta ensimmäiseen kysymykseen, ennen ja jälkeen, kirjataan).
+3. (A) Annettu aihe valittuna. Kun pelaan 200 siemenarvottua kierrosta
+   kumpaankin suuntaan. Niin jokainen kysymys ja kaikki neljä vaihtoehtoa ovat
+   vain valitusta aiheesta, ja jokaisessa kysymyksessä on neljä eri vaihtoehtoa
+   joista tasan yksi on oikea (kuten SEI-52 kr 3).
+4. (A) Annettu aihe, jossa on vähemmän pareja kuin kierroksessa on kysymyksiä
+   (viikonpäivät: täsmälleen 7 paria, kierros 10 kysymystä). Kun pelaan
+   kierroksen. Niin kierros on joko lyhyempi (7 kysymystä) tai parit toistuvat;
+   kumpi, on avoin (E8). Kriteeri täsmentyy vastauksen jälkeen: "ei samaa paria
+   kahdesti" (SEI-52 kr 3) ja "tähti 8/10:llä" (SEI-4 kr 7–8) on sovitettava
+   kierroksen pituuteen.
+5. (A) Annettu aiheen valinta. Kun lasken valinnat. Niin jokainen seitsemästä
+   aiheesta (tervehdys, väri, numerot, eläimet, ruoka, viikonpäivät, perhe) on
+   valittavissa ja "kaikki aiheet" on mukana.
+6. (B) Annettu taso. Kun pelaan 200 siemenarvottua kierrosta kullakin tasolla.
+   Niin tasot erottuvat havaittavasti siinä, mitä E7:ssä valittiin (esim. jos
+   taso = sanaryhmä: tasojen sanajoukot on kirjattu ja Helppo-tason jokainen
+   kysymys on Helppo-joukosta). Tarkistettava kriteeri kirjoitetaan E7:n
+   vastauksen jälkeen; ilman sitä (B) ei voi hyväksyä.
+7. (B) Annettu taso valittuna. Kun kysymyksessä on neljä vaihtoehtoa. Niin
+   väärät vaihtoehdot ovat edelleen samasta aiheesta ja tasan yksi vastaus on
+   oikea (ei kahta samaa suomea tai espanjaa; SEI-52 kr 2).
+8. Annettu uusi valinta. Kun pelaan kierroksen loppuun ja painan "Pelaa
+   uudelleen". Niin valinta säilyy (sama aihe/taso) tai palaa valintaan; kumpi,
+   päättyy designerin ehdotuksella; kierroksen tulosruutu ja tähti toimivat
+   kuten ennen.
+9. Annettu valinnat. Kun katson aloitusruutua kapealla ja leveällä ruudulla ja
+   kosketuksella. Niin valinnat ovat napautettavissa (kosketuskohde, kuten
+   muissa peleissä) ja teksti on suomea 1.–2.-luokkalaiselle; designerin
+   luonnos on omistajan hyväksymä ennen arkkitehtia.
+Kysymykset omistajalle: E6–E8 alla (oletuksineen). Q-numerot antaa pääsessio.
+Riskit (tähän tehtävään):
+- Jos "taso" tarkoittaa sanaryhmää (E7 a), jokainen espanjan sana on
+  luokiteltava helpoksi/vaikeaksi; luokitus on harkintaa eikä todennettavissa
+  koodilla (kuten SEI-52 kr 6). Tarkistaja on Claude (Q47), ei espanjaa
+  äidinkielenään puhuva.
+- Pienet aiheet (viikonpäivät 7 paria) ja aihe + taso -yhdistelmä voivat jättää
+  liian vähän pareja neljälle vaihtoehdolle (vähintään 4 paria vaaditaan).
+- Aloitusruudulle tulee lisää valintoja; 1.–2.-luokkalainen lukee vielä
+  hitaasti (ks. SEI-1 kohderyhmä). Olisi mitattava painallusten määrä (kr 2).
+- Kierroksen kesto lyhenee tai kysymykset toistuvat pienissä aiheissa (E8).
+Ei tässä tehtävässä (pm:n ehdotus, ei pyyntö): aiheen tai tason mukaan
+eriytetyt tähdet/tulokset (nyt yksi Espanjan tähti).
+
 Kysymykset E1–E5 (omistajan sanat sellaisinaan; vastaukset myös
 `docs/questions.md`):
 - E1 (päätös) — VASTATTU 2026-10-27 (Q45), sanatarkasti: "saa olla
@@ -1552,6 +1640,37 @@ Kysymykset E1–E5 (omistajan sanat sellaisinaan; vastaukset myös
 - E5 (päätös, pienempi) — EI KYSYTTY, oletus voimassa. Espanjan substantiivit
   artikkelin kanssa (el gato) vai ilman (gato)? Oletus: ilman, kuten nykyiset
   ("rojo").
+- E6 (päätös, SEI-57) — AVOIN, ei vielä kysytty omistajalta (pääsessio kirjoittaa
+  Q-numeron). Kysymys omistajan kielellä: "Espanjan sanat voisi jakaa
+  ryhmiin. Haluatko, että lapsi valitsee ennen kierrosta (a) aiheen, esim.
+  viikonpäivät tai eläimet, (b) tason helppo / keskitaso / vaikea, (c) molemmat,
+  vai (d) ei vielä mitään, kierros pysyy kuten nyt?" Oletus, jos vastaus on
+  "en tiedä" tai "suosituksen mukaan": (a) aiheen valinta, ja ensimmäisenä
+  vaihtoehtona "kaikki aiheet" eli nykyinen toiminta. Perustelu (pm,
+  oletus): aiheet ovat jo olemassa ja lapset ovat opiskelleet ne koulussa
+  (Q46), joten valinta ei vaadi uutta sanojen luokittelua; tasot vaatisivat,
+  että päätetään mikä on "helppo" (E7). Jos "en tiedä", kirjataan oletus
+  tehtävään.
+- E7 (päätös, vain jos E6 sisältää tasot) — AVOIN. Kysymys: "Jos tasoja
+  tulee, mikä tekee kierroksesta helpon tai vaikean? Esimerkkejä: (a) sanat:
+  helpossa vain lyhyet ja tutut asiat (esim. värit, numerot), vaikeassa
+  pidemmät (esim. perhe, ruoka); (b) vaihtoehtojen määrä: helpossa 2 vaihtoehtoa,
+  vaikeassa 4; (c) valitseminen vai kirjoittaminen: helpossa lapsi valitsee
+  oikean vastauksen, vaikeassa hän kirjoittaa sen; (d) apu: helpossa kuva tai
+  suomennos näkyy, vaikeassa ei. Mikä näistä, mikä muu, tai yhdistelmä?"
+  Oletus, jos "en tiedä": designer ehdottaa kaksi kolme vaihtoehtoa
+  luonnoksessa ja omistaja valitsee luonnoksesta; tasoja ei toteuteta ennen
+  sitä. pm ei ole valinnut merkitystä; esimerkit ovat vaihtoehtoja, eivät
+  ehdotus. Huomio: (b) ja (c) muuttavat nykyistä pelirakennetta (neljä
+  vaihtoehtoa, SEI-4) ja ovat arkkitehdin arvioitavia; Sanojen tasot (Q21)
+  tarkoittavat eri asiaa (apujen määrä), joten "sama nimi kuin Sanoissa" ei
+  riitä vastaukseksi.
+- E8 (päätös, vain jos E6 sisältää aiheen valinnan) — AVOIN. Kysymys:
+  "Viikonpäiviä on vain 7, mutta kierros on 10 kysymystä. Kun lapsi valitsee
+  pienen aiheen, onko kierros (a) lyhyempi, 7 kysymystä, vai (b) 10 kysymystä
+  niin että jotkin toistuvat?" Oletus: (a) lyhyempi, jolloin sama sana ei
+  tule kahdesti kierroksessa (kuten nyt). Tulosruudun tähti 8/10:llä
+  säädetään kierroksen pituuteen designerin ehdotuksella.
 
 Riskit ja huomiot:
 - Sisällön oikeellisuus: ei koodilla todennettavissa; tarkistus on
@@ -1679,3 +1798,4 @@ Riskit ja huomiot:
 - 2026-10-26: lisätty SEI-49 (Sanat: loppuruudun Kuuntele puhuu "Heti oikein 9. Uudella yrityksellä 1." eikä suomea), omistajan havainto klo 14.45 Macilla julkaistusta Sanat-pelistä (Harry Potter, Keskitaso, 9 / 10). Tila todo; muiden tehtävien tiloja ei muutettu.
 - 2026-10-27: omistajan pyyntö lisätä sisältöä Sanoihin (Normaali + Harry Potter) ja Espanjaan (A1, 1.–2. luokka) → osio E: SEI-50 (Normaali), SEI-51 (Harry Potter), SEI-52 (Espanja: numerot), SEI-53 (Espanja: eläimet); kaikki todo. SEI-40 absorboi kaksi ensimmäistä aihetta (huomio lisätty), SEI-34 pysyy erillisenä (huomio lisätty). Avoimet kysymykset E1–E5 oletuksineen osiossa E. Muiden tehtävien tiloja ei muutettu.
 - 2026-10-27: omistajan vastaukset Q45 (määrä: "saa olla enemmänkin"), Q46 (aiheet: numerot, eläimet, ruoka, viikonpäivät, perhe; lapset ovat opiskelleet ne koulussa) ja Q47 (tarkistaja: "sinä" = Claude, designer-rooli, sanakirjalähde sanakohtaisesti) kirjattu osioon E. Lisätty SEI-54 (ruoka), SEI-55 (viikonpäivät, täsmälleen 7 paria), SEI-56 (perhe); kaikki todo. SEI-40:n huomio päivitetty (jäljellä keho ja fraasit). SEI-50 – SEI-53:n kriteerit päivitetty: määrät ovat vähimmäismääriä (E1-tulkinta on pm:n oletus), tarkistajaksi Claude (kr 8 / kr 6), E4 ja E5 merkitty "oletus, ei kysytty". Olemassa olevien tehtävien tiloja ei muutettu.
+- 2026-10-27: lisätty SEI-57 (Espanja: aiheiden ryhmittely tai tasot helppo / keskitaso / vaikea), omistajan idea Q52:ssa sanatarkasti; tila todo. Vaihtoehdot A aiheen valinta, B tasot, C molemmat; avoimet kysymykset E6–E8 oletuksineen osiossa E. Lisäksi SEI-51 kriteeri 4 päivitetty: KORPINKYNSI (11 kirjainta) sallittu poikkeus (Q49). Yhdenkään tehtävän tilaa ei muutettu.
