@@ -1,6 +1,6 @@
 # Backlog: Seikkailut
 
-Päivitetty 2026-10-26 (pm; SEI-49 lisätty; aiemmin SEI-48 ja Q31–Q33). Syöte: `docs/brief.md` ja kolme kopiota
+Päivitetty 2026-10-27 (pm; osio E ja SEI-50 – SEI-53 lisätty; aiemmin SEI-49, SEI-48 ja Q31–Q33). Syöte: `docs/brief.md` ja kolme kopiota
 hakemistossa `originals/`. Tämä tiedosto on pm:n tuotos; tilan (todo,
 in-progress, review, verifying, done) siirtää vain pääsessio.
 
@@ -1197,6 +1197,8 @@ Kriteerit:
 #### SEI-34 — Lisää teemoja (ehdotus)
 Tila: todo
 Perustelu: nyt vain Normaali ja Harry Potter.
+Huomio (2026-10-27): omistajan pyyntö lisätä sanoja nykyisiin listoihin on
+SEI-50 ja SEI-51; ne eivät ole tämä tehtävä (tämä = uudet teemat).
 Riippuvuus: SEI-3.
 Kriteerit:
 1. Annettu uusi teema. Kun valitsen sen. Niin sanat tulevat vain siitä
@@ -1218,6 +1220,10 @@ Tila: todo
 Perustelu: nyt vain tervehdykset ja värit (18 sanaa). Aiheet ehdotuksessa:
 numerot, eläimet, perhe, ruoka, keho, viikonpäivät, fraasit. Järjestys
 riippuu K3:sta.
+Huomio (2026-10-27): omistajan pyyntö lisätä espanjan sanastoa (osio E)
+absorboi kaksi ensimmäistä aihetta: numerot = SEI-52, eläimet = SEI-53. Tähän
+tehtävään jäävät loput aiheet (perhe, ruoka, keho, viikonpäivät, fraasit), kun
+omistaja valitsee ne; kriteerit 1–2 alla pätevät niihin kuten SEI-52:ssa.
 Riippuvuus: SEI-4, SEI-9, K3.
 Kriteerit (kullekin aiheelle erikseen, voi julkaista aihe kerrallaan):
 1. Annettu uusi aihe. Kun valitsen sen. Niin kysymykset ja väärät
@@ -1265,6 +1271,206 @@ Kriteerit:
 2. Annettu laitteessa ei ole puheentunnistusta. Kun avaan pelin. Niin
    tämä pelitapa ei ole tarjolla tai kertoo selvästi, ettei se toimi;
    muut pelitavat toimivat normaalisti.
+
+---
+
+## E. Lisäsisältö (omistajan pyyntö 2026-10-27)
+
+Havainto/pyyntö (omistaja, 2026-10-27, sanatarkasti): "tää on nyt hyvä pohja.
+Voidaanko lisätä kontenttia ainakin sanoihin (normi + harry potter) ja myös
+espanjaan lisää kontenttia, jotka sopii A1-kielen harjoitteluun 1-2 luokalla".
+Tavoite ja kenelle: 1.–2.-luokkalaiset pelaavat samoja sanoja kierroksesta
+toiseen, koska listat ovat lyhyet; omistaja haluaa lisää sanoja Sanojen
+kahteen listaan (Normaali, Harry Potter) ja lisää Espanjan sanastoa, joka
+sopii espanjan A1-tason harjoitteluun 1.–2. luokalla. Ongelmaa "liian vähän
+sisältöä" ei ole nähty käytössä; omistajan oma pyyntö on tämän perustelu.
+
+Lähtötaso (luettu 2026-10-27, `app/src/games/sanat-logic.js` ja
+`app/src/games/espanja-logic.js`, main-haara commit 77b8b9f):
+- Sanat: Normaali `WORDS` 24 sanaa, Harry Potter `HP_WORDS` 20 sanaa; jokaisella
+  sanalla kuva (emoji) ja lyhyt suomenkielinen vihje; kierros 10 sanaa
+  (`MAX_WORDS`). Pisin Normaali-sana 7 kirjainta (AURINKO, BANAANI, JÄÄTELÖ),
+  pisin HP-sana 10 (TAIKASAUVA, VIISTOKUJA, LOHIKÄÄRME, TAIKAJUOMA). Pisin
+  nykyinen vihje 23 merkkiä ("Taikuutta osaava nainen").
+- Espanja: 18 paria, kaksi aihetta (tervehdys 8, väri 10); pari = es, fi,
+  topic; kierros 10 kysymystä arvotaan kaikista parista; väärät vaihtoehdot
+  samasta aiheesta (siksi aiheessa vähintään 4 paria); pisin espanjankielinen
+  ilmaus 2 sanaa.
+
+Suhde aiempiin ehdotuksiin (ei kaksoiskappaleita):
+- SEI-40 (Espanja: lisää aiheita) on absorboitu: omistajan pyyntö 2026-10-27
+  toteuttaa sen kaksi ensimmäistä aihetta (SEI-52, SEI-53) K3:n järjestyksessä
+  (Q7). SEI-40:een jää vain loput aiheet (perhe, ruoka, keho, viikonpäivät,
+  fraasit), kunnes omistaja valitsee ne.
+- SEI-34 (Sanat: lisää teemoja) EI ole sama asia: omistaja pyysi lisää sanoja
+  kahteen olemassa olevaan teemaan, ei uusia teemoja. SEI-34 pysyy erillisenä
+  ehdotuksena.
+
+Suunnittelutarve: sanat, vihjeet ja käännökset ovat tekstiä (copy). Ehdotus
+(pm, ei päätös): designer laatii kunkin listan taulukkona `docs/design/`-
+hakemistoon (sana, kuva, vihje / es, fi, aihe) ja omistaja hyväksyy sen ennen
+arkkitehtia, kuten SEI-9:ssä (Q32). Ulkoasu ei muutu.
+
+### SEI-50 — Sanat: lisää sanoja Normaali-listaan
+Tila: todo
+Perustelu: omistaja pyysi lisää sanoja ("normi"); 24 sanan lista toistuu
+10 sanan kierroksilla nopeasti.
+Riippuvuus: SEI-3 (done). Sisällön tarkistus (ks. kriteeri 8).
+Kriteerit (lukumäärä ja rajat ovat oletuksia, kunnes omistaja vastaa kysymyksiin
+E1 ja E4):
+1. Annettu Normaali-lista. Kun lasken sanat. Niin sanoja on vähintään 44
+   (oletus: 24 nykyistä + vähintään 20 uutta), ja kaikki 24 nykyistä sanaa
+   (KISSA … TULI) ovat tallella samoilla kuvilla ja vihjeillä.
+2. Annettu Normaali- ja Harry Potter -listat yhdessä. Kun vertaan sanoja.
+   Niin yksikään sana ei esiinny kahdesti (ei samaa listassa eikä listojen
+   välillä).
+3. Annettu jokainen uusi sana. Kun tarkistan merkit ja pituuden. Niin sana on
+   yksi sana (ei välilyöntiä eikä väliviivaa), vain kirjaimia A–Z, Å, Ä, Ö
+   (Vaikean tason aakkoset), ja pituus 3–7 kirjainta (oletus: pisin nykyinen
+   Normaali-sana on 7).
+4. Annettu jokainen uusi sana. Kun luen vihjeen. Niin vihje on suomea, enintään
+   30 merkkiä (oletus; pisin nykyinen 23), ei sisällä itse sanaa eikä sen
+   vartaloa (esim. vihje sanalle KAKKU ei sisällä "kakku"), ja sopii
+   1.–2.-luokkalaiselle.
+5. Annettu jokainen uusi sana. Kun katson sen kuvaa Macilla Chromessa. Niin
+   kuva näkyy kuvana (ei tyhjänä laatikkona) ja esittää sanaa yksiselitteisesti
+   (tarkistaja kirjaa jokaisen). Vanhemmalla iPadilla kuvan puuttuminen on
+   tunnettu riski (ei tarkistettu); sovellus ei kaadu, vaikka kuva puuttuu.
+6. Annettu jokainen uusi sana ja tavutus päällä. Kun avaan sanan. Niin tavut
+   ovat suomen tavutussäännön mukaiset (esim. KIS-SA, AU-TO); tavutus kirjataan
+   tehtävään sana kerrallaan. Sana, jonka tavutus tulee väärin, jätetään pois
+   tai ilmoitetaan arkkitehdille; sitä ei hyväksytä sellaisenaan.
+7. Annettu 5 kierrosta Normaali-listalla millä tahansa tasolla. Kun pelaan ne.
+   Niin vähintään yksi uusi sana tulee vastaan, ja yhdessä kierroksessa ei ole
+   samaa sanaa kahdesti (nykyinen toiminta säilyy).
+8. Annettu uusien sanojen, kuvien ja vihjeiden taulukko. Kun tarkistaja käy sen
+   läpi. Niin hänen hyväksyntänsä (nimi, päivä, mitä tarkisti) on kirjattu
+   tehtävään ennen julkaisua. Tarkistaja on oletuksena omistaja (kysymys E3).
+
+### SEI-51 — Sanat: lisää sanoja Harry Potter -listaan
+Tila: todo
+Perustelu: omistaja pyysi lisää sanoja ("harry potter"); 20 sanan lista toistuu
+10 sanan kierroksilla nopeasti.
+Riippuvuus: SEI-3 (done). Sisällön tarkistus (ks. kriteeri 8).
+Kriteerit (lukumäärä ja rajat ovat oletuksia, kunnes omistaja vastaa kysymyksiin
+E1 ja E4):
+1. Annettu Harry Potter -lista. Kun lasken sanat. Niin sanoja on vähintään 40
+   (oletus: 20 nykyistä + vähintään 20 uutta), ja kaikki 20 nykyistä sanaa
+   (JÄSTI … TAIKAJUOMA) ovat tallella samoilla kuvilla ja vihjeillä.
+2. Annettu Normaali- ja Harry Potter -listat yhdessä. Kun vertaan sanoja.
+   Niin yksikään sana ei esiinny kahdesti.
+3. Annettu jokainen uusi sana. Kun tarkistan sen lähteen. Niin sana on
+   suomenkielinen termi suomennetuista Harry Potter -kirjoista (ei englanninkielinen
+   alkuperäisnimi, ei oma keksintö), ja tarkistaja kirjaa lähteen jokaisesta
+   (kirja tai sanakirja/luettelo ja päivä). Oletus: esineitä, paikkoja, otuksia
+   ja käsitteitä; ei henkilöhahmojen nimiä (kysymys E4).
+4. Annettu jokainen uusi sana. Kun tarkistan merkit ja pituuden. Niin sana on
+   yksi sana (ei välilyöntiä eikä väliviivaa), vain kirjaimia A–Z, Å, Ä, Ö, ja
+   enintään 10 kirjainta (pisin nykyinen HP-sana on 10).
+5. Annettu jokainen uusi sana. Kun luen vihjeen. Niin vihje on suomea, enintään
+   30 merkkiä (pisin nykyinen 23), ei sisällä itse sanaa eikä sen vartaloa, ei
+   paljasta kirjojen juonta ja sopii 1.–2.-luokkalaiselle (ei pelottava).
+6. Annettu jokainen uusi sana. Kun katson sen kuvaa Macilla Chromessa. Niin
+   kuva näkyy kuvana (ei tyhjänä laatikkona) ja sopii sanaan (tarkistaja kirjaa
+   jokaisen). Jos sanalle ei ole sopivaa kuvaa, sana jätetään pois.
+7. Annettu jokainen uusi sana ja tavutus päällä. Kun avaan sanan. Niin tavut
+   ovat suomen tavutussäännön mukaiset; tavutus kirjataan tehtävään sana
+   kerrallaan. Väärin tavuttuvaa sanaa ei hyväksytä sellaisenaan (kuten SEI-50
+   kriteeri 6).
+8. Annettu uusien sanojen, kuvien ja vihjeiden taulukko. Kun tarkistaja käy sen
+   läpi. Niin hänen hyväksyntänsä (nimi, päivä, mitä tarkisti) on kirjattu
+   tehtävään ennen julkaisua.
+9. Annettu 5 kierrosta Harry Potter -listalla. Kun pelaan ne. Niin vähintään
+   yksi uusi sana tulee vastaan, ja yhdessä kierroksessa ei ole samaa sanaa
+   kahdesti.
+
+### SEI-52 — Espanja: uusi aihe "numerot"
+Tila: todo
+Perustelu: omistaja pyysi lisää espanjan sanastoa A1-tasolle 1.–2. luokalle;
+numerot ovat K3:n (Q7) ensimmäinen lisäaihe.
+Riippuvuus: SEI-4, SEI-9 (done). Aihe ja sanamäärä oletuksia, kunnes omistaja
+vastaa kysymyksiin E1 ja E2.
+Kriteerit:
+1. Annettu uusi aihe "numerot". Kun lasken parit. Niin aiheessa on vähintään 10
+   paria (oletus: yksi–kymmenen, uno–diez; ei yli 20), ja kullakin on es, fi ja
+   aihe; kaikki 18 nykyistä paria ovat tallella ennallaan (ml. SEI-9:n kolme
+   korjattua suomennosta).
+2. Annettu kaikki parit (nykyiset ja uudet). Kun vertaan. Niin missään aiheessa
+   ei ole kahta paria, joilla on sama suomi tai sama espanja (muuten yhdellä
+   kysymyksellä olisi kaksi oikeaa vastausta).
+3. Annettu kierros, jossa kysymyksenä on uuden aiheen pari. Kun pelaan 200
+   siemenarvottua kierrosta kumpaankin suuntaan. Niin jokaisessa kysymyksessä
+   on neljä eri vaihtoehtoa, joista tasan yksi on oikea, ja väärät ovat samasta
+   aiheesta (numeroista); kierroksessa ei ole samaa paria kahdesti.
+4. Annettu kysymys uudesta aiheesta. Kun katson vihjeriviä. Niin se kertoo
+   aiheen suomeksi (sanamuoto designerilta, kuten "tervehdys" ja "väri" nyt).
+5. Annettu jokainen uusi espanjankielinen sana. Kun painan "Kuuntele" Macilla
+   Chromessa. Niin sana luetaan espanjaksi (es-ES) selvästi oikein; tarkistaja
+   kirjaa jokaisen, joka kuulostaa väärältä (kuunteleminen ei ole sama kuin
+   käännöksen tarkistus).
+6. Annettu jokainen uusi pari. Kun tarkistaja käy ne läpi. Niin jokaisen parin
+   suomi ja espanja tarkoittavat samaa ja espanja on espanjan A1-tasoa
+   (konkreettinen, yleinen sana; enintään 2 sanaa; espanja Espanjasta, es-ES).
+   Tarkistajan hyväksyntä, lähde (esim. sanakirja) ja päivä kirjataan
+   tehtävään ennen julkaisua. Tarkistaja on oletuksena omistaja designerin
+   sanakirjatarkistuksen pohjalta, kuten SEI-9 (kysymys E3).
+7. Annettu kierros ja tulos 8/10 tai parempi. Kun kierros päättyy. Niin tähti
+   ja tulosruutu toimivat kuten ennen (SEI-4 kriteerit 7 ja 8; tähti 8/10:llä,
+   ei 7/10:llä).
+
+### SEI-53 — Espanja: uusi aihe "eläimet"
+Tila: todo
+Perustelu: omistaja pyysi lisää espanjan sanastoa; eläimet ovat K3:n (Q7)
+toinen lisäaihe ja konkreettinen, kuvittuva sanasto.
+Riippuvuus: SEI-4, SEI-9 (done). Voi julkaista erikseen SEI-52:sta. Aihe ja
+sanamäärä oletuksia (kysymykset E1 ja E2).
+Kriteerit:
+1–7. Samat kuin SEI-52:n kriteerit 1–7, kun "numerot" korvataan aiheella
+   "eläimet" (oletus vähintään 10 paria, esim. gato–kissa, perro–koira; yksikkö,
+   ilman artikkelia, ks. kysymys E5), ja kriteeri 1:n "kaikki 18 nykyistä" on
+   "kaikki jo julkaistut parit".
+8. Annettu uusi aihe "eläimet". Kun kysymyksessä on eläin. Niin oikea
+   vastaus ja väärät vaihtoehdot ovat eläimiä (ei numeroita eikä värejä).
+
+Avoimet kysymykset (omistajalle; pääsessio kirjoittaa ne omistajan kielellä ja
+numeroi; oletus voimassa kunnes omistaja vastaa):
+- E1 (päätös, tärkein). Kuinka paljon uutta? Oletus: Sanoihin vähintään 20
+  uutta sanaa kumpaankin listaan (Normaali 24 → 44+, Harry Potter 20 → 40+);
+  Espanjaan 10 uutta paria per aihe.
+- E2 (päätös, tärkein). Mitkä aiheet Espanjaan ja valitseeko lapsi aiheen?
+  Oletus: kaksi ensimmäistä K3:n järjestyksestä (numerot, eläimet), ja
+  kierrokset sekoittavat kaikki aiheet kuten nyt (lapsi ei valitse aihetta;
+  aihe näkyy vihjerivillä). Jos omistaja haluaa aiheen valinnan, se on oma
+  tehtävänsä ja vaatii designerin (EHDOTUS, ei tässä: "Espanja: pelaaja
+  valitsee aiheen").
+- E3 (tieto, tärkein). Kuka tarkistaa espanjan ja suomennokset? Oletus:
+  designer tarkistaa sanakirjasta ja kirjaa lähteen, omistaja hyväksyy kuten
+  SEI-9:ssä (Q32). Jos omistajalla on espanjaa osaava tuttu tai opettaja,
+  hän tarkistaa ennen omistajaa.
+- E4 (päätös, pienempi). Saako Harry Potter -sanaksi henkilöiden nimiä
+  (esim. hahmoja)? Oletus: ei, vain esineitä, paikkoja, otuksia ja
+  käsitteitä. Ja saako Normaali-listaan lisätä pidempiä sanoja kuin 7
+  kirjainta? Oletus: ei (1.–2. luokan lukutaito).
+- E5 (päätös, pienempi). Espanjan substantiivit artikkelin kanssa (el gato)
+  vai ilman (gato)? Oletus: ilman, kuten nykyiset ("rojo").
+
+Riskit ja huomiot:
+- Sisällön oikeellisuus: ei koodilla todennettavissa; tarkistus on
+  ihmistyötä (SEI-50 kr. 8, SEI-51 kr. 8, SEI-52 kr. 6). Ilman nimettyä
+  tarkistajaa (K3) omistaja kantaa sen.
+- Suomen tavutus: sovelluksen tavutus on sääntöpohjainen; yhdyssanat ja
+  harvinaiset yhdistelmät voivat tavuttua väärin (ei tarkistettu uusilla
+  sanoilla). Kriteerit 6/7 tarkistavat sanan kerrallaan.
+- Emojit: uudet emojit voivat puuttua vanhalta iPadilta (kts. Riskit,
+  "Emojikuvat"); ei tarkistettu.
+- Espanjan puhe: es-ES-ääni (Mónica) lausuu numerot ja eläinten nimet ehkä
+  eri tavalla kuin Latinalaisen Amerikan espanjassa; sanasto valitaan
+  Espanjan espanjasta. Ei kuunneltu.
+- Sanojen määrä kasvaa, ja Espanjassa kierros arvotaan kaikista pareista:
+  vanhat aiheet (tervehdys, väri) esiintyvät harvemmin yksittäisessä
+  kierroksessa. Voi olla toivottu tai ei; omistajan tietoon.
+- Ehdotus, ei pyyntö (pm): lisäyksen jälkeen sisältö voisi tulla omistajan
+  käyttöön helposti muokattavaksi taulukoksi, mutta sitä ei pyydetty.
 
 ---
 
@@ -1364,3 +1570,4 @@ Kriteerit:
 - 2026-10-26: Q26: Sanojen ulkoasu `docs/design/sei-3.md` hyväksytty omistajalla ("ok ja jatka"); koskee SEI-3, SEI-7, SEI-8. Q27: ohitettu sana näytetään ja luetaan ensin, sitten Seuraava ("joo", tulkittu oletukseksi; SEI-7, design E5). Q28: omistaja vastasi "joo" kysymykseen, siirtyykö Sanat oikean sanan jälkeen itsestään kuten Matikka, samoin säännöin kuin Q25 → lisätty SEI-47 (tila todo). SEI-46:een kirjattu, että Matikan ja Sanojen automaattisen siirtymisen ulkoasu suunnitellaan yhdessä. Tilarivejä ei muutettu.
 - 2026-10-26: Q31: Espanjan ulkoasu `docs/design/sei-4.md` (+ `.html`) hyväksytty omistajalla ("ok"); kattaa SEI-4, SEI-9, SEI-10, ja sen mukaan Espanja siirtyy oikean vastauksen jälkeen itsestään samoin säännöin kuin Matikka ja Sanat (Q25, Q28; `docs/design/sei-46.md`, Q29) → lisätty SEI-48 (tila todo). Q32: suomennokset adiós = näkemiin, buenas tardes = hyvää iltapäivää, por favor = ole kiltti hyväksytty omistajalla tarkistajana (SEI-9; kriteeri 4 lisätty). Q33: vanhan Espanjan tähtiä ei siirretä, alkavat nollasta (SEI-4; kriteeri 11 lisätty). Tilarivejä ei muutettu.
 - 2026-10-26: lisätty SEI-49 (Sanat: loppuruudun Kuuntele puhuu "Heti oikein 9. Uudella yrityksellä 1." eikä suomea), omistajan havainto klo 14.45 Macilla julkaistusta Sanat-pelistä (Harry Potter, Keskitaso, 9 / 10). Tila todo; muiden tehtävien tiloja ei muutettu.
+- 2026-10-27: omistajan pyyntö lisätä sisältöä Sanoihin (Normaali + Harry Potter) ja Espanjaan (A1, 1.–2. luokka) → osio E: SEI-50 (Normaali), SEI-51 (Harry Potter), SEI-52 (Espanja: numerot), SEI-53 (Espanja: eläimet); kaikki todo. SEI-40 absorboi kaksi ensimmäistä aihetta (huomio lisätty), SEI-34 pysyy erillisenä (huomio lisätty). Avoimet kysymykset E1–E5 oletuksineen osiossa E. Muiden tehtävien tiloja ei muutettu.

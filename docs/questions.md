@@ -2,7 +2,16 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q45 (päätös):** Kuinka paljon uutta? Oletus: 20 uutta sanaa kumpaankin
+  Sanat-listaan (Normaali ja Harry Potter) ja Espanjaan kaksi uutta aihetta,
+  10 sanaa kumpaankin. (SEI-50–53, E1) (2026-10-27)
+- **Q46 (päätös):** Espanjan uudet aiheet? Oletus: numerot ja eläimet;
+  kierros sekoittaa kaikki aiheet kuten nyt, lapsi ei valitse aihetta.
+  (SEI-52, 53, E2) (2026-10-27)
+- **Q47 (tieto):** Kuka tarkistaa espanjan sanat? Oletus: tarkistan
+  sanakirjasta ja sinä hyväksyt listan ennen rakentamista, kuten
+  käännöskorjauksissa; jos tunnet espanjan opettajan, hän tarkistaa ensin.
+  (SEI-52, 53, E3) (2026-10-27)
 
 ## Vastatut
 
