@@ -2,7 +2,9 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q53 (katso):** Macilla Sanat, Normaali ja Harry Potter, yksi kierros
+  kumpaakin: näkyykö jokaisen sanan kuva (ei tyhjää laatikkoa)? kyllä /
+  ei + sana. Oletus: kysyn uudelleen. (SEI-50, 51) (2026-10-27)
 
 ## Vastatut
 
