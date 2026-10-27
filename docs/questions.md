@@ -2,7 +2,12 @@
 
 ## Avoimet
 
-(ei avoimia)
+- **Q56 (katso):** Espanjan aiheen valinnan luonnos
+  (https://claude.ai/artifact/BVxaxePAixHcvbavB82onE): käykö? Oletus: kyllä
+  sellaisenaan. (SEI-57) (2026-10-27)
+- **Q57 (päätös):** Lyhyen kierroksen tähti: 80 % kuten nyt (6/7
+  viikonpäivät, 7/8 tervehdykset) vai aina kaksi väärin sallittu (5/7,
+  6/8)? Oletus: 80 %. (SEI-57) (2026-10-27)
 
 ## Vastatut
 
